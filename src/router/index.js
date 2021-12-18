@@ -3,8 +3,8 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {BottomNavigator} from '../components/organism';
-import {Home, Movies, Profile, Series, Splash} from '../pages';
+import {Home, Movies, Playlist, Profile, Series, Splash} from '../pages';
+import {BottomNavigator} from '../components';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -16,7 +16,7 @@ const MainApp = () => {
         name="Home"
         component={Home}
         options={{
-          tabBarLabel: 'Home',
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -24,33 +24,29 @@ const MainApp = () => {
         component={Series}
         options={{
           tabBarLabel: 'TV Series',
-          // tabBarIcon: ({color, size}) => (
-          //   <MaterialCommunityIcons name="home" color={color} size={size} />
-          // ),
+          headerShown: false,
         }}
       />
-      {/* <Tab.Screen
-        name="Play"
-        component={Play}
-        options={{
-          tabBarLabel: 'Play',
-        }}
-      /> */}
       <Tab.Screen
-        name="Movie"
+        name="Play"
+        component={Playlist}
+        options={{
+          tabBarLabel: 'Playlist',
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Movies"
         component={Movies}
         options={{
-          tabBarLabel: 'Movie',
-          // tabBarIcon: ({color, size}) => (
-          //   <MaterialCommunityIcons name="home" color={color} size={size} />
-          // ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
-        name="profile"
+        name="Profile"
         component={Profile}
         options={{
-          tabBarLabel: 'profile',
+          headerShown: false,
           // tabBarIcon: ({color, size}) => (
           //   <MaterialCommunityIcons name="home" color={color} size={size} />
           // ),

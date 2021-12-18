@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Logo} from '../../assets';
-import {color} from '../../utils/colors';
-import {responsiveHeight, responsiveWidth} from '../../utils/dimensions';
+import {colors, responsiveHeight, responsiveWidth} from '../../utils';
 
 export default class Splash extends Component {
   componentDidMount() {
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: color.backgroud,
+    backgroundColor: colors.background,
   },
   wrapper: {
     width: responsiveWidth(138),

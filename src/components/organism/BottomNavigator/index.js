@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {color} from '../../../utils/colors';
-import {TabItem} from '../../atoms';
+import {TabItem} from '../..';
+import {colors} from '../../../utils';
 
 const BottomNavigator = ({state, descriptors, navigation}) => {
   return (
@@ -60,11 +60,12 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     flexDirection: 'row',
-    backgroundColor: color.onPrimary,
+    backgroundColor: colors.onPrimary,
+    opacity: 0.9,
     justifyContent: 'space-between',
     marginBottom: 16,
     marginHorizontal: 16,
-    paddingVertical: 8,
+    padding: 8,
     borderRadius: 10,
   },
 });
