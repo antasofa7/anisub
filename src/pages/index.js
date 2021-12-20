@@ -4,5 +4,6 @@ import Series from './Series';
 import Playlist from './Playlist';
 import Movies from './Movies';
 import Profile from './Profile';
+import Detail from './Detail';
 
-export {Splash, Home, Series, Playlist, Movies, Profile};
+export {Splash, Home, Series, Playlist, Movies, Profile, Detail};

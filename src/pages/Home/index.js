@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {
+  AnimeByGenre,
   BannerCarousel,
   ContinueWatching,
   Header,
-  NewMovie,
+  NewAllAnime,
   Spacing,
+  UpcomingAnime,
   WatchList,
 } from '../../components';
-import {Animes} from '../../json';
 import {colors, responsiveHeight} from '../../utils';
 
 export default class Home extends Component {
@@ -16,19 +17,20 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      animes: Animes,
+      animes: [],
     };
   }
 
   render() {
-    const {animes} = this.state;
     return (
       <ScrollView style={styles.container}>
         <Header home />
-        <BannerCarousel animes={animes} />
-        <ContinueWatching animes={animes} />
-        <WatchList animes={animes} />
-        <NewMovie animes={animes} />
+        <BannerCarousel />
+        {/* <ContinueWatching animes={animes} />
+        <WatchList animes={animes} /> */}
+        <NewAllAnime />
+        <UpcomingAnime />
+        <AnimeByGenre />
         <Spacing height={responsiveHeight(90)} />
       </ScrollView>
     );

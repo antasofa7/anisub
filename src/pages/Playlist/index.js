@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {AnimeList, GenreButton, Header, Spacing} from '../../components';
-import {Animes, Genres} from '../../json';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  AnimeGenreList,
+  AnimeList,
+  GenreButton,
+  Header,
+  Spacing,
+} from '../../components';
+import {getAnimeByGenre, getGenres} from '../../config';
+import {Animes} from '../../json';
 import {colors, responsiveHeight} from '../../utils';
 
 export default class Playlist extends Component {
@@ -11,21 +17,31 @@ export default class Playlist extends Component {
 
     this.state = {
       animes: Animes,
-      genres: Genres,
+      genres: [],
+      genrePressed: false,
     };
   }
 
+  onPressGenre = () => {
+    const response = getGenres();
+    response.then(res => {
+      const data = res.data;
+      console.log('data>> ', data.genre_name);
+      // this.setState(data ? {genrePressed: true} : null);
+    });
+  };
+
   render() {
-    const {animes, genres} = this.state;
+    const {genrePressed} = this.state;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Header />
-        <GenreButton genres={genres} />
-        <ScrollView>
-          <AnimeList animes={animes} />
+        <GenreButton onPress={this.onPressGenre} />
+        <ScrollView nestedScrollEnabled={true}>
+          {genrePressed ? <AnimeGenreList /> : null}
           <Spacing height={responsiveHeight(90)} />
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }

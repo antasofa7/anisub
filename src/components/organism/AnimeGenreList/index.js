@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {MainCardFilm} from '../..';
 import {getAllNew, getAnimeByGenre} from '../../../config';
 
-const AnimeList = ({animes}) => {
+const AnimeGenreList = ({animes}) => {
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
 
@@ -55,7 +55,7 @@ const AnimeList = ({animes}) => {
   );
 };
 
-export default AnimeList;
+export default AnimeGenreList;
 
 const styles = StyleSheet.create({
   container: {

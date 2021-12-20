@@ -1,39 +1,63 @@
-import React, {useRef} from 'react';
-import {Dimensions, Platform, StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import {IconStarActive} from '../../../assets';
+import {getHotMovies} from '../../../config';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 
 const {width: screenWidth} = Dimensions.get('window');
 const {height: screenHeight} = Dimensions.get('window');
 
-const BannerCarousel = ({animes}) => {
+const BannerCarousel = () => {
   const carouselRef = useRef(null);
+  const navigation = useNavigation();
+  const [movies, setMovies] = useState([]);
+
+  const getMovieList = useCallback(async () => {
+    const res = await getHotMovies();
+    setMovies(res.data.animes);
+  }, []);
+
+  useEffect(() => {
+    getMovieList();
+  }, [getMovieList]);
+
+  const IMG_URL = 'https://testapi.my.id/images/anime';
 
   const renderItem = ({item, index}, parallaxProps) => {
     return (
-      <View style={styles.item}>
-        <ParallaxImage
-          key={index}
-          source={item.thumbnail}
-          containerStyle={styles.imageContainer}
-          style={styles.image}
-          parallaxFactor={0.4}
-          {...parallaxProps}
-        />
-        <LinearGradient
-          colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.75)']}
-          style={styles.linearGradient}
-        />
-        <View style={styles.wrapperRating}>
-          <IconStarActive />
-          <Text style={styles.rating}>{item.rating}</Text>
+      <Pressable onPress={() => navigation.navigate('Detail')}>
+        <View style={styles.item} onPress={() => navigation.navigate('Detail')}>
+          <ParallaxImage
+            key={item.sub_id}
+            source={{uri: `${IMG_URL}/${item.sub_banner}` || 'kjjk'}}
+            containerStyle={styles.imageContainer}
+            style={styles.image}
+            parallaxFactor={0.4}
+            {...parallaxProps}
+          />
+          <LinearGradient
+            colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.75)']}
+            style={styles.linearGradient}
+          />
+          <View style={styles.wrapperRating}>
+            <IconStarActive />
+            <Text style={styles.rating}>{item.rate}</Text>
+          </View>
+          <Text style={styles.title} numberOfLines={3}>
+            {item.sub_name}
+          </Text>
         </View>
-        <Text style={styles.title} numberOfLines={3}>
-          {item.title}
-        </Text>
-      </View>
+      </Pressable>
     );
   };
 
@@ -44,7 +68,7 @@ const BannerCarousel = ({animes}) => {
         sliderWidth={screenWidth}
         sliderHeight={screenHeight}
         itemWidth={responsiveWidth(216)}
-        data={animes}
+        data={movies}
         renderItem={renderItem}
         hasParallaxImages={true}
       />
@@ -72,7 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: null,
     height: null,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   linearGradient: {
     flex: 1,
@@ -101,11 +125,10 @@ const styles = StyleSheet.create({
     zIndex: 2,
     position: 'absolute',
     bottom: 12,
-    left: 16,
-    right: 16,
-    fontSize: 32,
+    left: 12,
+    right: 18,
+    fontSize: 20,
     fontFamily: fonts.nunito.bold,
     color: colors.onBackground,
-    backgroundColor: 'transparent',
   },
 });

@@ -4,14 +4,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Star} from '../..';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 
-const MainCardFilm = props => {
+const DetailCardFilm = props => {
   const {title, rating, thumbnail, width, margin} = props;
   return (
     <View style={styles.container(margin)}>
-      <Image
-        source={{uri: thumbnail || '../../../assets/images/image-default.jpg'}}
-        style={styles.imageThumbnail(width)}
-      />
+      <Image source={thumbnail} style={styles.imageThumbnail(width)} />
       <LinearGradient
         colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.85)']}
         style={styles.linearGradient(width)}
@@ -24,7 +21,7 @@ const MainCardFilm = props => {
   );
 };
 
-export default MainCardFilm;
+export default DetailCardFilm;
 
 const styles = StyleSheet.create({
   container: margin => ({
@@ -32,9 +29,8 @@ const styles = StyleSheet.create({
   }),
   imageThumbnail: width => ({
     width: width ? width : responsiveWidth(100),
-    height: responsiveHeight(110),
+    height: responsiveHeight(120),
     borderRadius: 10,
-    resizeMode: 'cover',
   }),
   linearGradient: width => ({
     flex: 1,
@@ -42,7 +38,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: responsiveWidth(100) || width,
-    height: responsiveHeight(110),
+    height: responsiveHeight(120),
     borderRadius: 10,
   }),
   wrapperTitle: {
