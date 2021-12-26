@@ -1,14 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {MainCardFilm} from '../..';
 import {getNewSeries} from '../../../config';
 import {colors, fonts} from '../../../utils';
+import {MainCardFilm} from '../../molecules';
 
-const NewSeries = () => {
+const NewSeries = ({loading}) => {
   const [movies, setMovies] = useState([]);
+  const [isLoading, setLoading] = useState(loading);
 
   const getMovieList = useCallback(async () => {
+    setLoading(true);
     const res = await getNewSeries();
+    setLoading(false);
     setMovies(res.data.episodes);
   }, []);
 
@@ -28,6 +31,7 @@ const NewSeries = () => {
               title={anime.post_name}
               rating={anime.rate}
               thumbnail={`${IMG_URL}/${anime.post_image}`}
+              isLoading={isLoading}
             />
           );
         })}

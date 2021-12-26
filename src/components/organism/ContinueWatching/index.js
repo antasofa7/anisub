@@ -1,7 +1,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {MainCardFilm} from '../..';
 import {colors, fonts} from '../../../utils';
+import {MainCardFilm} from '../../molecules';
 
 const ContinueWatching = ({animes}) => {
   return (

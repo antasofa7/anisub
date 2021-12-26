@@ -1,8 +1,8 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {InputSearch, Spacing} from '../..';
 import {IconSearch, IconSummer, Logo} from '../../../assets';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
+import {InputSearch, Spacing} from '../../atoms';
 
 const Header = ({home}) => {
   const ContentHeader = () => {

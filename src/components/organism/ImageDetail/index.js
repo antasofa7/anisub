@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   IconBack,
@@ -10,22 +10,36 @@ import {
 } from '../../../assets';
 
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
-
-const ImageDetail = () => {
+import {IMG_ANIME_URL} from '../../../utils/constan';
+const leftPlayIcon = Dimensions.get('window').width / 2 - 30;
+const ImageDetail = ({animeDetail}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Image source={ImageForDetail} style={styles.imageDetail} />
+      <Image
+        source={{
+          uri:
+            `${IMG_ANIME_URL}/${animeDetail.sub_banner}` ||
+            '../../../assets/images/image-default.jpg',
+        }}
+        style={styles.imageDetail}
+      />
       <LinearGradient
         colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 1)']}
         style={styles.linearGradient}
       />
-      <IconBack style={styles.iconBack} onPress={() => navigation.goBack()} />
-      <IconBookmark style={styles.iconBookmark} />
-      <IconPlayCircle style={styles.iconPlay} />
+      <View style={styles.iconBack}>
+        <IconBack onPress={() => navigation.goBack()} />
+      </View>
+      <View style={styles.iconBookmark}>
+        <IconBookmark />
+      </View>
+      <View style={styles.iconPlay}>
+        <IconPlayCircle />
+      </View>
       <View style={styles.wrapperTitle}>
-        <Text style={styles.episode}>Episode 09 - 03 Dec 2021</Text>
-        <Text style={styles.title}>Death Note - Session 2</Text>
+        <Text style={styles.episode}>Episode 09 - {animeDetail.rilis}</Text>
+        <Text style={styles.title}>{animeDetail.sub_name}</Text>
       </View>
     </View>
   );
@@ -40,6 +54,7 @@ const styles = StyleSheet.create({
   imageDetail: {
     width: responsiveWidth(360),
     height: responsiveHeight(270),
+    resizeMode: 'cover',
   },
   linearGradient: {
     flex: 1,
@@ -53,23 +68,35 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     right: 16,
-    opacity: 0.9,
+    opacity: 0.5,
+    backgroundColor: colors.onPrimary,
+    padding: 10,
+    borderRadius: 5,
   },
   iconBack: {
     position: 'absolute',
     top: 16,
     left: 16,
     opacity: 0.5,
+    backgroundColor: colors.onPrimary,
+    padding: 10,
+    borderRadius: 5,
   },
   iconPlay: {
     position: 'absolute',
     top: 105,
-    left: 140,
-    opacity: 0.9,
+    left: leftPlayIcon,
+    opacity: 0.5,
+    backgroundColor: colors.onPrimary,
+    paddingLeft: 20,
+    paddingRight: 15,
+    paddingVertical: 15,
+    borderRadius: 50,
   },
   wrapperTitle: {
     position: 'absolute',
     left: 16,
+    right: 16,
     bottom: 0,
   },
   episode: {

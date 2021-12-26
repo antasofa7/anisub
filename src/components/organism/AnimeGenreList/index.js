@@ -1,19 +1,31 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, FlatList, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {MainCardFilm} from '../..';
 import {getAllNew, getAnimeByGenre} from '../../../config';
+import {colors, responsiveHeight} from '../../../utils';
+import {Spacing} from '../../atoms';
+import {MainCardFilm} from '../../molecules';
 
-const AnimeGenreList = ({animes}) => {
+const AnimeGenreList = ({loading}) => {
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [isLoading, setLoading] = useState(loading);
 
   const getMovieList = useCallback(async () => {
+    setLoading(true);
     const allAnime = await getAllNew();
     const animeGenre = await getAnimeByGenre();
     setMovies(allAnime.data.episodes);
     setGenres(animeGenre.data);
+    setLoading(false);
   }, []);
+  // console.log('isLoading>>', loading);
 
   useEffect(() => {
     getAllNew();
@@ -29,6 +41,7 @@ const AnimeGenreList = ({animes}) => {
   const _itemSeparator = () => {
     return <View style={styles.separator} />;
   };
+  // console.log('isLoading>>', isLoading);
 
   const _renderItem = ({item, index}) => {
     return (
@@ -39,18 +52,33 @@ const AnimeGenreList = ({animes}) => {
         thumbnail={`${IMG_URL}/${item.post_image}`}
         width={size}
         margin={0}
+        isLoading={isLoading}
       />
     );
   };
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={movies}
-        renderItem={_renderItem}
-        ItemSeparatorComponent={_itemSeparator}
-        keyExtractor={(item, index) => `key-${index}`}
-        numColumns={numColumns}
-      />
+      {isLoading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator
+            size="large"
+            color={colors.onPrimary}
+            // style={styles.loading}
+          />
+        </View>
+      ) : (
+        <FlatList
+          data={movies}
+          renderItem={_renderItem}
+          ItemSeparatorComponent={_itemSeparator}
+          keyExtractor={item => item.post_id.toString()}
+          numColumns={numColumns}
+          initialNumToRender={12}
+          // scrollToIndex={() => ({animated: true, index: 0})}
+          scrollToEnd={() => ({animated: true})}
+          ListFooterComponent={() => <Spacing height={responsiveHeight(180)} />}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -59,7 +87,6 @@ export default AnimeGenreList;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     margin: 16,
   },
   separator: {

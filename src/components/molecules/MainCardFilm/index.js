@@ -1,17 +1,25 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Star} from '../..';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
+import {ImageLoading, Star} from '../../atoms';
 
 const MainCardFilm = props => {
-  const {title, rating, thumbnail, width, margin} = props;
+  const {title, rating, thumbnail, width, margin, isLoading} = props;
+  // console.log('loading >>', isLoading);
+
   return (
     <View style={styles.container(margin)}>
-      <Image
-        source={{uri: thumbnail || '../../../assets/images/image-default.jpg'}}
-        style={styles.imageThumbnail(width)}
-      />
+      {isLoading ? (
+        <ImageLoading />
+      ) : (
+        <Image
+          source={{
+            uri: thumbnail || '../../../assets/images/image-default.jpg',
+          }}
+          style={styles.imageThumbnail(width)}
+        />
+      )}
       <LinearGradient
         colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.85)']}
         style={styles.linearGradient(width)}
@@ -37,7 +45,6 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   }),
   linearGradient: width => ({
-    flex: 1,
     position: 'absolute',
     top: 0,
     left: 0,

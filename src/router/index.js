@@ -12,7 +12,7 @@ import {
   Series,
   Splash,
 } from '../pages';
-import {BottomNavigator} from '../components';
+import {BottomNavigator} from '../components/organism';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

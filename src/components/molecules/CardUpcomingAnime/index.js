@@ -2,13 +2,24 @@ import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
-import {Star} from '../../atoms';
+import {ImageLoading, Star} from '../../atoms';
 
-const DetailCardFilm = props => {
-  const {title, rating, thumbnail, width, margin} = props;
+const CardUpcomingAnime = props => {
+  const {title, rating, thumbnail, width, margin, isLoading} = props;
+  // console.log('loading >>', isLoading);
+
   return (
     <View style={styles.container(margin)}>
-      <Image source={thumbnail} style={styles.imageThumbnail(width)} />
+      {isLoading ? (
+        <ImageLoading />
+      ) : (
+        <Image
+          source={{
+            uri: thumbnail || '../../../assets/images/image-default.jpg',
+          }}
+          style={styles.imageThumbnail(width)}
+        />
+      )}
       <LinearGradient
         colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.85)']}
         style={styles.linearGradient(width)}
@@ -21,7 +32,7 @@ const DetailCardFilm = props => {
   );
 };
 
-export default DetailCardFilm;
+export default CardUpcomingAnime;
 
 const styles = StyleSheet.create({
   container: margin => ({
@@ -29,8 +40,9 @@ const styles = StyleSheet.create({
   }),
   imageThumbnail: width => ({
     width: width ? width : responsiveWidth(100),
-    height: responsiveHeight(120),
+    height: responsiveHeight(110),
     borderRadius: 10,
+    resizeMode: 'cover',
   }),
   linearGradient: width => ({
     flex: 1,
@@ -38,7 +50,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: responsiveWidth(100) || width,
-    height: responsiveHeight(120),
+    height: responsiveHeight(110),
     borderRadius: 10,
   }),
   wrapperTitle: {

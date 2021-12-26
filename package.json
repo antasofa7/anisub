@@ -21,7 +21,6 @@
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.1",
     "react-native-snap-carousel": "^3.9.1",
-    "react-native-star-rating-svg": "^1.2.0",
     "react-native-svg": "^12.1.1",
     "react-native-svg-transformer": "^0.14.3"
   },

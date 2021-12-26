@@ -1,10 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {getGenres} from '../../../config';
 import GenreItem from './GenreItem';
 
-const GenreButton = ({onPress}) => {
+const GenreButton = ({navigation}) => {
   const [genres, setGenres] = useState([]);
+  const [activeGenre, setActiveGenre] = useState('all');
   const getGenreList = useCallback(async () => {
     const res = await getGenres();
     setGenres(res.data);
@@ -14,19 +15,35 @@ const GenreButton = ({onPress}) => {
     getGenreList();
   }, [getGenreList]);
 
+  const onPressGenre = value => {
+    setActiveGenre(value);
+  };
+
+  const _renderItem = ({item, index}) => {
+    return (
+      <GenreItem
+        key={item.genre_id}
+        genreName={item.genre_name}
+        active={item.genre_name === activeGenre ? true : false}
+        onPress={() => onPressGenre(item.genreName)}
+        navigation={navigation}
+      />
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView horizontal={true} style={styles.wrapper}>
-        {genres.map(genre => {
-          return (
-            <GenreItem
-              key={genre.genre_id}
-              genre={genre.genre_name}
-              onPress={onPress(genre.genre_id)}
-            />
-          );
-        })}
-      </ScrollView>
+      <View horizontal={true} style={styles.wrapper}>
+        <FlatList
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          data={genres}
+          renderItem={_renderItem}
+          keyExtractor={item => item.genre_id.toString()}
+          // initialNumToRender={12}
+          scrollToEnd={() => ({animated: true})}
+        />
+      </View>
     </View>
   );
 };

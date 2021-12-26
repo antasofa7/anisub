@@ -1,7 +1,6 @@
 import callAPI from '../api';
 
 const ROOT_API = 'https://testapi.my.id/';
-export const IMG_URL = 'https://tetapi.my.id/images/anime/';
 
 export async function getHotMovies() {
   const url = `${ROOT_API}/hot/season`;
@@ -12,8 +11,26 @@ export async function getHotMovies() {
   });
 }
 
+export async function getMoreHotMovies(page) {
+  const url = `${ROOT_API}/hot/season/${page}`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
 export async function getAllNew() {
   const url = `${ROOT_API}/all/new`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+export async function getMoreAllNew(page) {
+  const url = `${ROOT_API}/all/new/${page}`;
 
   return callAPI({
     url,
@@ -48,8 +65,53 @@ export async function getUpcomingAnimes() {
   });
 }
 
+export async function getMoreUpcomingAnimes(page) {
+  const url = `${ROOT_API}/up/coming/@{pages}`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+// export async function getAnimeByGenre(id) {
+//   const url = `${ROOT_API}/genre/${id}/animes/0`;
+
+//   return callAPI({
+//     url,
+//     method: 'GET',
+//   });
+// }
+
 export async function getAnimeByGenre() {
   const url = `${ROOT_API}/genres/animes`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+export async function getAnimeById(animeId) {
+  const url = `${ROOT_API}/anime/${animeId}`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+export async function getMoreEpisodes(animeId, page) {
+  const url = `${ROOT_API}/anime/${animeId}/episode/${page}`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+export async function getPlaylistyByGenre(animeId) {
+  const url = `${ROOT_API}/genre/${animeId}/animes/0`;
 
   return callAPI({
     url,
