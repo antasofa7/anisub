@@ -4,6 +4,7 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {getAllNew, getMoreAllNew} from '../../../config';
@@ -13,12 +14,12 @@ import {CardNewAllMovie} from '../../molecules';
 
 let stopLoadMore = true;
 
-const NewAllAnime = ({loading, isPages}) => {
+const NewAllAnime = ({loading, navigation}) => {
   const [movies, setMovies] = useState([]);
-  const [moreMovies, setMoreMovies] = useState([]);
+  // const [moreMovies, setMoreMovies] = useState([]);
   const [isLoading, setLoading] = useState(loading);
   const [page, setPage] = useState(0);
-  const [isPage, setIsPage] = useState(isPages);
+  // const [isPage, setIsPage] = useState(isPages);
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
@@ -31,27 +32,33 @@ const NewAllAnime = ({loading, isPages}) => {
     getMovieList();
   }, [getMovieList, setLoading]);
 
-  const loadMoreEpisodes = async () => {
+  const loadMoreMovies = async () => {
+    setLoading(true);
     if (!stopLoadMore) {
-      setLoading(true);
       setPage(page + 1);
       const res = await getMoreAllNew(page);
-      setMoreMovies(res.data.episodes);
+      if (!res.data.pages) {
+        return;
+      }
+      setMovies([...movies, ...res.data.episodes]);
       stopLoadMore = true;
-      setIsPage(true);
+      // setIsPage(true);
     }
     setLoading(false);
   };
-
+  // console.log('page', page);
   const _renderItem = ({item, index}) => {
     return (
-      <CardNewAllMovie
-        key={item.post_id}
-        title={item.post_name}
-        rating={item.rate}
-        thumbnail={`${IMG_EPISODE_URL}/${item.post_image}`}
-        isLoading={isLoading}
-      />
+      <TouchableOpacity
+        onPress={() => navigation('Detail', {animeId: item.sub_id})}>
+        <CardNewAllMovie
+          key={item.post_id}
+          title={item.post_name}
+          rating={item.rate}
+          thumbnail={`${IMG_EPISODE_URL}/${item.post_image}`}
+          isLoading={isLoading}
+        />
+      </TouchableOpacity>
     );
   };
 
@@ -62,23 +69,26 @@ const NewAllAnime = ({loading, isPages}) => {
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          data={!isPage ? movies : moreMovies}
+          data={movies}
           renderItem={_renderItem}
           initialNumToRender={4}
-          // ItemSeparatorComponent={_itemSeparator}
-          keyExtractor={item => item.sub_id.toString()}
-          // numColumns={numColumns}
-          // scrollToIndex={() => ({animated: true, index: 0})}
+          maxToRenderPerBatch={8}
+          // keyExtractor={item => item.post_id.toString()}
           scrollToEnd={() => ({animated: true})}
-          onEndReached={loadMoreEpisodes}
-          onEndReachedThreshold={1}
+          getItemLayout={(data, index) => ({
+            length: responsiveHeight(100),
+            offset: responsiveHeight(100) * index,
+            index,
+          })}
+          onEndReached={loadMoreMovies}
+          onEndReachedThreshold={0.5}
           onMomentumScrollBegin={() => {
             stopLoadMore = false;
           }}
           ListFooterComponent={() =>
             isLoading && (
               <View style={styles.loading}>
-                <ActivityIndicator />
+                <ActivityIndicator color={colors.onPrimary} />
               </View>
             )
           }
@@ -93,7 +103,6 @@ export default NewAllAnime;
 const styles = StyleSheet.create({
   container: {
     marginTop: 16,
-    marginHorizontal: 16,
   },
   wrapper: {
     flexDirection: 'row',

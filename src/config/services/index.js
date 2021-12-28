@@ -66,7 +66,7 @@ export async function getUpcomingAnimes() {
 }
 
 export async function getMoreUpcomingAnimes(page) {
-  const url = `${ROOT_API}/up/coming/@{pages}`;
+  const url = `${ROOT_API}/up/coming/${page}`;
 
   return callAPI({
     url,

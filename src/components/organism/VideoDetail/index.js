@@ -1,14 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React from 'react';
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   IconBack,
@@ -20,11 +13,8 @@ import {
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import {IMG_ANIME_URL} from '../../../utils/constan';
 const leftPlayIcon = Dimensions.get('window').width / 2 - 30;
-
 const ImageDetail = ({animeDetail}) => {
   const navigation = useNavigation();
-  const episodes = animeDetail.episodes;
-  // console.log('episodes', episodes);
   return (
     <View style={styles.container}>
       <Image
@@ -45,19 +35,15 @@ const ImageDetail = ({animeDetail}) => {
       <View style={styles.iconBookmark}>
         <IconBookmark />
       </View>
-      <TouchableOpacity
-        style={styles.iconPlay}
-        onPress={() => navigation.navigate('PlayVideo', {episodes})}>
+      <View style={styles.iconPlay}>
         <IconPlayCircle />
-      </TouchableOpacity>
+      </View>
       <View style={styles.wrapperTitle}>
         <Text style={styles.episode}>
           {/* Episode 09 -  */}
           {moment(animeDetail.rilis).format('DD MMMM YYYY')}
         </Text>
-        <Text style={styles.title} numberOfLines={2}>
-          {animeDetail.sub_name}
-        </Text>
+        <Text style={styles.title}>{animeDetail.sub_name}</Text>
       </View>
     </View>
   );
@@ -86,7 +72,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     right: 16,
-    opacity: 0.6,
+    opacity: 0.5,
     backgroundColor: colors.onPrimary,
     padding: 10,
     borderRadius: 5,
@@ -95,7 +81,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     left: 16,
-    opacity: 0.6,
+    opacity: 0.5,
     backgroundColor: colors.onPrimary,
     padding: 10,
     borderRadius: 5,
@@ -104,8 +90,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 105,
     left: leftPlayIcon,
-    opacity: 0.8,
-    backgroundColor: colors.background,
+    opacity: 0.5,
+    backgroundColor: colors.onPrimary,
     paddingLeft: 20,
     paddingRight: 15,
     paddingVertical: 15,

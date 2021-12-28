@@ -4,6 +4,7 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {getMoreUpcomingAnimes, getUpcomingAnimes} from '../../../config';
@@ -17,12 +18,13 @@ import {
 import {CardUpcomingAnime} from '../../molecules';
 
 let stopLoadMore = true;
-const UpcomingAnime = ({loading, isPages}) => {
+
+const UpcomingAnime = ({loading, navigation}) => {
   const [movies, setMovies] = useState([]);
-  const [moreMovies, setMoreMovies] = useState([]);
+  // const [moreMovies, setMoreMovies] = useState([]);
   const [isLoading, setLoading] = useState(loading);
   const [page, setPage] = useState(0);
-  const [isPage, setIsPage] = useState(isPages);
+  // const [isPage, setIsPage] = useState(isPages);
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
@@ -38,33 +40,40 @@ const UpcomingAnime = ({loading, isPages}) => {
   }, [getMovieList]);
 
   const loadMoreMovies = async () => {
+    setLoading(true);
     if (!stopLoadMore) {
-      setLoading(true);
       setPage(page + 1);
       const res = await getMoreUpcomingAnimes(page);
-      if (res.data.pages) {
-        setMoreMovies(res.data.episodes);
-        stopLoadMore = true;
-        setIsPage(true);
+      if (!res.data.pages) {
+        return;
       } else {
-        console.log('err>>', res.data.pages);
+        setMovies([...movies, ...res.data.episodes]);
+        stopLoadMore = true;
+        // setIsPage(true);
       }
       setLoading(false);
     }
   };
-  console.log('pageUp>>', page);
-  console.log('isPage>>', isPage);
+  // console.log('pageUp>>', page);
+  // console.log('movies>>', movies);
 
   const _renderItem = ({item, index}) => {
     return (
-      <CardUpcomingAnime
-        key={item.post_id}
-        title={item.sub_name}
-        rating={item.rate}
-        thumbnail={`${IMG_ANIME_URL}/${item.sub_banner}`}
-        isLoading={isLoading}
-      />
+      <TouchableOpacity
+        onPress={() => navigation('Detail', {animeId: item.sid_new})}>
+        <CardUpcomingAnime
+          key={item.post_id}
+          title={item.sub_name}
+          rating={item.rate}
+          thumbnail={`${IMG_ANIME_URL}/${item.sub_banner}`}
+          isLoading={isLoading}
+        />
+      </TouchableOpacity>
     );
+  };
+
+  const _itemSeparator = () => {
+    return <View style={styles.separator} />;
   };
 
   return (
@@ -74,19 +83,27 @@ const UpcomingAnime = ({loading, isPages}) => {
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          data={!isPages ? movies : moreMovies}
+          data={movies}
           renderItem={_renderItem}
-          keyExtractor={item => item.post_id.toString()}
+          initialNumToRender={4}
+          maxToRenderPerBatch={8}
+          // ItemSeparatorComponent={_itemSeparator}
+          // keyExtractor={item => item.post_id.toString()}
           scrollToEnd={() => ({animated: true})}
+          getItemLayout={(data, index) => ({
+            length: responsiveHeight(100),
+            offset: responsiveHeight(100) * index,
+            index,
+          })}
           onEndReached={loadMoreMovies}
-          onEndReachedThreshold={1}
+          onEndReachedThreshold={0.5}
           onMomentumScrollBegin={() => {
             stopLoadMore = false;
           }}
           ListFooterComponent={() =>
             isLoading && (
               <View style={styles.loading}>
-                <ActivityIndicator />
+                <ActivityIndicator color={colors.onPrimary} />
               </View>
             )
           }
@@ -101,7 +118,6 @@ export default UpcomingAnime;
 const styles = StyleSheet.create({
   container: {
     marginTop: 16,
-    marginHorizontal: 16,
   },
   wrapper: {
     flexDirection: 'row',
@@ -122,5 +138,10 @@ const styles = StyleSheet.create({
     width: responsiveWidth(100),
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  separator: {
+    height: 16,
+    width: '100%',
+    backgroundColor: 'transparent',
   },
 });

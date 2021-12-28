@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import {Spacing} from '../../components/atoms';
-import {GenreButton} from '../../components/molecules';
+import {GenreButton, HeaderSearch} from '../../components/molecules';
 import {AnimeGenreList, Header} from '../../components/organism';
 import {getAnimeByGenre, getGenres} from '../../config';
 import {Animes} from '../../json';
+import Router from '../../router';
 import {colors, responsiveHeight} from '../../utils';
 
 export default class Playlist extends Component {
@@ -31,11 +32,11 @@ export default class Playlist extends Component {
     const navigate = this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
-        <Header />
+        <HeaderSearch />
         <GenreButton navigation={navigate} />
-        <AnimeGenreList />
+        <AnimeGenreList navigation={navigate} />
         {/* {genrePressed ? <AnimeGenreList /> : null} */}
-        <Spacing height={responsiveHeight(90)} />
+        {/* <Spacing height={responsiveHeight(90)} /> */}
         {/* <View>
         </View> */}
       </SafeAreaView>

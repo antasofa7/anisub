@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {Spacing} from '../../components/atoms';
 import {
   AnimeByGenre,
@@ -8,6 +9,7 @@ import {
   NewAllAnime,
   UpcomingAnime,
 } from '../../components/organism';
+import HomeComponent from '../../components/organism/HomeComponent';
 import {colors, responsiveHeight} from '../../utils';
 
 export default class Home extends PureComponent {
@@ -42,16 +44,20 @@ export default class Home extends PureComponent {
     const {navigate} = this.props.navigation;
     const {isLoading, isPage} = this.state;
     return (
-      <ScrollView style={styles.container}>
-        <Header home />
+      <SafeAreaView style={styles.container}>
+        {/* <Header home />
         <BannerCarousel navigation={navigate} isPages={isPage} />
-        {/* <ContinueWatching animes={animes} />
-        <WatchList animes={animes} /> */}
+        <ContinueWatching animes={animes} />
+        <WatchList animes={animes} />
         <NewAllAnime loading={isLoading} isPages={isPage} />
-        <UpcomingAnime loading={isLoading} isPages={isPage} />
-        <AnimeByGenre navigation={navigate} />
+        <UpcomingAnime loading={isLoading} isPages={isPage} /> */}
+        <HomeComponent
+          navigation={navigate}
+          loading={isLoading}
+          isPages={isPage}
+        />
         <Spacing height={responsiveHeight(90)} />
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }

@@ -4,7 +4,7 @@ import {IconSearch, IconSummer, Logo} from '../../../assets';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import {InputSearch, Spacing} from '../../atoms';
 
-const Header = () => {
+const HeaderSearch = () => {
   // const ContentHeader = () => {
   //   if (home) {
   //     return (
@@ -30,31 +30,20 @@ const Header = () => {
   // };
   return (
     <View style={styles.container}>
-      <View style={styles.wrapper}>
-        <View style={styles.wrapperLogo}>
-          <Image source={Logo} style={styles.logo} />
-        </View>
-        <Spacing width={10} />
-        <View style={styles.season}>
-          <IconSummer />
-          <Text style={styles.seasonTitle}>Summer</Text>
-        </View>
-      </View>
-      <View style={styles.wrapperSearch}>
-        <IconSearch />
-      </View>
+      <InputSearch />
     </View>
   );
 };
 
-export default Header;
+export default HeaderSearch;
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    marginHorizontal: 16,
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: responsiveHeight(60),
+    height: responsiveHeight(40),
   },
   wrapper: {
     flexDirection: 'row',

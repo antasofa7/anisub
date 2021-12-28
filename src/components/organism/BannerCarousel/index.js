@@ -44,34 +44,27 @@ const BannerCarousel = ({navigation, isPages}) => {
   }, [getMovieList]);
 
   const loadMoreMovies = async () => {
+    setLoading(true);
     if (!stopLoadMore) {
-      setLoading(true);
       setPage(page + 1);
       const res = await getMoreHotMovies(page);
-      if (res.data.pages) {
-        setMoreMovies(res.data.animes);
-        stopLoadMore = true;
-        setIsPage(true);
-      } else {
+      if (!res.data.pages) {
+        return;
       }
-      console.log('err>>', res.data);
+      setMovies([...movies, ...res.data.animes]);
+      stopLoadMore = true;
     }
     setLoading(false);
   };
+  // console.log('pageHot>>', page);
   // console.log('animes>>', movies);
-  // console.log('pageUp>>', page);
   // console.log('isPage>>', isPage);
 
   const renderItem = ({item, index}, parallaxProps) => {
     return (
       <TouchableOpacity
         onPress={() => navigation('Detail', {animeId: item.sub_id})}>
-        <View
-          style={styles.item}
-          // onPress={() =>
-          //   this.props.navigation.navigate('Detail', {animeId: item.sub_id})
-          // }
-        >
+        <View style={styles.item}>
           <Image
             key={item.sub_id}
             source={{uri: `${IMG_ANIME_URL}/${item.sub_banner}` || 'Hot Anime'}}
@@ -88,7 +81,7 @@ const BannerCarousel = ({navigation, isPages}) => {
             <IconStarActive />
             <Text style={styles.rating}>{item.rate}</Text>
           </View>
-          <Text style={styles.title} numberOfLines={3}>
+          <Text style={styles.title} numberOfLines={2}>
             {item.sub_name}
           </Text>
         </View>
@@ -104,12 +97,12 @@ const BannerCarousel = ({navigation, isPages}) => {
         sliderWidth={screenWidth}
         sliderHeight={screenHeight}
         itemWidth={responsiveWidth(240)}
-        data={!isPage ? movies : moreMovies}
+        data={movies}
         renderItem={renderItem}
         // hasParallaxImages={true}
         // firstItem={3}
-        // autoplay={true}
-        // autoplayDelay={1000}
+        autoplay={true}
+        autoplayDelay={1000}
         // loop={true}
         onEndReached={loadMoreMovies}
         onEndReachedThreshold={0.5}

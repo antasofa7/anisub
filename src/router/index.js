@@ -1,18 +1,20 @@
 // In App.js in a new project
 
-import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import * as React from 'react';
+import {BottomNavigator} from '../components/organism';
 import {
   Detail,
+  Episodes,
   Home,
   Movies,
   Playlist,
+  PlayVideo,
   Profile,
   Series,
   Splash,
 } from '../pages';
-import {BottomNavigator} from '../components/organism';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,6 +82,16 @@ const Router = () => {
       <Stack.Screen
         name="Detail"
         component={Detail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Episodes"
+        component={Episodes}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PlayVideo"
+        component={PlayVideo}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

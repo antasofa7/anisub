@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Dimensions, FlatList, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getAllNew, getAnimeByGenre} from '../../../config';
+import {IMG_ANIME_URL} from '../../../utils';
 import {MainCardFilm} from '../../molecules';
 
 const AnimeList = ({animes}) => {
@@ -20,9 +21,6 @@ const AnimeList = ({animes}) => {
     getMovieList();
   }, [getMovieList]);
 
-  const IMG_URL = 'https://testapi.my.id/images/episode';
-  const IMG_GENRE_URL = 'https://testapi.my.id/images/anime';
-
   const numColumns = 3;
   const size = Dimensions.get('window').width / numColumns - 20;
 
@@ -36,7 +34,7 @@ const AnimeList = ({animes}) => {
         key={item.post_id}
         title={item.post_name}
         rating={item.rate}
-        thumbnail={`${IMG_URL}/${item.post_image}`}
+        thumbnail={`${IMG_ANIME_URL}/${item.post_image}`}
         width={size}
         margin={0}
       />
@@ -50,6 +48,7 @@ const AnimeList = ({animes}) => {
         ItemSeparatorComponent={_itemSeparator}
         keyExtractor={(item, index) => `key-${index}`}
         numColumns={numColumns}
+        scrollToEnd={() => ({animated: true})}
       />
     </SafeAreaView>
   );

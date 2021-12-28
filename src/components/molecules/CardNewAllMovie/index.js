@@ -10,22 +10,20 @@ const CardNewAllMovie = props => {
 
   return (
     <View style={styles.container(margin)}>
-      {isLoading ? (
-        <ImageLoading />
-      ) : (
-        <Image
-          source={{
-            uri: thumbnail || '../../../assets/images/image-default.jpg',
-          }}
-          style={styles.imageThumbnail(width)}
-        />
-      )}
+      <Image
+        source={{
+          uri: thumbnail || '../../../assets/images/image-default.jpg',
+        }}
+        style={styles.imageThumbnail(width)}
+      />
       <LinearGradient
         colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.85)']}
         style={styles.linearGradient(width)}
       />
       <View style={styles.wrapperTitle}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {title}
+        </Text>
         <Star rating={rating} size={12} />
       </View>
     </View>
@@ -56,6 +54,7 @@ const styles = StyleSheet.create({
   wrapperTitle: {
     position: 'absolute',
     left: 4,
+    right: 4,
     bottom: 8,
     width: responsiveWidth(100),
   },

@@ -53,7 +53,7 @@ export default GenreButton;
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 16,
-    marginVertical: 8,
+    marginTop: 16,
   },
   wrapper: {
     flexDirection: 'row',

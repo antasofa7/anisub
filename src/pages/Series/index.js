@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Spacing} from '../../components/atoms';
+import {HeaderSearch} from '../../components/molecules';
 import {AnimeByGenre, Header, NewSeries} from '../../components/organism';
 import {Animes} from '../../json';
 import {colors, responsiveHeight} from '../../utils';
@@ -19,10 +20,10 @@ export default class Series extends Component {
     const {isLoading} = this.state;
     return (
       <ScrollView style={styles.container}>
-        <Header />
+        <HeaderSearch />
         <NewSeries loading={isLoading} />
         {/* <UpcomingAnime animes={animes} /> */}
-        <AnimeByGenre />
+        {/* <AnimeByGenre /> */}
         <Spacing height={responsiveHeight(90)} />
       </ScrollView>
     );

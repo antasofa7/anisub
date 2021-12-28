@@ -1,15 +1,24 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {colors, fonts, IMG_EPISODE_URL} from '../../../utils';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {colors, fonts, IMG_EPISODE_URL, responsiveHeight} from '../../../utils';
 import {MainCardFilm} from '../../molecules';
 
-const OtherEpisodes = ({episodes, animeId, pages}) => {
-  // console.log('episodes>> ', episodes);
+const OtherEpisodes = ({animeDetail}) => {
+  const navigation = useNavigation();
+  // console.log('pages>> ', animeDetail.pages);
   // const [moreEpisodes, setMoreEpisodes] = useState([]);
   // const [page, setPage] = useState(0);
 
   // const getMoreEpisodes = async ({page}) => {
-  //   const res = await getMoreEpisodes(animeId, page);
+  //   const res = await getMoreEpisodes(animeDetail, page);
   //   console.log('more episode >>', res.data);
   //   // setMoreEpisodes(res.)
   // };
@@ -36,16 +45,41 @@ const OtherEpisodes = ({episodes, animeId, pages}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Other Episodes</Text>
+      <View style={styles.wrapperLabel}>
+        <Text style={styles.label}>Other Episodes</Text>
+        {animeDetail.pages ? (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Episodes', {animeDetail})}>
+            <Text style={styles.more}>See more</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
       <View style={styles.wrapper}>
         <FlatList
-          data={episodes.reverse()}
+          data={animeDetail.episodes.reverse()}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           renderItem={_renderItem}
           initialNumToRender={3}
           keyExtractor={item => item.post_id.toString()}
-          // scrollToEnd={() => ({animated: true})}
+          scrollToEnd={() => ({animated: true})}
+          getItemLayout={(data, index) => ({
+            length: responsiveHeight(100),
+            offset: responsiveHeight(100) * index,
+            index,
+          })}
+          // onEndReached={loadMoreMovies}
+          // onEndReachedThreshold={0.5}
+          // onMomentumScrollBegin={() => {
+          //   stopLoadMore = false;
+          // }}
+          // ListFooterComponent={() =>
+          //   isLoading && (
+          //     <View style={styles.loading}>
+          //       <ActivityIndicator color={colors.onPrimary} />
+          //     </View>
+          //   )
+          // }
         />
       </View>
     </View>
@@ -61,11 +95,21 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexDirection: 'row',
-    marginTop: 8,
+    marginTop: 12,
+  },
+  wrapperLabel: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   label: {
     fontSize: 14,
     fontFamily: fonts.sora.medium,
     color: colors.onBackground,
+  },
+  more: {
+    fontSize: 12,
+    fontFamily: fonts.sora.regular,
+    color: colors.primary,
   },
 });

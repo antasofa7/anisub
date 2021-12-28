@@ -4,7 +4,7 @@ import {colors, fonts} from '../../../utils';
 
 const GenreItem = props => {
   const {genreName, active, onPress, navigation} = props;
-  console.log('active', active);
+  // console.log('active', active);
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
