@@ -15,6 +15,8 @@ import {
   Series,
   Splash,
 } from '../pages';
+import Library from '../pages/Library';
+import Search from '../pages/Search';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,24 +32,16 @@ const MainApp = () => {
         }}
       />
       <Tab.Screen
-        name="Series"
-        component={Series}
+        name="Search"
+        component={Search}
         options={{
-          tabBarLabel: 'TV Series',
+          tabBarLabel: 'Search',
           headerShown: false,
         }}
       />
       <Tab.Screen
-        name="Play"
-        component={Playlist}
-        options={{
-          tabBarLabel: 'Playlist',
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Movies"
-        component={Movies}
+        name="Library"
+        component={Library}
         options={{
           headerShown: false,
         }}
@@ -57,9 +51,6 @@ const MainApp = () => {
         component={Profile}
         options={{
           headerShown: false,
-          // tabBarIcon: ({color, size}) => (
-          //   <MaterialCommunityIcons name="home" color={color} size={size} />
-          // ),
         }}
       />
     </Tab.Navigator>

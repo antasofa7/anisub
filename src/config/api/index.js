@@ -5,7 +5,7 @@ export default async function callAPI({url, method, data}) {
     url,
     method,
     data,
-  }).catch(err => err.response);
+  }).catch(err => console.log('err >>', err));
 
   const axiosResponse = response.data;
 

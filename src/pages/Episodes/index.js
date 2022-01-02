@@ -52,21 +52,18 @@ const Episodes = () => {
       console.log('ID >>', anime.sub_id);
       console.log('page >>', page);
       const res = await getMoreEpisodes(animeId, page);
-      // const pages = res.data.pages;
       console.log('moreMovies >>', res);
       if (res.error) {
         setAllDataDisplayed(true);
         return;
       }
-      // setMoreMovies(res.data.episodes);
+
       setMovies([...movies, ...res.data.episodes]);
       setStopLoadMore(true);
-      // setIsPage(true);
     }
     setLoading(false);
   };
-  // console.log('page>>', anime.pages);
-  // console.log('episodes>>', episodes);
+
   const _renderItem = ({item, index}) => {
     return (
       <MainCardFilm
@@ -105,8 +102,6 @@ const Episodes = () => {
           ItemSeparatorComponent={_itemSeparator}
           // keyExtractor={item => item.post_id.toString()}
           numColumns={numColumns}
-          // initialNumToRender={12}
-          // scrollToEnd={() => ({animated: true})}
           onEndReached={loadMoreMovies}
           onEndReachedThreshold={0.5}
           onScroll={() => setStopLoadMore(false)}
@@ -121,7 +116,7 @@ const Episodes = () => {
           }
         />
       </View>
-      {/* {allDataDisplayed && ( */}
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -130,7 +125,6 @@ const Episodes = () => {
           // Alert.alert('Modal has been closed.');
           setAllDataDisplayed(false);
         }}>
-        {/* <View style={styles.allDataDisplayed}> */}
         <TouchableOpacity
           style={styles.allDataDisplayed}
           onPress={() => setAllDataDisplayed(false)}>
@@ -138,10 +132,7 @@ const Episodes = () => {
             Semua data sudah ditampilkan.
           </Text>
         </TouchableOpacity>
-        {/* </View> */}
       </Modal>
-      {/* )} */}
-      {/* )} */}
     </SafeAreaView>
   );
 };
@@ -159,7 +150,6 @@ const styles = StyleSheet.create({
   header: {
     height: responsiveHeight(40),
     flexDirection: 'row',
-    // alignItems: 'center',
   },
   iconBack: {
     opacity: 0.5,
@@ -186,7 +176,6 @@ const styles = StyleSheet.create({
     left: responsiveWidth(95),
     backgroundColor: colors.primary,
     borderRadius: 10,
-    // opacity: 0.5,
   },
   TextDisplayed: {
     paddingVertical: 5,

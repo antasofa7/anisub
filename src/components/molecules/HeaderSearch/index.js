@@ -1,36 +1,27 @@
-import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {IconSearch, IconSummer, Logo} from '../../../assets';
-import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
-import {InputSearch, Spacing} from '../../atoms';
+import React, {useCallback, useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {getAllNew} from '../../../config';
+import {responsiveHeight} from '../../../utils';
+import {InputSearch} from '../../atoms';
 
-const HeaderSearch = () => {
-  // const ContentHeader = () => {
-  //   if (home) {
-  //     return (
-  //       <>
-  //         <View style={styles.wrapper}>
-  //           <View style={styles.wrapperLogo}>
-  //             <Image source={Logo} style={styles.logo} />
-  //           </View>
-  //           <Spacing width={10} />
-  //           <View style={styles.season}>
-  //             <IconSummer />
-  //             <Text style={styles.seasonTitle}>Summer</Text>
-  //           </View>
-  //         </View>
-  //         <View style={styles.wrapperSearch}>
-  //           <IconSearch />
-  //         </View>
-  //       </>
-  //     );
-  //   } else {
-  //     return <InputSearch />;
-  //   }
-  // };
+const HeaderSearch = ({navigation}) => {
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+
+  const getMovieList = useCallback(async () => {
+    setLoading(true);
+    const allAnime = await getAllNew();
+    setMovies(allAnime.data.episodes);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    getMovieList();
+  }, [getMovieList]);
+
   return (
     <View style={styles.container}>
-      <InputSearch />
+      <InputSearch data={movies} navigation={navigation} />
     </View>
   );
 };
@@ -43,34 +34,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: responsiveHeight(40),
-  },
-  wrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  wrapperLogo: {
-    width: responsiveWidth(110),
-    height: responsiveHeight(44),
-  },
-  logo: {
-    flex: 1,
-    width: null,
-    height: null,
-    resizeMode: 'contain',
-  },
-  season: {
-    alignItems: 'center',
-  },
-  seasonTitle: {
-    fontFamily: fonts.sora.medium,
-    fontSize: 6,
-    color: colors.onBackground,
-  },
-  wrapperSearch: {
-    flexDirection: 'row',
-    padding: 3,
-    backgroundColor: colors.onPrimary,
-    borderRadius: 5,
+    height: responsiveHeight(60),
   },
 });

@@ -4,37 +4,36 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Modal,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {getAllNew, getAnimeByGenre, getMoreAllNew} from '../../../config';
+import {getAllNew, getMoreAllNew} from '../../../config';
 import {
   colors,
-  IMG_ANIME_URL,
+  fonts,
   IMG_EPISODE_URL,
   responsiveHeight,
+  responsiveWidth,
 } from '../../../utils';
 import {Spacing} from '../../atoms';
-import {GenreButton, MainCardFilm} from '../../molecules';
+import {MainCardFilm} from '../../molecules';
 
-// let stopLoadMore = true;
-
-const AnimeGenreList = ({loading}) => {
+const AnimeGenreList = () => {
   const navigation = useNavigation();
   const [movies, setMovies] = useState([]);
-  const [genres, setGenres] = useState([]);
-  const [isLoading, setLoading] = useState(loading);
+  const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [stopLoadMore, setStopLoadMore] = useState(true);
+  const [allDataDisplayed, setAllDataDisplayed] = useState(false);
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
     const allAnime = await getAllNew();
-    const animeGenre = await getAnimeByGenre();
     setMovies(allAnime.data.episodes);
-    setGenres(animeGenre.data);
     setLoading(false);
   }, []);
 
@@ -54,20 +53,17 @@ const AnimeGenreList = ({loading}) => {
     if (!stopLoadMore) {
       setPage(page + 1);
       const res = await getMoreAllNew(page);
-      // const pages = res.data.pages;
-      // console.log('pages>>', pages);
-      if (!res.error) {
-        setMovies([...movies, ...res.data.episodes]);
-        // setMoreMovies(res.data.episodes);
-        setStopLoadMore(true);
-        // setIsPage(true);
+      if (res.error) {
+        setAllDataDisplayed(true);
+        return null;
       }
-      return;
+      setMovies([...movies, ...res.data.episodes]);
+      setStopLoadMore(true);
+      return null;
     }
     setLoading(false);
   };
-  // console.log('page>>', page);
-  // console.log('movies>>', movies);
+
   const _renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -86,26 +82,12 @@ const AnimeGenreList = ({loading}) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      {/* {isLoading ? (
-        <View style={styles.loading}>
-          <ActivityIndicator
-            size="large"
-            color={colors.onPrimary}
-            // style={styles.loading}
-          />
-        </View>
-      ) : ( */}
-      {/* <GenreButton navigation={navigation} /> */}
       <FlatList
         data={movies}
         renderItem={_renderItem}
         ItemSeparatorComponent={_itemSeparator}
         keyExtractor={item => item.post_id.toString()}
         numColumns={numColumns}
-        // initialNumToRender={12}
-        // scrollToEnd={() => ({animated: true})}
-        // ListHeaderComponent={() => <GenreButton navigation={navigation} />}
-        // ListFooterComponent={() => <Spacing height={responsiveHeight(140)} />}
         onEndReached={loadMoreMovies}
         onEndReachedThreshold={0.5}
         onMomentumScrollBegin={() => setStopLoadMore(false)}
@@ -119,7 +101,22 @@ const AnimeGenreList = ({loading}) => {
           )
         }
       />
-      {/* )} */}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={allDataDisplayed}
+        onRequestClose={() => {
+          setAllDataDisplayed(false);
+        }}>
+        <TouchableOpacity
+          style={styles.allDataDisplayed}
+          onPress={() => setAllDataDisplayed(false)}>
+          <Text style={styles.TextDisplayed}>
+            Semua data sudah ditampilkan.
+          </Text>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -129,6 +126,7 @@ export default AnimeGenreList;
 const styles = StyleSheet.create({
   container: {
     margin: 16,
+    zIndex: -1,
   },
   separator: {
     height: 12,
@@ -137,8 +135,21 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  allDataDisplayed: {
+    position: 'absolute',
+    bottom: 16,
+    left: responsiveWidth(95),
+    backgroundColor: colors.primary,
+    borderRadius: 10,
+  },
+  TextDisplayed: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    color: colors.onPrimary,
+    fontFamily: fonts.sora.regular,
+    fontSize: 10,
   },
 });

@@ -1,55 +1,45 @@
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React from 'react';
-import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import {
-  IconBack,
-  IconBookmark,
-  IconPlayCircle,
-  ImageForDetail,
-} from '../../../assets';
-
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {IconBack, IconPlayCircle} from '../../../assets';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import {IMG_ANIME_URL} from '../../../utils/constan';
+
 const leftPlayIcon = Dimensions.get('window').width / 2 - 30;
-const ImageDetail = ({animeDetail}) => {
+
+const VideoDetail = ({animeDetail}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Image
+      <View style={styles.iconBack}>
+        <IconBack onPress={() => navigation.goBack()} />
+      </View>
+
+      <View style={styles.iconPlay}>
+        <IconPlayCircle />
+      </View>
+      <FastImage
         source={{
           uri:
             `${IMG_ANIME_URL}/${animeDetail.sub_banner}` ||
             '../../../assets/images/image-default.jpg',
+          priority: FastImage.priority.normal,
         }}
         style={styles.imageDetail}
       />
-      <LinearGradient
-        colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 1)']}
-        style={styles.linearGradient}
-      />
-      <View style={styles.iconBack}>
-        <IconBack onPress={() => navigation.goBack()} />
-      </View>
-      <View style={styles.iconBookmark}>
-        <IconBookmark />
-      </View>
-      <View style={styles.iconPlay}>
-        <IconPlayCircle />
-      </View>
       <View style={styles.wrapperTitle}>
-        <Text style={styles.episode}>
-          {/* Episode 09 -  */}
-          {moment(animeDetail.rilis).format('DD MMMM YYYY')}
-        </Text>
         <Text style={styles.title}>{animeDetail.sub_name}</Text>
+        <Text style={styles.episode}>
+          Episode 09 -{moment(animeDetail.rilis).format('DD MMMM YYYY')}
+        </Text>
       </View>
     </View>
   );
 };
 
-export default ImageDetail;
+export default VideoDetail;
 
 const styles = StyleSheet.create({
   container: {

@@ -13,20 +13,6 @@ import {MainCardFilm} from '../../molecules';
 
 const OtherEpisodes = ({animeDetail}) => {
   const navigation = useNavigation();
-  // console.log('pages>> ', animeDetail.pages);
-  // const [moreEpisodes, setMoreEpisodes] = useState([]);
-  // const [page, setPage] = useState(0);
-
-  // const getMoreEpisodes = async ({page}) => {
-  //   const res = await getMoreEpisodes(animeDetail, page);
-  //   console.log('more episode >>', res.data);
-  //   // setMoreEpisodes(res.)
-  // };
-
-  // const loadMoreEpisodes = () => {
-  //   setPage(page + 1);
-  //   getMoreEpisodes(page);
-  // };
 
   const _renderItem = ({item, index}) => {
     return (
@@ -34,10 +20,7 @@ const OtherEpisodes = ({animeDetail}) => {
         <MainCardFilm
           key={item.post_id}
           title={item.post_name}
-          //   rating={item.rate}
           thumbnail={`${IMG_EPISODE_URL}/${item.post_image}`}
-          // isLoading={isLoading}
-          // onPress={() => navigation.navigate("movie", { movieId: item.id })}
         />
       </View>
     );
@@ -68,18 +51,6 @@ const OtherEpisodes = ({animeDetail}) => {
             offset: responsiveHeight(100) * index,
             index,
           })}
-          // onEndReached={loadMoreMovies}
-          // onEndReachedThreshold={0.5}
-          // onMomentumScrollBegin={() => {
-          //   stopLoadMore = false;
-          // }}
-          // ListFooterComponent={() =>
-          //   isLoading && (
-          //     <View style={styles.loading}>
-          //       <ActivityIndicator color={colors.onPrimary} />
-          //     </View>
-          //   )
-          // }
         />
       </View>
     </View>

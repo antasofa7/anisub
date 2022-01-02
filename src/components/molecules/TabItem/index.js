@@ -5,8 +5,12 @@ import {
   IconFilmActive,
   IconHome,
   IconHomeActive,
+  IconLibrary,
+  IconLibraryActive,
   IconPlay,
   IconPlayActive,
+  IconSearcActive,
+  IconSearchMenu,
   IconTv,
   IconTvActive,
   IconUser,
@@ -21,20 +25,17 @@ const TabItem = props => {
     if (label === 'Home') {
       return isFocused ? <IconHomeActive /> : <IconHome />;
     }
-    if (label === 'TV Series') {
-      return isFocused ? <IconTvActive /> : <IconTv />;
+    if (label === 'Search') {
+      return isFocused ? <IconSearcActive /> : <IconSearchMenu />;
     }
-    if (label === 'Playlist') {
-      return isFocused ? <IconPlayActive /> : <IconPlay />;
-    }
-    if (label === 'Movies') {
-      return isFocused ? <IconFilmActive /> : <IconFilm />;
+    if (label === 'Library') {
+      return isFocused ? <IconLibraryActive /> : <IconLibrary />;
     }
     if (label === 'Profile') {
       return isFocused ? <IconUserActive /> : <IconUser />;
     }
 
-    return <IconPlay />;
+    return <IconHomeActive />;
   };
 
   return (
@@ -46,7 +47,7 @@ const TabItem = props => {
       onLongPress={onLongPress}
       style={styles.container}>
       <Icon />
-      <Text style={styles.label(isFocused)}>{label}</Text>
+      {/* <Text style={styles.label(isFocused)}>{label}</Text> */}
     </TouchableOpacity>
   );
 };
@@ -56,7 +57,7 @@ export default TabItem;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    padding: 4,
+    padding: 12,
   },
   label: isFocused => ({
     color: isFocused ? colors.primary : colors.onBackground,

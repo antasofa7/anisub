@@ -12,7 +12,7 @@ import {Animes} from '../../json';
 import Router from '../../router';
 import {colors, responsiveHeight} from '../../utils';
 
-export default class Playlist extends Component {
+export default class Search extends Component {
   constructor(props) {
     super(props);
 
@@ -32,18 +32,13 @@ export default class Playlist extends Component {
     const navigate = this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
-        <HeaderSearch />
+        <HeaderSearch navigation={navigate} />
         <GenreButton navigation={navigate} handleProps={this.getID} />
         {genreID === 0 ? (
           <AnimeGenreList navigation={navigate} />
         ) : (
           <PlaylistByGenre genreID={genreID} />
         )}
-
-        {/* {genrePressed ? <AnimeGenreList /> : null} */}
-        {/* <Spacing height={responsiveHeight(90)} /> */}
-        {/* <View>
-        </View> */}
       </SafeAreaView>
     );
   }

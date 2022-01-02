@@ -1,10 +1,18 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {getNewMovies} from '../../../config';
 import {colors, fonts} from '../../../utils';
 import {MainCardFilm} from '../../molecules';
 
 const NewMovie = ({loading}) => {
+  const navigation = useNavigation();
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(loading);
 
@@ -26,13 +34,18 @@ const NewMovie = ({loading}) => {
       <ScrollView horizontal={true} style={styles.wrapper}>
         {movies.map(anime => {
           return (
-            <MainCardFilm
+            <TouchableOpacity
               key={anime.sub_id}
-              title={anime.sub_name}
-              rating={anime.rate}
-              thumbnail={`${IMG_URL}/${anime.sub_banner}`}
-              isLoading={isLoading}
-            />
+              onPress={() =>
+                navigation.navigate('Detail', {animeId: anime.sub_id})
+              }>
+              <MainCardFilm
+                title={anime.sub_name}
+                rating={anime.rate}
+                thumbnail={`${IMG_URL}/${anime.sub_banner}`}
+                isLoading={isLoading}
+              />
+            </TouchableOpacity>
           );
         })}
       </ScrollView>
@@ -49,7 +62,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexDirection: 'row',
-    marginTop: 8,
+    marginTop: 12,
   },
   label: {
     fontSize: 14,

@@ -2,15 +2,14 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
-  Image,
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
+import Carousel from 'react-native-snap-carousel';
 import {IconStarActive} from '../../../assets';
 import {getHotMovies, getMoreHotMovies} from '../../../config';
 import {
@@ -29,10 +28,8 @@ let stopLoadMore = true;
 const BannerCarousel = ({navigation, isPages}) => {
   const carouselRef = useRef(null);
   const [movies, setMovies] = useState([]);
-  const [moreMovies, setMoreMovies] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
-  const [isPage, setIsPage] = useState(isPages);
 
   const getMovieList = useCallback(async () => {
     const res = await getHotMovies();
@@ -48,30 +45,27 @@ const BannerCarousel = ({navigation, isPages}) => {
     if (!stopLoadMore) {
       setPage(page + 1);
       const res = await getMoreHotMovies(page);
-      if (!res.data.pages) {
-        return;
+      if (res.error) {
+        return null;
       }
       setMovies([...movies, ...res.data.animes]);
       stopLoadMore = true;
     }
     setLoading(false);
   };
-  // console.log('pageHot>>', page);
-  // console.log('animes>>', movies);
-  // console.log('isPage>>', isPage);
 
   const renderItem = ({item, index}, parallaxProps) => {
     return (
       <TouchableOpacity
         onPress={() => navigation('Detail', {animeId: item.sub_id})}>
         <View style={styles.item}>
-          <Image
+          <FastImage
             key={item.sub_id}
-            source={{uri: `${IMG_ANIME_URL}/${item.sub_banner}` || 'Hot Anime'}}
-            // containerStyle={styles.imageContainer}
+            source={{
+              uri: `${IMG_ANIME_URL}/${item.sub_banner}` || 'Hot Anime',
+              priority: FastImage.priority.normal,
+            }}
             style={styles.image}
-            // parallaxFactor={0.4}
-            // {...parallaxProps}
           />
           <LinearGradient
             colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.75)']}
@@ -92,18 +86,12 @@ const BannerCarousel = ({navigation, isPages}) => {
   return (
     <View style={styles.container}>
       <Carousel
-        // horizontal
         ref={carouselRef}
         sliderWidth={screenWidth}
         sliderHeight={screenHeight}
         itemWidth={responsiveWidth(240)}
         data={movies}
         renderItem={renderItem}
-        // hasParallaxImages={true}
-        // firstItem={3}
-        autoplay={true}
-        autoplayDelay={1000}
-        // loop={true}
         onEndReached={loadMoreMovies}
         onEndReachedThreshold={0.5}
         onMomentumScrollBegin={() => {
@@ -112,7 +100,7 @@ const BannerCarousel = ({navigation, isPages}) => {
         ListFooterComponent={() =>
           isLoading && (
             <View style={styles.loading}>
-              <ActivityIndicator />
+              <ActivityIndicator size="large" color={colors.onPrimary} />
             </View>
           )
         }
@@ -131,12 +119,6 @@ const styles = StyleSheet.create({
     width: responsiveWidth(230),
     height: responsiveHeight(280),
   },
-  // imageContainer: {
-  //   flex: 1,
-  //   marginBottom: Platform.select({ios: 0, android: 1}), // Prevent a random Android rendering issue
-  //   backgroundColor: colors.onPrimary,
-  //   borderRadius: 20,
-  // },
   image: {
     flex: 1,
     width: null,

@@ -1,47 +1,19 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {IconSearch, IconSummer, Logo} from '../../../assets';
+import {IconFall, Logo} from '../../../assets';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
-import {InputSearch, Spacing} from '../../atoms';
+import {Spacing} from '../../atoms';
 
 const Header = () => {
-  // const ContentHeader = () => {
-  //   if (home) {
-  //     return (
-  //       <>
-  //         <View style={styles.wrapper}>
-  //           <View style={styles.wrapperLogo}>
-  //             <Image source={Logo} style={styles.logo} />
-  //           </View>
-  //           <Spacing width={10} />
-  //           <View style={styles.season}>
-  //             <IconSummer />
-  //             <Text style={styles.seasonTitle}>Summer</Text>
-  //           </View>
-  //         </View>
-  //         <View style={styles.wrapperSearch}>
-  //           <IconSearch />
-  //         </View>
-  //       </>
-  //     );
-  //   } else {
-  //     return <InputSearch />;
-  //   }
-  // };
   return (
     <View style={styles.container}>
-      <View style={styles.wrapper}>
-        <View style={styles.wrapperLogo}>
-          <Image source={Logo} style={styles.logo} />
-        </View>
-        <Spacing width={10} />
-        <View style={styles.season}>
-          <IconSummer />
-          <Text style={styles.seasonTitle}>Summer</Text>
-        </View>
+      <View style={styles.wrapperLogo}>
+        <Image source={Logo} style={styles.logo} />
       </View>
-      <View style={styles.wrapperSearch}>
-        <IconSearch />
+      <View style={styles.season}>
+        <Text style={styles.seasonTitle}>Fall</Text>
+        <Spacing width={4} />
+        <IconFall />
       </View>
     </View>
   );
@@ -51,14 +23,11 @@ export default Header;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     height: responsiveHeight(60),
-  },
-  wrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   wrapperLogo: {
     width: responsiveWidth(110),
@@ -71,17 +40,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   season: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
   seasonTitle: {
     fontFamily: fonts.sora.medium,
-    fontSize: 6,
-    color: colors.onBackground,
-  },
-  wrapperSearch: {
-    flexDirection: 'row',
-    padding: 3,
-    backgroundColor: colors.onPrimary,
-    borderRadius: 5,
+    fontSize: 16,
+    color: colors.secondary,
   },
 });

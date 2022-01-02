@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {colors} from '../../../utils';
+import {colors, responsiveWidth} from '../../../utils';
 import {TabItem} from '../../molecules';
 
 const BottomNavigator = ({state, descriptors, navigation}) => {
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     flexDirection: 'row',
-    backgroundColor: colors.onPrimary,
+    backgroundColor: colors.background,
     opacity: 0.9,
     justifyContent: 'space-between',
     marginBottom: 16,
     marginHorizontal: 16,
-    padding: 8,
+    paddingHorizontal: responsiveWidth(16),
     borderRadius: 10,
   },
 });

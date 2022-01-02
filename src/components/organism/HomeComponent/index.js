@@ -17,95 +17,105 @@ import {Spacing} from '../../atoms';
 import {MainCardFilm} from '../../molecules';
 
 const HomeComponent = ({navigation, loading, isPage}) => {
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setLoading] = useState(true);
+  // const [movies, setMovies] = useState([]);
+  // const [isLoading, setLoading] = useState(true);
 
-  const getMovieList = useCallback(async () => {
-    setLoading(true);
-    const res = await getAnimeByGenre();
-    setMovies(res.data);
-    setLoading(false);
-  }, []);
+  // const getMovieList = useCallback(async () => {
+  //   setLoading(true);
+  //   const res = await getAnimeByGenre();
+  //   setMovies(res.data);
+  //   setLoading(false);
+  // }, []);
 
-  useEffect(() => {
-    getMovieList();
-  }, [getMovieList]);
+  // useEffect(() => {
+  //   getMovieList();
+  // }, [getMovieList]);
 
-  const _listHeader = () => {
-    return (
-      <View>
-        <Header home />
-        <BannerCarousel navigation={navigation} isPages={isPage} />
-        {/* <ContinueWatching animes={animes} />
-        <WatchList animes={animes} /> */}
-        <NewAllAnime
-          navigation={navigation}
-          loading={isLoading}
-          isPages={isPage}
-        />
-        <UpcomingAnime
-          navigation={navigation}
-          loading={isLoading}
-          isPages={isPage}
-        />
-      </View>
-    );
-  };
+  // const _listHeader = () => {
+  //   return (
+  //     <View>
+  //       <Header home />
+  //       <BannerCarousel navigation={navigation} isPages={isPage} />
+  //       <ContinueWatching animes={animes} />
+  //       <WatchList animes={animes} />
+  //       <NewAllAnime
+  //         navigation={navigation}
+  //         loading={isLoading}
+  //         isPages={isPage}
+  //       />
+  //       <UpcomingAnime
+  //         navigation={navigation}
+  //         loading={isLoading}
+  //         isPages={isPage}
+  //       />
+  //     </View>
+  //   );
+  // };
 
-  const _renderAllItem = ({item}) => {
-    return (
-      <View style={styles.wrapper}>
-        <Text style={styles.label}>{item.genre_name}</Text>
-        <FlatList
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          data={item.animes}
-          renderItem={_renderItem}
-          initialNumToRender={3}
-          // ItemSeparatorComponent={_itemSeparator}
-          // keyExtractor={() => item.sub_id.toString()}
-          // numColumns={numColumns}
-          // scrollToIndex={() => ({animated: true, index: 0})}
-          scrollToEnd={() => ({animated: true})}
-        />
-      </View>
-    );
-  };
+  // const _renderAllItem = ({item}) => {
+  //   return (
+  //     <View style={styles.wrapper}>
+  //       <Text style={styles.label}>{item.genre_name}</Text>
+  //       <FlatList
+  //         horizontal={true}
+  //         showsHorizontalScrollIndicator={false}
+  //         data={item.animes}
+  //         renderItem={_renderItem}
+  //         initialNumToRender={3}
+  //         ItemSeparatorComponent={_itemSeparator}
+  //         keyExtractor={() => item.sub_id.toString()}
+  //         numColumns={numColumns}
+  //         scrollToIndex={() => ({animated: true, index: 0})}
+  //         scrollToEnd={() => ({animated: true})}
+  //       />
+  //     </View>
+  //   );
+  // };
+
+  const _itemComponents = [
+    {
+      id: 1,
+      component: <Header />,
+    },
+    {
+      id: 2,
+      component: <BannerCarousel navigation={navigation} />,
+    },
+    {
+      id: 3,
+      component: <NewAllAnime navigation={navigation} />,
+    },
+    {
+      id: 4,
+      component: <UpcomingAnime navigation={navigation} />,
+    },
+  ];
 
   const _renderItem = ({item}) => {
     return (
-      <View key={item.sub_id} style={styles.wrapperItem}>
-        <TouchableOpacity
-          onPress={() => navigation('Detail', {animeId: item.sub_id})}>
-          <MainCardFilm
-            key={item.sub_id}
-            title={item.sub_name}
-            //   rating={item.rate}
-            thumbnail={`${IMG_ANIME_URL}/${item.sub_banner}`}
-            isLoading={isLoading}
-          />
-        </TouchableOpacity>
+      <View key={item.id} style={styles.wrapperItem}>
+        {item.component}
       </View>
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading ? (
+      {/* {isLoading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color={colors.onPrimary} />
         </View>
-      ) : (
-        <FlatList
-          data={movies}
-          renderItem={_renderAllItem}
-          initialNumToRender={4}
-          keyExtractor={item => item.genre_id.toString()}
-          scrollToEnd={() => ({animated: true})}
-          ListHeaderComponent={_listHeader}
-          // ListFooterComponent={() => <Spacing height={responsiveHeight(10)} />}
-        />
-      )}
+      ) : ( */}
+      <FlatList
+        data={_itemComponents}
+        renderItem={_renderItem}
+        initialNumToRender={3}
+        // keyExtractor={item => item.genre_id.toString()}
+        scrollToEnd={() => ({animated: true})}
+        // ListHeaderComponent={_listHeader}
+        ListFooterComponent={() => <Spacing height={responsiveHeight(80)} />}
+      />
+      {/* )} */}
     </SafeAreaView>
   );
 };
@@ -116,17 +126,9 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 16,
   },
-  wrapper: {
-    marginTop: 16,
-  },
   wrapperItem: {
     flexDirection: 'row',
     marginTop: 8,
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: fonts.sora.medium,
-    color: colors.onBackground,
   },
   wrapperImageLoading: {
     flexDirection: 'row',

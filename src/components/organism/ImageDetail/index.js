@@ -3,35 +3,31 @@ import moment from 'moment';
 import React from 'react';
 import {
   Dimensions,
-  Image,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import {
-  IconBack,
-  IconBookmark,
-  IconPlayCircle,
-  ImageForDetail,
-} from '../../../assets';
-
+import {IconBack, IconBookmark, IconPlayCircle} from '../../../assets';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import {IMG_ANIME_URL} from '../../../utils/constan';
+
 const leftPlayIcon = Dimensions.get('window').width / 2 - 30;
 
 const ImageDetail = ({animeDetail}) => {
   const navigation = useNavigation();
-  const episodes = animeDetail.episodes;
-  // console.log('episodes', episodes);
+  // const episodes = animeDetail.episodes;
+
   return (
     <View style={styles.container}>
-      <Image
+      <FastImage
         source={{
           uri:
             `${IMG_ANIME_URL}/${animeDetail.sub_banner}` ||
             '../../../assets/images/image-default.jpg',
+          priority: FastImage.priority.normal,
         }}
         style={styles.imageDetail}
       />
@@ -47,13 +43,12 @@ const ImageDetail = ({animeDetail}) => {
       </View>
       <TouchableOpacity
         style={styles.iconPlay}
-        onPress={() => navigation.navigate('PlayVideo', {episodes})}>
+        onPress={() => navigation.navigate('PlayVideo', {animeDetail})}>
         <IconPlayCircle />
       </TouchableOpacity>
       <View style={styles.wrapperTitle}>
         <Text style={styles.episode}>
-          {/* Episode 09 -  */}
-          {moment(animeDetail.rilis).format('DD MMMM YYYY')}
+          Episode 09 -{moment(animeDetail.rilis).format('DD MMMM YYYY')}
         </Text>
         <Text style={styles.title} numberOfLines={2}>
           {animeDetail.sub_name}

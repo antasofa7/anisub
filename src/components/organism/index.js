@@ -11,6 +11,7 @@ import ImageDetail from './ImageDetail';
 import AnimeList from './AnimeList';
 import AnimeByGenre from './AnimeByGenre';
 import AnimeGenreList from './AnimeGenreList';
+import PlaylistByGenre from './PlaylistByGenre';
 import OtherEpisodes from './OtherEpisodes';
 
 export {
@@ -26,6 +27,7 @@ export {
   WatchList,
   ImageDetail,
   AnimeByGenre,
+  PlaylistByGenre,
   AnimeGenreList,
   OtherEpisodes,
 };

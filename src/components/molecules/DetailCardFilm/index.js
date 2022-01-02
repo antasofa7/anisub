@@ -1,5 +1,6 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import {Star} from '../../atoms';
@@ -8,7 +9,10 @@ const DetailCardFilm = props => {
   const {title, rating, thumbnail, width, margin} = props;
   return (
     <View style={styles.container(margin)}>
-      <Image source={thumbnail} style={styles.imageThumbnail(width)} />
+      <FastImage
+        source={{thumbnail, priority: FastImage.priority.normal}}
+        style={styles.imageThumbnail(width)}
+      />
       <LinearGradient
         colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.85)']}
         style={styles.linearGradient(width)}

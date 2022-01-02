@@ -1,10 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {colors, fonts} from '../../../utils';
 
 const GenreItem = props => {
-  const {genreName, active, onPress, navigation} = props;
-  // console.log('active', active);
+  const {genreName, active, onPress} = props;
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>

@@ -1,18 +1,19 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
-import {ImageLoading, Star} from '../../atoms';
+import {Star} from '../../atoms';
 
 const CardNewAllMovie = props => {
   const {title, rating, thumbnail, width, margin, isLoading} = props;
-  // console.log('loading >>', isLoading);
 
   return (
     <View style={styles.container(margin)}>
-      <Image
+      <FastImage
         source={{
           uri: thumbnail || '../../../assets/images/image-default.jpg',
+          priority: FastImage.priority.normal,
         }}
         style={styles.imageThumbnail(width)}
       />
@@ -24,7 +25,7 @@ const CardNewAllMovie = props => {
         <Text style={styles.title} numberOfLines={2}>
           {title}
         </Text>
-        <Star rating={rating} size={12} />
+        <Star rating={rating} size={14} />
       </View>
     </View>
   );
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     marginRight: margin ? margin : responsiveWidth(12),
   }),
   imageThumbnail: width => ({
-    width: width ? width : responsiveWidth(100),
+    width: width ? width : responsiveWidth(110),
     height: responsiveHeight(110),
     borderRadius: 10,
     resizeMode: 'cover',
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: responsiveWidth(100) || width,
+    width: responsiveWidth(110) || width,
     height: responsiveHeight(110),
     borderRadius: 10,
   }),
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.onBackground,
-    fontSize: 8,
+    fontSize: 10,
     fontFamily: fonts.sora.medium,
   },
 });

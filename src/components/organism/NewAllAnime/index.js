@@ -16,10 +16,8 @@ let stopLoadMore = true;
 
 const NewAllAnime = ({loading, navigation}) => {
   const [movies, setMovies] = useState([]);
-  // const [moreMovies, setMoreMovies] = useState([]);
-  const [isLoading, setLoading] = useState(loading);
+  const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
-  // const [isPage, setIsPage] = useState(isPages);
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
@@ -42,11 +40,10 @@ const NewAllAnime = ({loading, navigation}) => {
       }
       setMovies([...movies, ...res.data.episodes]);
       stopLoadMore = true;
-      // setIsPage(true);
     }
     setLoading(false);
   };
-  // console.log('page', page);
+
   const _renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -107,10 +104,10 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     height: responsiveHeight(110),
-    marginTop: 8,
+    marginTop: 12,
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: fonts.sora.medium,
     color: colors.onBackground,
   },
@@ -120,7 +117,7 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-    width: responsiveWidth(100),
+    width: responsiveWidth(120),
     justifyContent: 'center',
     alignItems: 'center',
   },

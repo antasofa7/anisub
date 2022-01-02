@@ -21,18 +21,14 @@ let stopLoadMore = true;
 
 const UpcomingAnime = ({loading, navigation}) => {
   const [movies, setMovies] = useState([]);
-  // const [moreMovies, setMoreMovies] = useState([]);
-  const [isLoading, setLoading] = useState(loading);
+  const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
-  // const [isPage, setIsPage] = useState(isPages);
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
     const res = await getUpcomingAnimes();
     setMovies(res.data.episodes);
     setLoading(false);
-    // setTimeout(() => {
-    // }, 1000);
   }, []);
 
   useEffect(() => {
@@ -49,13 +45,10 @@ const UpcomingAnime = ({loading, navigation}) => {
       } else {
         setMovies([...movies, ...res.data.episodes]);
         stopLoadMore = true;
-        // setIsPage(true);
       }
       setLoading(false);
     }
   };
-  // console.log('pageUp>>', page);
-  // console.log('movies>>', movies);
 
   const _renderItem = ({item, index}) => {
     return (
@@ -87,7 +80,6 @@ const UpcomingAnime = ({loading, navigation}) => {
           renderItem={_renderItem}
           initialNumToRender={4}
           maxToRenderPerBatch={8}
-          // ItemSeparatorComponent={_itemSeparator}
           // keyExtractor={item => item.post_id.toString()}
           scrollToEnd={() => ({animated: true})}
           getItemLayout={(data, index) => ({
@@ -122,10 +114,10 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     height: responsiveHeight(110),
-    marginTop: 8,
+    marginTop: 12,
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: fonts.sora.medium,
     color: colors.onBackground,
   },

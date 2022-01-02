@@ -6,12 +6,23 @@ import {IconShare} from '../../assets';
 import {Star} from '../../components/atoms';
 import {ImageDetail, OtherEpisodes} from '../../components/organism';
 import {getAnimeById} from '../../config';
-import {colors, fonts} from '../../utils';
+import {
+  colors,
+  fonts,
+  IMG_EPISODE_URL,
+  responsiveHeight,
+  responsiveWidth,
+} from '../../utils';
+import FastImage from 'react-native-fast-image';
+import {MainCardFilm} from '../../components/molecules';
+import Video from 'react-native-video';
 
 const PlayVideo = () => {
   const route = useRoute();
-  const episodes = route.params.episodes;
-  console.log('episodes', episodes);
+  const animeDetail = route.params.animeDetail;
+  const episodes = animeDetail.episodes[0];
+  // const episodes = episodes[0];
+  console.log('episodes', episodes.post_image);
   // const {animeId} = route.params;
   // console.log('animeId>> ', animeId);
   // const [IdEpisode, setIdEpisode] = useState([]);
@@ -54,38 +65,41 @@ const PlayVideo = () => {
         </View>
       ) : ( */}
       <View>
-        {/* <ImageDetail animeDetail={animeDetail} /> */}
+        <Video
+          source={{
+            uri: episodes.post_video,
+          }}
+          style={styles.imageDetail}
+          controls={true}
+          poster={`${IMG_EPISODE_URL}/${episodes.post_image}`}
+          resizeMode="cover"
+          // ref={(ref) => {
+          // this.player = ref
+          // }}
+        />
+        {/* <MainCardFilm thumbnail={`${IMG_EPISODE_URL}/${episodes.post_image}`} /> */}
+        {/* <FastImage
+          source={{uri: `${IMG_EPISODE_URL}/${episodes.post_image}`}}
+        /> */}
         <View style={styles.wrapper}>
-          <Text style={styles.genre}>
-            {/* {moment(animeDetail.rilis).format('YYYY')} |{' '}
-              {genres.map(genre => {
-                return <Text key={genre.genre_id}> {genre.genre_name}</Text>;
-              })}{' '}
-              | {animeDetail.duration} */}
-          </Text>
-          <View style={styles.wrapperRating}>
+          <Text style={styles.title}>{episodes.post_name}</Text>
+          <View style={styles.wrapperShare}>
+            <View style={styles.sinopsis}>
+              {/* <Text style={styles.sinopsisDetail} numberOfLines={2}>
+                Episode {episodes.post_episodes}
+              </Text> */}
+              <Text style={styles.genre}>
+                {moment(episodes.updated_at).format('dddd, d MMMM YYYY')}
+              </Text>
+            </View>
             <IconShare />
           </View>
         </View>
-        <View style={styles.sinopsis}>
-          <Text style={styles.sinopsisTitle}>Synopsis</Text>
-          <Text
-            style={styles.sinopsisDetail}
-            numberOfLines={textShown ? undefined : 3}
-            onTextLayout={onTextLayout}>
-            {/* {animeDetail.sub_description} */}
-          </Text>
-          {lengthMore ? (
-            <Text onPress={toggleNumberOfLines} style={styles.readMore}>
-              {textShown ? 'read less' : 'read more'}
-            </Text>
-          ) : null}
-        </View>
-        {/* <OtherEpisodes
-            episodes={animeDetail.episodes}
-            animeId={animeDetail.sub_id}
-            pages={animeDetail.pages}
-          /> */}
+        <OtherEpisodes
+          // episodes={animeDetail.episodes}
+          animeId={animeDetail.sub_id}
+          // pages={animeDetail.pages}
+        />
       </View>
       {/* )} */}
     </View>
@@ -99,39 +113,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  imageDetail: {
+    width: responsiveWidth(360),
+    height: responsiveHeight(270),
+  },
   wrapper: {
     marginVertical: 4,
     marginHorizontal: 16,
   },
   genre: {
     fontFamily: fonts.sora.regular,
-    fontSize: 10,
+    fontSize: 12,
     color: colors.onBackground,
   },
-  wrapperRating: {
+  wrapperShare: {
     marginTop: 4,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  sinopsis: {
-    marginHorizontal: 16,
-  },
-  sinopsisTitle: {
+  title: {
     marginTop: 16,
     fontFamily: fonts.sora.semiBold,
-    fontSize: 12,
+    fontSize: 16,
     color: colors.onBackground,
-  },
-  sinopsisDetail: {
-    marginTop: 8,
-    fontFamily: fonts.sora.regular,
-    fontSize: 10,
-    color: colors.onBackground,
-  },
-  readMore: {
-    fontFamily: fonts.sora.regular,
-    fontSize: 12,
-    color: colors.primary,
   },
   loading: {
     flex: 1,

@@ -1,6 +1,12 @@
 import moment from 'moment';
 import React, {useCallback, useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {IconShare} from '../../assets';
 import {Star} from '../../components/atoms';
 import {ImageDetail, OtherEpisodes} from '../../components/organism';
@@ -9,7 +15,6 @@ import {colors, fonts} from '../../utils';
 
 const Detail = ({route}) => {
   const {animeId} = route.params;
-  console.log('animeId>> ', animeId);
   const [animeDetail, setAnimeDetail] = useState([]);
   const [genres, setGenres] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -29,8 +34,8 @@ const Detail = ({route}) => {
   }, [getAnimeDetail]);
 
   const onTextLayout = useCallback(e => {
-    setLengthMore(e.nativeEvent.lines.length >= 3); //to check the text is more than 4 lines or not
-    // console.log(e.nativeEvent);
+    setLengthMore(e.nativeEvent.lines.length >= 3);
+    //to check the text is more than 4 lines or not
   }, []);
 
   const toggleNumberOfLines = () => {
@@ -42,14 +47,10 @@ const Detail = ({route}) => {
     <View style={styles.container}>
       {isLoading ? (
         <View style={styles.loading}>
-          <ActivityIndicator
-            size="large"
-            color={colors.onPrimary}
-            // style={styles.loading}
-          />
+          <ActivityIndicator size="large" color={colors.onPrimary} />
         </View>
       ) : (
-        <View>
+        <ScrollView>
           <ImageDetail animeDetail={animeDetail} />
           <View style={styles.wrapper}>
             <Text style={styles.genre}>
@@ -79,7 +80,7 @@ const Detail = ({route}) => {
             ) : null}
           </View>
           <OtherEpisodes animeDetail={animeDetail} />
-        </View>
+        </ScrollView>
       )}
     </View>
   );

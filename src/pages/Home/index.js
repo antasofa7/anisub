@@ -22,35 +22,11 @@ export default class Home extends PureComponent {
     };
   }
 
-  // componentDidMount() {
-  //   this._getGenreList();
-  // }
-
-  // _getGenreList = async () => {
-  //   this.setState({isLoading: true});
-  //   const res = await getGenres();
-  //   res.data.map(item => {
-  //     this.setState({
-  //       genres: {
-  //         id: item.genre_id,
-  //         name: item.genre_name,
-  //       },
-  //     });
-  //   });
-  //   this.setState({isLoading: false});
-  // };
-
   render() {
     const {navigate} = this.props.navigation;
     const {isLoading, isPage} = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        {/* <Header home />
-        <BannerCarousel navigation={navigate} isPages={isPage} />
-        <ContinueWatching animes={animes} />
-        <WatchList animes={animes} />
-        <NewAllAnime loading={isLoading} isPages={isPage} />
-        <UpcomingAnime loading={isLoading} isPages={isPage} /> */}
         <HomeComponent
           navigation={navigate}
           loading={isLoading}

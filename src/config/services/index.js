@@ -1,10 +1,10 @@
 import callAPI from '../api';
 
-const ROOT_API = 'https://testapi.my.id/';
+const ROOT_API = 'https://testapi.my.id';
 
 export async function getHotMovies() {
   const url = `${ROOT_API}/hot/season`;
-
+  console.log(url);
   return callAPI({
     url,
     method: 'GET',
@@ -74,15 +74,6 @@ export async function getMoreUpcomingAnimes(page) {
   });
 }
 
-// export async function getAnimeByGenre(id) {
-//   const url = `${ROOT_API}/genre/${id}/animes/0`;
-
-//   return callAPI({
-//     url,
-//     method: 'GET',
-//   });
-// }
-
 export async function getAnimeByGenre() {
   const url = `${ROOT_API}/genres/animes`;
 
@@ -110,8 +101,8 @@ export async function getMoreEpisodes(animeId, page) {
   });
 }
 
-export async function getPlaylistyByGenre(animeId) {
-  const url = `${ROOT_API}/genre/${animeId}/animes/0`;
+export async function getPlaylistyByGenre(genreID, page) {
+  const url = `${ROOT_API}/genre/${genreID}/animes/${page}`;
 
   return callAPI({
     url,
