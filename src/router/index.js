@@ -4,19 +4,15 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import {BottomNavigator} from '../components/organism';
-import {
-  Detail,
-  Episodes,
-  Home,
-  Movies,
-  Playlist,
-  PlayVideo,
-  Profile,
-  Series,
-  Splash,
-} from '../pages';
+import Detail from '../pages/Detail';
+import DetailEpisode from '../pages/Detail/DetailEpisode';
+import DetailMovies from '../pages/Detail/DetailMovies';
+import Episodes from '../pages/Episodes';
+import GenrePage from '../pages/GenrePage';
+import Home from '../pages/Home';
 import Library from '../pages/Library';
 import Search from '../pages/Search';
+import Splash from '../pages/Splash';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,13 +42,6 @@ const MainApp = () => {
           headerShown: false,
         }}
       />
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          headerShown: false,
-        }}
-      />
     </Tab.Navigator>
   );
 };
@@ -76,13 +65,23 @@ const Router = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="DetailMovies"
+        component={DetailMovies}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="DetailEpisode"
+        component={DetailEpisode}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="Episodes"
         component={Episodes}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="PlayVideo"
-        component={PlayVideo}
+        name="GenrePage"
+        component={GenrePage}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

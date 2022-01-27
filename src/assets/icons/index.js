@@ -16,11 +16,12 @@ import IconBookmark from './icon_bookmark.svg';
 import IconShare from './icon_share.svg';
 import IconPlayCircle from './play_icon.svg';
 import IconSummer from './summer.svg';
-import IconFall from './fall.svg';
+import IconFall from './icon_fall.svg';
 import IconSearcActive from './icon_search_active.svg';
 import IconSearchMenu from './icon_search_.svg';
 import IconLibrary from './icon_library.svg';
 import IconLibraryActive from './icon_library_active';
+import IconClose from './icon_close.svg';
 
 export {
   IconFilm,
@@ -44,6 +45,7 @@ export {
   IconSearchMenu,
   IconLibrary,
   IconLibraryActive,
+  IconClose,
   IconSummer,
   IconFall,
 };

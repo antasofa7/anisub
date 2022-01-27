@@ -1,20 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {
-  IconFilm,
-  IconFilmActive,
   IconHome,
   IconHomeActive,
   IconLibrary,
   IconLibraryActive,
-  IconPlay,
-  IconPlayActive,
   IconSearcActive,
   IconSearchMenu,
-  IconTv,
-  IconTvActive,
-  IconUser,
-  IconUserActive,
 } from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
@@ -31,9 +23,9 @@ const TabItem = props => {
     if (label === 'Library') {
       return isFocused ? <IconLibraryActive /> : <IconLibrary />;
     }
-    if (label === 'Profile') {
-      return isFocused ? <IconUserActive /> : <IconUser />;
-    }
+    // if (label === 'Profile') {
+    //   return isFocused ? <IconUserActive /> : <IconUser />;
+    // }
 
     return <IconHomeActive />;
   };
@@ -57,7 +49,8 @@ export default TabItem;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    padding: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
   },
   label: isFocused => ({
     color: isFocused ? colors.primary : colors.onBackground,

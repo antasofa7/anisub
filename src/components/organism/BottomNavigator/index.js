@@ -63,9 +63,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     opacity: 0.9,
     justifyContent: 'space-between',
-    marginBottom: 16,
     marginHorizontal: 16,
     paddingHorizontal: responsiveWidth(16),
-    borderRadius: 10,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
   },
 });

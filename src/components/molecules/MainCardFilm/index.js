@@ -6,7 +6,7 @@ import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import {Star} from '../../atoms';
 
 const MainCardFilm = props => {
-  const {title, rating, thumbnail, width, margin, isLoading} = props;
+  const {title, rating, thumbnail, width, margin} = props;
 
   return (
     <View style={styles.container(margin)}>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     marginRight: margin ? margin : responsiveWidth(12),
   }),
   imageThumbnail: width => ({
-    width: width ? width : responsiveWidth(110),
+    width: width || responsiveWidth(110),
     height: responsiveHeight(110),
     borderRadius: 10,
     resizeMode: 'cover',
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: responsiveWidth(110) || width,
+    width: width || responsiveWidth(110),
     height: responsiveHeight(110),
     borderRadius: 10,
   }),

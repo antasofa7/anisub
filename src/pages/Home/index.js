@@ -1,14 +1,8 @@
-import React, {PureComponent} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import React from 'react';
+import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {PureComponent} from 'react/cjs/react.development';
 import {Spacing} from '../../components/atoms';
-import {
-  AnimeByGenre,
-  BannerCarousel,
-  Header,
-  NewAllAnime,
-  UpcomingAnime,
-} from '../../components/organism';
 import HomeComponent from '../../components/organism/HomeComponent';
 import {colors, responsiveHeight} from '../../utils';
 

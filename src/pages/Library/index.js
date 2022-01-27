@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {Spacing} from '../../components/atoms';
-import {HeaderSearch} from '../../components/molecules';
 import HeaderLibrary from '../../components/molecules/HeaderLibrary';
-import {AnimeByGenre, Header, NewMovie} from '../../components/organism';
+import {NewMovie, NewSeries} from '../../components/organism';
 import {colors, responsiveHeight} from '../../utils';
 
 export default class Library extends Component {
@@ -13,20 +13,27 @@ export default class Library extends Component {
     this.state = {
       animes: [],
       isLoading: true,
+      tabName: 'TV Series',
     };
   }
 
+  getTabName = value => {
+    this.setState({tabName: value});
+  };
+
   render() {
     const {navigate} = this.props.navigation;
-    const {isLoading} = this.state;
+    const {isLoading, tabName} = this.state;
     return (
-      <ScrollView style={styles.container}>
-        <HeaderLibrary />
-        <NewMovie loading={isLoading} />
-        {/* <UpcomingAnime animes={animes} /> */}
-        <AnimeByGenre loading={isLoading} navigation={navigate} />
+      <SafeAreaView style={styles.container}>
+        <HeaderLibrary navigation={navigate} handleProps={this.getTabName} />
+        {tabName === 'TV Series' ? (
+          <NewSeries loading={isLoading} />
+        ) : (
+          <NewMovie loading={isLoading} />
+        )}
         <Spacing height={responsiveHeight(90)} />
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }

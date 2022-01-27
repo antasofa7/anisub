@@ -4,7 +4,6 @@ const ROOT_API = 'https://testapi.my.id';
 
 export async function getHotMovies() {
   const url = `${ROOT_API}/hot/season`;
-  console.log(url);
   return callAPI({
     url,
     method: 'GET',
@@ -47,8 +46,26 @@ export async function getNewMovies() {
   });
 }
 
+export async function getMoreNewMovies(page) {
+  const url = `${ROOT_API}/movie/new/${page}`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
 export async function getNewSeries() {
   const url = `${ROOT_API}/episode/new`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+export async function getMoreNewSeries(page) {
+  const url = `${ROOT_API}/episode/new/${page}`;
 
   return callAPI({
     url,
@@ -101,7 +118,16 @@ export async function getMoreEpisodes(animeId, page) {
   });
 }
 
-export async function getPlaylistyByGenre(genreID, page) {
+export async function getPlaylistyByGenre(genreID) {
+  const url = `${ROOT_API}/genre/${genreID}/animes/0`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+export async function getMorePlaylistyByGenre(genreID, page) {
   const url = `${ROOT_API}/genre/${genreID}/animes/${page}`;
 
   return callAPI({
@@ -112,6 +138,24 @@ export async function getPlaylistyByGenre(genreID, page) {
 
 export async function getGenres() {
   const url = `${ROOT_API}/genres`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+export async function getSearch(searchParams) {
+  const url = `${ROOT_API}/search/${searchParams}`;
+
+  return callAPI({
+    url,
+    method: 'GET',
+  });
+}
+
+export async function getRecommendation() {
+  const url = `${ROOT_API}/recommendation`;
 
   return callAPI({
     url,

@@ -1,19 +1,25 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {getMorePlaylistyByGenre, getPlaylistyByGenre} from '../../../config';
-import {IMG_ANIME_URL} from '../../../utils';
-import {LoadingPage} from '../../atoms/Loading';
-import {ListFooterComponent} from '../../atoms/Loading/ListFooterComponent';
-import {MainCardFilm} from '../../molecules';
+import {IconBack} from '../../assets';
+import {Spacing} from '../../components/atoms';
+import {LoadingPage} from '../../components/atoms/Loading';
+import {ListFooterComponent} from '../../components/atoms/Loading/ListFooterComponent';
+import {MainCardFilm} from '../../components/molecules';
+import {getMorePlaylistyByGenre, getPlaylistyByGenre} from '../../config';
+import {colors, fonts, IMG_ANIME_URL, responsiveHeight} from '../../utils';
 
-const PlaylistByGenre = ({genreID, navigation}) => {
+const GenrePage = ({route}) => {
+  const navigation = useNavigation();
+  const {genre} = route.params;
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isMoreLoading, setMoreLoading] = useState(false);
@@ -24,7 +30,8 @@ const PlaylistByGenre = ({genreID, navigation}) => {
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
-    const res = await getPlaylistyByGenre(genreID);
+    const res = await getPlaylistyByGenre(genre.genre_id);
+    console.log('genre.genre_id> ', genre.genre_id);
     setMovies(res.data.getAnime);
     setIsPage(res.data.pages);
     setLoading(false);
@@ -33,7 +40,7 @@ const PlaylistByGenre = ({genreID, navigation}) => {
       setAllDataDisplayed(true);
       setMoreLoading(false);
     }
-  }, [genreID]);
+  }, [genre]);
 
   useEffect(() => {
     getMovieList();
@@ -41,10 +48,6 @@ const PlaylistByGenre = ({genreID, navigation}) => {
 
   const numColumns = 3;
   const size = Dimensions.get('window').width / numColumns - 20;
-
-  const _itemSeparator = () => {
-    return <View style={styles.separator} />;
-  };
 
   const _renderItem = ({item, index}) => {
     return (
@@ -62,14 +65,25 @@ const PlaylistByGenre = ({genreID, navigation}) => {
     );
   };
 
+  const _itemSeparator = () => {
+    return <View style={styles.separator} />;
+  };
+
+  console.log('page', page);
+  console.log('loading', isLoading);
+  console.log('pages', isPage);
+  console.log('loadingMore', isMoreLoading);
+  console.log('stopLoadMore', stopLoadMore);
+  console.log('allDataDisplayed', allDataDisplayed);
+
   const loadMoreMovies = async () => {
     try {
       if (!stopLoadMore) {
         if (isPage) {
           setMoreLoading(true);
-          console.log('genre_id> ', genreID);
-          const res = await getMorePlaylistyByGenre(genreID, page);
+          const res = await getMorePlaylistyByGenre(genre.genre_id, page);
           console.log('pages', res.data.pages);
+          console.log('genre_id> ', genre.genre_id);
           setMovies([...movies, ...res.data.getAnime]);
           setIsPage(res.data.pages);
           setPage(page + 1);
@@ -87,15 +101,22 @@ const PlaylistByGenre = ({genreID, navigation}) => {
     }
   };
 
-  console.log('genreID', genreID);
-  console.log('pages', isPage);
-
   return (
     <SafeAreaView style={styles.container}>
       {isLoading ? (
-        <LoadingPage />
+        <LoadingPage margin />
       ) : (
-        <>
+        <View style={styles.wrapper}>
+          <View style={styles.header}>
+            <View style={styles.iconBack}>
+              <IconBack onPress={() => navigation.goBack()} />
+            </View>
+            <Spacing width={30} />
+            <Text style={styles.subTitle}>Genre: </Text>
+            <Text numberOfLines={1} style={styles.title}>
+              {genre.genre_name}
+            </Text>
+          </View>
           <FlatList
             data={movies}
             renderItem={_renderItem}
@@ -105,29 +126,51 @@ const PlaylistByGenre = ({genreID, navigation}) => {
             onEndReached={loadMoreMovies}
             onEndReachedThreshold={0.1}
             onMomentumScrollBegin={() => setStopLoadMore(false)}
+            removeClippedSubviews={true} // Unmount components when outside of window
+            initialNumToRender={4} // Reduce initial render amount
+            maxToRenderPerBatch={1} // Reduce number in each render batch
             ListFooterComponent={
               <ListFooterComponent
                 isMoreLoading={isMoreLoading}
                 allDataDisplayed={allDataDisplayed}
               />
             }
-            removeClippedSubviews={true} // Unmount components when outside of window
-            initialNumToRender={4} // Reduce initial render amount
-            maxToRenderPerBatch={1} // Reduce number in each render batch
           />
-        </>
+        </View>
       )}
     </SafeAreaView>
   );
 };
 
-export default PlaylistByGenre;
+export default GenrePage;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background,
+  },
+  wrapper: {
     margin: 16,
-    zIndex: -1,
+  },
+  header: {
+    height: responsiveHeight(40),
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  iconBack: {
+    opacity: 0.5,
+  },
+  title: {
+    fontFamily: fonts.sora.medium,
+    fontSize: 18,
+    color: colors.secondary,
+    marginTop: -3,
+  },
+  subTitle: {
+    fontFamily: fonts.sora.regular,
+    fontSize: 18,
+    color: colors.onBackground,
+    marginTop: -3,
   },
   separator: {
     height: 12,

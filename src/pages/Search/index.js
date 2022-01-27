@@ -1,16 +1,8 @@
 import React, {Component} from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
-import {Spacing} from '../../components/atoms';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import {GenreButton, HeaderSearch} from '../../components/molecules';
-import {
-  AnimeGenreList,
-  Header,
-  PlaylistByGenre,
-} from '../../components/organism';
-import {getAnimeByGenre, getGenres} from '../../config';
-import {Animes} from '../../json';
-import Router from '../../router';
-import {colors, responsiveHeight} from '../../utils';
+import {AnimeGenreList, PlaylistByGenre} from '../../components/organism';
+import {colors} from '../../utils';
 
 export default class Search extends Component {
   constructor(props) {
@@ -28,7 +20,6 @@ export default class Search extends Component {
 
   render() {
     const {genreID} = this.state;
-    console.log('genre>>', genreID);
     const navigate = this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
@@ -37,7 +28,7 @@ export default class Search extends Component {
         {genreID === 0 ? (
           <AnimeGenreList navigation={navigate} />
         ) : (
-          <PlaylistByGenre genreID={genreID} />
+          <PlaylistByGenre genreID={genreID} navigation={navigate} />
         )}
       </SafeAreaView>
     );

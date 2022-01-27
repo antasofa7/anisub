@@ -1,14 +1,29 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Alert, Image, Platform, StyleSheet, View} from 'react-native';
 import {Logo} from '../../assets';
 import {colors, responsiveHeight, responsiveWidth} from '../../utils';
+import NetInfo from '@react-native-community/netinfo';
 
 export default class Splash extends Component {
+  unsubscribe = NetInfo.addEventListener(state => {
+    if (Platform.OS === 'android') {
+      if (state.isConnected === false) {
+        Alert.alert('Please check your internet connection!');
+      } else {
+        setTimeout(() => {
+          this.props.navigation.navigate('MainApp');
+        }, 3000);
+      }
+      console.log('Connection type', state.type);
+
+      console.log('Is connected?', state.isConnected);
+    }
+  });
   componentDidMount() {
-    setTimeout(() => {
-      this.props.navigation.navigate('MainApp');
-    }, 3000);
+    // this.CheckConnectivity();
+    this.unsubscribe();
   }
+
   render() {
     return (
       <View style={styles.container}>

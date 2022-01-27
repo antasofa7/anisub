@@ -20,22 +20,34 @@ import {
   responsiveWidth,
 } from '../../../utils';
 import {Spacing} from '../../atoms';
+import {LoadingPage} from '../../atoms/Loading';
+import {ListFooterComponent} from '../../atoms/Loading/ListFooterComponent';
 import {MainCardFilm} from '../../molecules';
 
-const AnimeGenreList = () => {
-  const navigation = useNavigation();
+const AnimeGenreList = ({navigation}) => {
+  // const navigation = useNavigation();
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [page, setPage] = useState(0);
-  const [stopLoadMore, setStopLoadMore] = useState(true);
+  const [isMoreLoading, setMoreLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [isPage, setIsPage] = useState(false);
+  const [stopLoadMore, setStopLoadMore] = useState(false);
   const [allDataDisplayed, setAllDataDisplayed] = useState(false);
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
     const allAnime = await getAllNew();
     setMovies(allAnime.data.episodes);
+    setIsPage(allAnime.data.pages);
     setLoading(false);
   }, []);
+
+  console.log('page', page);
+  // console.log('movies', movies);
+  console.log('pages', isPage);
+  console.log('loading', isLoading);
+  console.log('moreLoading', isMoreLoading);
+  console.log('stopLoadMore', stopLoadMore);
 
   useEffect(() => {
     getMovieList();
@@ -49,19 +61,38 @@ const AnimeGenreList = () => {
   };
 
   const loadMoreMovies = async () => {
-    setLoading(true);
-    if (!stopLoadMore) {
-      setPage(page + 1);
-      const res = await getMoreAllNew(page);
-      if (res.error) {
-        setAllDataDisplayed(true);
-        return null;
+    try {
+      if (!stopLoadMore) {
+        if (isPage) {
+          setMoreLoading(true);
+          const res = await getMoreAllNew(page);
+          console.log('pages', res.data.pages);
+          setMovies([...movies, ...res.data.episodes]);
+          setIsPage(res.data.pages);
+          setPage(page + 1);
+          setStopLoadMore(true);
+
+          setMoreLoading(false);
+          // getMoreAllNew(page)
+          //   .then(res => {
+          //     setIsPage(res.data.pages);
+          //     setMovies([...movies, ...res.data.episodes]);
+          //     setPage(page + 1);
+          //     setStopLoadMore(true);
+          //     setMoreLoading(false);
+          //   })
+          //   .catch(err => {
+          //     console.log('err >> ', err);
+          //   });
+        } else {
+          setAllDataDisplayed(true);
+          setMoreLoading(false);
+        }
       }
-      setMovies([...movies, ...res.data.episodes]);
-      setStopLoadMore(true);
-      return null;
+      setMoreLoading(false);
+    } catch (error) {
+      console.log('error >> ', error);
     }
-    setLoading(false);
   };
 
   const _renderItem = ({item, index}) => {
@@ -69,7 +100,7 @@ const AnimeGenreList = () => {
       <TouchableOpacity
         onPress={() => navigation.navigate('Detail', {animeId: item.sub_id})}>
         <MainCardFilm
-          key={item.post_id}
+          key={index}
           title={item.post_name}
           rating={item.rate}
           thumbnail={`${IMG_EPISODE_URL}/${item.post_image}`}
@@ -80,43 +111,32 @@ const AnimeGenreList = () => {
       </TouchableOpacity>
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={movies}
-        renderItem={_renderItem}
-        ItemSeparatorComponent={_itemSeparator}
-        keyExtractor={item => item.post_id.toString()}
-        numColumns={numColumns}
-        onEndReached={loadMoreMovies}
-        onEndReachedThreshold={0.5}
-        onMomentumScrollBegin={() => setStopLoadMore(false)}
-        ListFooterComponent={() =>
-          isLoading ? (
-            <View style={styles.loading}>
-              <ActivityIndicator size="large" color={colors.onBackground} />
-            </View>
-          ) : (
-            <Spacing height={responsiveHeight(140)} />
-          )
-        }
-      />
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={allDataDisplayed}
-        onRequestClose={() => {
-          setAllDataDisplayed(false);
-        }}>
-        <TouchableOpacity
-          style={styles.allDataDisplayed}
-          onPress={() => setAllDataDisplayed(false)}>
-          <Text style={styles.TextDisplayed}>
-            Semua data sudah ditampilkan.
-          </Text>
-        </TouchableOpacity>
-      </Modal>
+      {isLoading ? (
+        <LoadingPage />
+      ) : (
+        <FlatList
+          data={movies}
+          renderItem={_renderItem}
+          ItemSeparatorComponent={_itemSeparator}
+          keyExtractor={(item, index) => String(index)}
+          numColumns={numColumns}
+          onEndReached={loadMoreMovies}
+          onEndReachedThreshold={0.1}
+          onMomentumScrollBegin={() => setStopLoadMore(false)}
+          ListFooterComponent={
+            <ListFooterComponent
+              isMoreLoading={isMoreLoading}
+              allDataDisplayed={allDataDisplayed}
+            />
+          }
+          removeClippedSubviews={true} // Unmount components when outside of window
+          initialNumToRender={4} // Reduce initial render amount
+          maxToRenderPerBatch={1} // Reduce number in each render batch
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -125,6 +145,7 @@ export default AnimeGenreList;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     margin: 16,
     zIndex: -1,
   },
@@ -140,7 +161,7 @@ const styles = StyleSheet.create({
   },
   allDataDisplayed: {
     position: 'absolute',
-    bottom: 16,
+    bottom: 90,
     left: responsiveWidth(95),
     backgroundColor: colors.primary,
     borderRadius: 10,

@@ -3,7 +3,6 @@ import moment from 'moment';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,13 +14,14 @@ import {Star} from '../../components/atoms';
 import {MainCardFilm} from '../../components/molecules';
 import {ImageDetail} from '../../components/organism';
 import Recomendation from '../../components/organism/Recommendation';
-import {getAnimeById} from '../../config';
-import {colors, fonts, IMG_EPISODE_URL, responsiveHeight} from '../../utils';
+import {getAnimeById, getRecommendation} from '../../config';
+import {colors, fonts, IMG_ANIME_URL, responsiveHeight} from '../../utils';
 import PlayVideo from './PlayVideo';
 
-const Detail = ({route}) => {
+const DetailMovies = ({route}) => {
   const navigation = useNavigation();
   const {animeId} = route.params;
+  const [movies, setMovies] = useState([]);
   const [animeDetail, setAnimeDetail] = useState([]);
   const [episode, setEpisode] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -34,6 +34,8 @@ const Detail = ({route}) => {
     setLoading(true);
     const res = await getAnimeById(animeId);
     setAnimeDetail(res.data.anime);
+    const response = await getRecommendation();
+    setMovies(response.data.animes);
     setLoading(false);
     setGenres(res.data.anime.genres);
   }, [animeId]);
@@ -52,23 +54,6 @@ const Detail = ({route}) => {
     setTextShown(!textShown);
   };
 
-  const _renderItem = ({item, index}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          setVideoPlay(true), setEpisode(animeDetail.episodes[index]);
-        }}>
-        <View key={item.post_id} style={styles.wrapperItem}>
-          <MainCardFilm
-            key={item.post_id}
-            title={item.post_name}
-            thumbnail={`${IMG_EPISODE_URL}/${item.post_image}`}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <View style={styles.container}>
       {isLoading ? (
@@ -83,10 +68,6 @@ const Detail = ({route}) => {
               <View style={styles.wrapperTitle}>
                 <Text style={styles.title} numberOfLines={1}>
                   {episode.post_name}
-                </Text>
-                <Text style={styles.episode}>
-                  Episode {episode.post_episodes} -{' '}
-                  {moment(episode.updated_at).format('DD MMMM YYYY')}
                 </Text>
               </View>
             </View>
@@ -139,56 +120,25 @@ const Detail = ({route}) => {
               </Text>
             ) : null}
           </View>
-          {animeDetail.type === 'TV' ? (
-            <View style={styles.otherEpisodes}>
-              <View style={styles.wrapperLabel}>
-                <Text style={styles.label}>Other Episodes</Text>
-                {animeDetail.pages ? (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('Episodes', {animeDetail})
-                    }>
-                    <Text style={styles.more}>See more</Text>
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-              <View style={styles.wrapperEpisodes}>
-                <FlatList
-                  data={animeDetail.episodes}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={_renderItem}
-                  initialNumToRender={3}
-                  keyExtractor={item => item.post_id.toString()}
-                  scrollToEnd={() => ({animated: true})}
-                  getItemLayout={(data, index) => ({
-                    length: responsiveHeight(100),
-                    offset: responsiveHeight(100) * index,
-                    index,
-                  })}
-                />
-              </View>
-            </View>
-          ) : (
-            <View style={styles.recomendation}>
-              <Recomendation />
-            </View>
-          )}
+          <View style={styles.recomendations}>
+            <Recomendation />
+          </View>
         </ScrollView>
       )}
     </View>
   );
 };
 
-export default Detail;
+export default DetailMovies;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+    paddingBottom: 16,
   },
   wrapper: {
-    marginTop: 16,
+    marginTop: 4,
     marginHorizontal: 16,
   },
   genreWrapper: {
@@ -244,12 +194,14 @@ const styles = StyleSheet.create({
     height: responsiveHeight(320),
   },
   wrapperTitle: {
-    marginTop: 12,
-    marginHorizontal: 16,
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    bottom: 0,
   },
   episode: {
     fontFamily: fonts.sora.regular,
-    fontSize: 10,
+    fontSize: 12,
     color: colors.onBackground,
     marginBottom: 8,
   },
@@ -258,12 +210,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: colors.onBackground,
   },
-  otherEpisodes: {
-    margin: 16,
-  },
-  recomendation: {
-    marginTop: -20,
-    padding: 16,
+  recomendations: {
+    marginHorizontal: 16,
   },
   wrapperEpisodes: {
     flexDirection: 'row',

@@ -22,7 +22,9 @@ const CardUpcomingAnime = props => {
         style={styles.linearGradient(width)}
       />
       <View style={styles.wrapperTitle}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {title}
+        </Text>
         <Star rating={rating} size={14} />
       </View>
     </View>

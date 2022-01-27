@@ -1,27 +1,12 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {getAllNew} from '../../../config';
 import {responsiveHeight} from '../../../utils';
 import {InputSearch} from '../../atoms';
 
-const HeaderSearch = ({navigation}) => {
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setLoading] = useState(false);
-
-  const getMovieList = useCallback(async () => {
-    setLoading(true);
-    const allAnime = await getAllNew();
-    setMovies(allAnime.data.episodes);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    getMovieList();
-  }, [getMovieList]);
-
+const HeaderSearch = ({navigation, onPress, close}) => {
   return (
     <View style={styles.container}>
-      <InputSearch data={movies} navigation={navigation} />
+      <InputSearch close={close} navigation={navigation} onPress={onPress} />
     </View>
   );
 };

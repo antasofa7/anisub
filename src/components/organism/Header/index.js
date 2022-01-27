@@ -1,19 +1,30 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {IconFall, Logo} from '../../../assets';
+import {getHotMovies} from '../../../config';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import {Spacing} from '../../atoms';
 
 const Header = () => {
+  const [season, setSeason] = useState([]);
+  const getSeason = useCallback(async () => {
+    const res = await getHotMovies();
+    setSeason(res.data.animes[0]);
+  }, []);
+  // console.log('season> ', season.season);
+
+  useEffect(() => {
+    getSeason();
+  }, [getSeason]);
   return (
     <View style={styles.container}>
       <View style={styles.wrapperLogo}>
         <Image source={Logo} style={styles.logo} />
       </View>
       <View style={styles.season}>
-        <Text style={styles.seasonTitle}>Fall</Text>
+        <Text style={styles.seasonTitle}>{season.season}</Text>
         <Spacing width={4} />
-        <IconFall />
+        {/* <IconFall /> */}
       </View>
     </View>
   );

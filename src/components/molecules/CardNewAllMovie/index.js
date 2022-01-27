@@ -6,7 +6,7 @@ import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import {Star} from '../../atoms';
 
 const CardNewAllMovie = props => {
-  const {title, rating, thumbnail, width, margin, isLoading} = props;
+  const {title, rating, thumbnail, width, margin} = props;
 
   return (
     <View style={styles.container(margin)}>

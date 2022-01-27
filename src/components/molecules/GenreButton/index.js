@@ -13,7 +13,6 @@ const GenreButton = props => {
     const res = await getGenres();
     setGenres([allGenre, ...res.data]);
   }, []);
-  // console.log('genre >>', genres);
 
   useEffect(() => {
     getGenreList();

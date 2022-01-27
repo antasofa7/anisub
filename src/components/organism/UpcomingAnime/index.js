@@ -1,33 +1,23 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {getMoreUpcomingAnimes, getUpcomingAnimes} from '../../../config';
-import {
-  colors,
-  fonts,
-  IMG_ANIME_URL,
-  responsiveHeight,
-  responsiveWidth,
-} from '../../../utils';
+import {colors, fonts, IMG_ANIME_URL, responsiveHeight} from '../../../utils';
+import {LoadingPage} from '../../atoms/Loading';
 import {CardUpcomingAnime} from '../../molecules';
 
-let stopLoadMore = true;
-
-const UpcomingAnime = ({loading, navigation}) => {
+const UpcomingAnime = ({navigation}) => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [isPage, setIsPage] = useState(false);
+  const [stopLoadMore, setStopLoadMore] = useState(false);
+  const [allDataDisplayed, setAllDataDisplayed] = useState(false);
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
     const res = await getUpcomingAnimes();
     setMovies(res.data.episodes);
+    setIsPage(res.data.pages);
     setLoading(false);
   }, []);
 
@@ -36,17 +26,26 @@ const UpcomingAnime = ({loading, navigation}) => {
   }, [getMovieList]);
 
   const loadMoreMovies = async () => {
-    setLoading(true);
-    if (!stopLoadMore) {
-      setPage(page + 1);
-      const res = await getMoreUpcomingAnimes(page);
-      if (!res.data.pages) {
-        return;
-      } else {
-        setMovies([...movies, ...res.data.episodes]);
-        stopLoadMore = true;
+    try {
+      if (!stopLoadMore) {
+        if (isPage) {
+          setLoading(true);
+          const res = await getMoreUpcomingAnimes(page);
+          console.log('pages', res.data.pages);
+          setMovies([...movies, ...res.data.episodes]);
+          setIsPage(res.data.pages);
+          setPage(page + 1);
+          setStopLoadMore(true);
+
+          setLoading(false);
+        } else {
+          setAllDataDisplayed(true);
+          setLoading(false);
+        }
       }
       setLoading(false);
+    } catch (error) {
+      console.log('error >> ', error);
     }
   };
 
@@ -65,10 +64,6 @@ const UpcomingAnime = ({loading, navigation}) => {
     );
   };
 
-  const _itemSeparator = () => {
-    return <View style={styles.separator} />;
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Upcoming Anime</Text>
@@ -80,24 +75,20 @@ const UpcomingAnime = ({loading, navigation}) => {
           renderItem={_renderItem}
           initialNumToRender={4}
           maxToRenderPerBatch={8}
-          // keyExtractor={item => item.post_id.toString()}
+          keyExtractor={(item, index) => String(index)}
           scrollToEnd={() => ({animated: true})}
           getItemLayout={(data, index) => ({
-            length: responsiveHeight(100),
-            offset: responsiveHeight(100) * index,
+            length: responsiveHeight(110),
+            offset: responsiveHeight(110) * index,
             index,
           })}
           onEndReached={loadMoreMovies}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.1}
           onMomentumScrollBegin={() => {
-            stopLoadMore = false;
+            setStopLoadMore(false);
           }}
-          ListFooterComponent={() =>
-            isLoading && (
-              <View style={styles.loading}>
-                <ActivityIndicator color={colors.onPrimary} />
-              </View>
-            )
+          ListFooterComponent={
+            <LoadingPage allDataDisplayed={allDataDisplayed} width small />
           }
         />
       </View>
@@ -110,6 +101,7 @@ export default UpcomingAnime;
 const styles = StyleSheet.create({
   container: {
     marginTop: 16,
+    zIndex: -1,
   },
   wrapper: {
     flexDirection: 'row',
@@ -120,20 +112,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fonts.sora.medium,
     color: colors.onBackground,
-  },
-  wrapperImageLoading: {
-    flexDirection: 'row',
-    marginTop: 8,
-  },
-  loading: {
-    flex: 1,
-    width: responsiveWidth(100),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  separator: {
-    height: 16,
-    width: '100%',
-    backgroundColor: 'transparent',
   },
 });

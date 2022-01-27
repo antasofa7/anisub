@@ -1,19 +1,13 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {getAllNew, getMoreAllNew} from '../../../config';
-import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
-import {IMG_EPISODE_URL} from '../../../utils/constan';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {getHotMovies, getMoreHotMovies} from '../../../config';
+import {colors, fonts, IMG_ANIME_URL, responsiveHeight} from '../../../utils';
 import {LoadingPage} from '../../atoms/Loading';
-import {CardNewAllMovie} from '../../molecules';
+import {CardUpcomingAnime, MainCardFilm} from '../../molecules';
 
-const NewAllAnime = ({navigation}) => {
+const HotSeason = () => {
+  const navigation = useNavigation();
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -23,8 +17,8 @@ const NewAllAnime = ({navigation}) => {
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
-    const res = await getAllNew();
-    setMovies(res.data.episodes);
+    const res = await getHotMovies();
+    setMovies(res.data.animes);
     setIsPage(res.data.pages);
     setLoading(false);
   }, []);
@@ -33,14 +27,31 @@ const NewAllAnime = ({navigation}) => {
     getMovieList();
   }, [getMovieList]);
 
+  const _renderItem = ({item, index}) => {
+    const type = item.type;
+    const detailPage = type === 'TV' ? 'Detail' : 'DetailMovies';
+    return (
+      <TouchableOpacity
+        onPress={() => navigation.navigate(detailPage, {animeId: item.sub_id})}>
+        <MainCardFilm
+          key={item.post_id}
+          title={item.sub_name}
+          rating={item.rate}
+          thumbnail={`${IMG_ANIME_URL}/${item.sub_banner}`}
+          isLoading={isLoading}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   const loadMoreMovies = async () => {
     try {
       if (!stopLoadMore) {
         if (isPage) {
           setLoading(true);
-          const res = await getMoreAllNew(page);
+          const res = await getMoreHotMovies(page);
           console.log('pages', res.data.pages);
-          setMovies([...movies, ...res.data.episodes]);
+          setMovies([...movies, ...res.data.animes]);
           setIsPage(res.data.pages);
           setPage(page + 1);
           setStopLoadMore(true);
@@ -57,24 +68,9 @@ const NewAllAnime = ({navigation}) => {
     }
   };
 
-  const _renderItem = ({item, index}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => navigation('Detail', {animeId: item.sub_id})}>
-        <CardNewAllMovie
-          key={item.post_id}
-          title={item.post_name}
-          rating={item.rate}
-          thumbnail={`${IMG_EPISODE_URL}/${item.post_image}`}
-          isLoading={isLoading}
-        />
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>New Anime</Text>
+      <Text style={styles.label}>Hot Movies</Text>
       <View horizontal={true} style={styles.wrapper}>
         <FlatList
           horizontal={true}
@@ -104,11 +100,12 @@ const NewAllAnime = ({navigation}) => {
   );
 };
 
-export default NewAllAnime;
+export default HotSeason;
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 16,
+    zIndex: -1,
   },
   wrapper: {
     flexDirection: 'row',

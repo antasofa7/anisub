@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {Rating} from 'react-native-rating-element';
 
 const Star = ({rating, size}) => {
@@ -19,5 +19,3 @@ const Star = ({rating, size}) => {
 };
 
 export default Star;
-
-const styles = StyleSheet.create({});
