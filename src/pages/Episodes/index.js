@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IconBack} from '../../assets';
-import {Spacing} from '../../components/atoms';
+import Spacing from '../../components/atoms/Spacing';
 import {LoadingPage} from '../../components/atoms/Loading';
 import {ListFooterComponent} from '../../components/atoms/Loading/ListFooterComponent';
 import {MainCardFilm} from '../../components/molecules';
@@ -39,18 +39,7 @@ const Episodes = () => {
   const numColumns = 3;
   const size = Dimensions.get('window').width / numColumns - 20;
 
-  console.log('page', page);
-  console.log('loading', isLoading);
-  console.log('pages', isPage);
-  console.log('loadingMore', isMoreLoading);
-  console.log('stopLoadMore', stopLoadMore);
-  console.log('allDataDisplayed', allDataDisplayed);
-
-  // console.log('moreMovies >>', movies);
-  console.log('animeId>', anime.sub_id);
-
   const _renderItem = ({item, index}) => {
-    // console.log('item>', item);
     return (
       <TouchableOpacity
         onPress={() =>
@@ -81,10 +70,7 @@ const Episodes = () => {
           setMoreLoading(true);
           const animeId = anime.sub_id;
           const res = await getMoreEpisodes(animeId, page);
-          console.log('pages', res.data.pages);
-          // movies.push(...res.data.animes);
           setMovies([...movies, ...res.data.episodes]);
-          console.log('episodes>', res.data.episodes);
           setIsPage(res.data.pages);
           setPage(page + 1);
           setStopLoadMore(true);

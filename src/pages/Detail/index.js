@@ -10,8 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {IconShare} from '../../assets';
-import {Star} from '../../components/atoms';
+import Star from '../../components/atoms/Star';
 import {MainCardFilm} from '../../components/molecules';
 import {ImageDetail} from '../../components/organism';
 import Recomendation from '../../components/organism/Recommendation';
@@ -122,7 +121,6 @@ const Detail = ({route}) => {
             </View>
             <View style={styles.wrapperRating}>
               <Star rating={animeDetail.rate} size={32} />
-              <IconShare />
             </View>
           </View>
           <View style={styles.sinopsis}>

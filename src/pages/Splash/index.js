@@ -14,13 +14,9 @@ export default class Splash extends Component {
           this.props.navigation.navigate('MainApp');
         }, 3000);
       }
-      console.log('Connection type', state.type);
-
-      console.log('Is connected?', state.isConnected);
     }
   });
   componentDidMount() {
-    // this.CheckConnectivity();
     this.unsubscribe();
   }
 

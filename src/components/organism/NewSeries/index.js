@@ -10,6 +10,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getMoreNewSeries, getNewSeries} from '../../../config';
 import {IMG_EPISODE_URL} from '../../../utils';
+// import {Spacing} from '../../atoms';
 import {LoadingPage} from '../../atoms/Loading';
 import {ListFooterComponent} from '../../atoms/Loading/ListFooterComponent';
 import {MainCardFilm} from '../../molecules';
@@ -31,13 +32,6 @@ const NewSeries = () => {
     setIsPage(allMovies.data.pages);
     setLoading(false);
   }, []);
-
-  // console.log('movies', movies);
-  // console.log('page', page);
-  // console.log('loading', isLoading);
-  console.log('pages', isPage);
-  console.log('loadingMore', isMoreLoading);
-  console.log('stopLoadMore', stopLoadMore);
 
   useEffect(() => {
     getMovieList();
@@ -72,9 +66,7 @@ const NewSeries = () => {
         if (isPage) {
           setMoreLoading(true);
           const res = await getMoreNewSeries(page);
-          console.log('pages', res.data.pages);
           setIsPage(res.data.pages);
-          // movies.push(...res.data.animes);
           setMovies([...movies, ...res.data.episodes]);
           setPage(page + 1);
           setStopLoadMore(true);
@@ -124,8 +116,7 @@ export default NewSeries;
 
 const styles = StyleSheet.create({
   container: {
-    margin: 16,
-    zIndex: -1,
+    marginHorizontal: 16,
   },
   separator: {
     height: 12,

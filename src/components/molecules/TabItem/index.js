@@ -23,10 +23,6 @@ const TabItem = props => {
     if (label === 'Library') {
       return isFocused ? <IconLibraryActive /> : <IconLibrary />;
     }
-    // if (label === 'Profile') {
-    //   return isFocused ? <IconUserActive /> : <IconUser />;
-    // }
-
     return <IconHomeActive />;
   };
 
@@ -39,7 +35,6 @@ const TabItem = props => {
       onLongPress={onLongPress}
       style={styles.container}>
       <Icon />
-      {/* <Text style={styles.label(isFocused)}>{label}</Text> */}
     </TouchableOpacity>
   );
 };

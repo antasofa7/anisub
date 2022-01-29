@@ -67,9 +67,7 @@ const PlaylistByGenre = ({genreID, navigation}) => {
       if (!stopLoadMore) {
         if (isPage) {
           setMoreLoading(true);
-          console.log('genre_id> ', genreID);
           const res = await getMorePlaylistyByGenre(genreID, page);
-          console.log('pages', res.data.pages);
           setMovies([...movies, ...res.data.getAnime]);
           setIsPage(res.data.pages);
           setPage(page + 1);
@@ -86,9 +84,6 @@ const PlaylistByGenre = ({genreID, navigation}) => {
       console.log('error >> ', error);
     }
   };
-
-  console.log('genreID', genreID);
-  console.log('pages', isPage);
 
   return (
     <SafeAreaView style={styles.container}>

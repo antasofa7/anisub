@@ -9,19 +9,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {IconShare} from '../../assets';
-import {Star} from '../../components/atoms';
-import {MainCardFilm} from '../../components/molecules';
+import Star from '../../components/atoms/Star';
 import {ImageDetail} from '../../components/organism';
 import Recomendation from '../../components/organism/Recommendation';
-import {getAnimeById, getRecommendation} from '../../config';
-import {colors, fonts, IMG_ANIME_URL, responsiveHeight} from '../../utils';
+import {getAnimeById} from '../../config';
+import {colors, fonts, responsiveHeight} from '../../utils';
 import PlayVideo from './PlayVideo';
 
 const DetailMovies = ({route}) => {
   const navigation = useNavigation();
   const {animeId} = route.params;
-  const [movies, setMovies] = useState([]);
   const [animeDetail, setAnimeDetail] = useState([]);
   const [episode, setEpisode] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -34,8 +31,6 @@ const DetailMovies = ({route}) => {
     setLoading(true);
     const res = await getAnimeById(animeId);
     setAnimeDetail(res.data.anime);
-    const response = await getRecommendation();
-    setMovies(response.data.animes);
     setLoading(false);
     setGenres(res.data.anime.genres);
   }, [animeId]);
@@ -103,7 +98,6 @@ const DetailMovies = ({route}) => {
             </View>
             <View style={styles.wrapperRating}>
               <Star rating={animeDetail.rate} size={32} />
-              <IconShare />
             </View>
           </View>
           <View style={styles.sinopsis}>
@@ -199,12 +193,6 @@ const styles = StyleSheet.create({
     right: 16,
     bottom: 0,
   },
-  episode: {
-    fontFamily: fonts.sora.regular,
-    fontSize: 12,
-    color: colors.onBackground,
-    marginBottom: 8,
-  },
   title: {
     fontFamily: fonts.nunito.bold,
     fontSize: 22,
@@ -212,24 +200,5 @@ const styles = StyleSheet.create({
   },
   recomendations: {
     marginHorizontal: 16,
-  },
-  wrapperEpisodes: {
-    flexDirection: 'row',
-    marginTop: 12,
-  },
-  wrapperLabel: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: fonts.sora.medium,
-    color: colors.onBackground,
-  },
-  more: {
-    fontSize: 12,
-    fontFamily: fonts.sora.regular,
-    color: colors.primary,
   },
 });

@@ -12,7 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
 import {IconStarActive} from '../../../assets';
-import {getRecommendation} from '../../../config';
+import {getHotMovies} from '../../../config';
 import {
   colors,
   fonts,
@@ -32,7 +32,7 @@ const BannerCarousel = ({navigation}) => {
 
   const getMovieList = useCallback(async () => {
     setLoading(true);
-    const res = await getRecommendation();
+    const res = await getHotMovies();
     setMovies(res.data.animes);
     setTotal(res.data.animes.length);
     setLoading(false);
@@ -89,20 +89,6 @@ const BannerCarousel = ({navigation}) => {
           renderItem={renderItem}
           autoplay={true}
           loop={true}
-          // onEndReached={loadMoreMovies}
-          // onEndReachedThreshold={0.1}
-          // onMomentumScrollBegin={() => {
-          //   setStopLoadMore(false);
-          // }}
-          // ListFooterComponent={() => (
-          //   <View style={styles.loading}>
-          //     {allDataDisplayed ? (
-          //       <Text style={styles.TextDisplayed}>All data is displayed.</Text>
-          //     ) : (
-          //       <ActivityIndicator size="large" color={colors.secondary} />
-          //     )}
-          //   </View>
-          // )}
         />
       )}
     </SafeAreaView>
@@ -170,10 +156,5 @@ const styles = StyleSheet.create({
     width: responsiveWidth(160),
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  TextDisplayed: {
-    color: colors.onBackground,
-    fontFamily: fonts.sora.regular,
-    fontSize: 10,
   },
 });

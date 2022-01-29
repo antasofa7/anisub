@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {PureComponent} from 'react/cjs/react.development';
-import {Spacing} from '../../components/atoms';
+import Spacing from '../../components/atoms/Spacing';
 import HomeComponent from '../../components/organism/HomeComponent';
 import {colors, responsiveHeight} from '../../utils';
 

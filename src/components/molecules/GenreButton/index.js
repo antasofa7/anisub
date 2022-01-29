@@ -54,10 +54,7 @@ export default GenreButton;
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16,
-    marginTop: 8,
-    flexDirection: 'row',
-    zIndex: -1,
+    margin: 16,
   },
   wrapper: active => ({
     backgroundColor: active ? colors.primary : colors.onPrimary,
@@ -66,7 +63,7 @@ const styles = StyleSheet.create({
   }),
   title: active => ({
     fontFamily: fonts.sora.medium,
-    fontSize: 12,
+    fontSize: 14,
     color: active ? colors.onPrimary : colors.onBackground,
     paddingHorizontal: 16,
     paddingVertical: 8,

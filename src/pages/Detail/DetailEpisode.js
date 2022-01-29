@@ -1,11 +1,7 @@
-import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
   Dimensions,
-  FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,11 +9,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import {IconPlayCircle, IconShare} from '../../assets';
-import {Star} from '../../components/atoms';
-import {MainCardFilm} from '../../components/molecules';
-import {ImageDetail} from '../../components/organism';
-import {getAnimeById} from '../../config';
+import {IconPlayCircle} from '../../assets';
 import {
   colors,
   fonts,
@@ -117,7 +109,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 105,
     left: '40%',
-    // opacity: 0.8,
     backgroundColor: colors.background,
     paddingLeft: 20,
     paddingRight: 15,
@@ -125,7 +116,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   video: {
-    height: 320,
+    height: responsiveHeight(320),
   },
   wrapperTitle: {
     position: 'absolute',

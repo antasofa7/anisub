@@ -65,7 +65,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 16,
     paddingHorizontal: responsiveWidth(16),
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
   },
 });

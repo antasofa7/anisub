@@ -1,27 +1,17 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
   Dimensions,
   FlatList,
-  Modal,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getAllNew, getMoreAllNew} from '../../../config';
-import {
-  colors,
-  fonts,
-  IMG_EPISODE_URL,
-  responsiveHeight,
-  responsiveWidth,
-} from '../../../utils';
-import {Spacing} from '../../atoms';
+import {colors, fonts, IMG_EPISODE_URL, responsiveWidth} from '../../../utils';
 import {LoadingPage} from '../../atoms/Loading';
 import {ListFooterComponent} from '../../atoms/Loading/ListFooterComponent';
+import Spacing from '../../atoms/Spacing';
 import {MainCardFilm} from '../../molecules';
 
 const AnimeGenreList = ({navigation}) => {
@@ -42,13 +32,6 @@ const AnimeGenreList = ({navigation}) => {
     setLoading(false);
   }, []);
 
-  console.log('page', page);
-  // console.log('movies', movies);
-  console.log('pages', isPage);
-  console.log('loading', isLoading);
-  console.log('moreLoading', isMoreLoading);
-  console.log('stopLoadMore', stopLoadMore);
-
   useEffect(() => {
     getMovieList();
   }, [getMovieList]);
@@ -66,24 +49,12 @@ const AnimeGenreList = ({navigation}) => {
         if (isPage) {
           setMoreLoading(true);
           const res = await getMoreAllNew(page);
-          console.log('pages', res.data.pages);
           setMovies([...movies, ...res.data.episodes]);
           setIsPage(res.data.pages);
           setPage(page + 1);
           setStopLoadMore(true);
 
           setMoreLoading(false);
-          // getMoreAllNew(page)
-          //   .then(res => {
-          //     setIsPage(res.data.pages);
-          //     setMovies([...movies, ...res.data.episodes]);
-          //     setPage(page + 1);
-          //     setStopLoadMore(true);
-          //     setMoreLoading(false);
-          //   })
-          //   .catch(err => {
-          //     console.log('err >> ', err);
-          //   });
         } else {
           setAllDataDisplayed(true);
           setMoreLoading(false);
@@ -126,6 +97,7 @@ const AnimeGenreList = ({navigation}) => {
           onEndReached={loadMoreMovies}
           onEndReachedThreshold={0.1}
           onMomentumScrollBegin={() => setStopLoadMore(false)}
+          ListHeaderComponent={() => <Spacing height={16} />}
           ListFooterComponent={
             <ListFooterComponent
               isMoreLoading={isMoreLoading}
@@ -146,7 +118,7 @@ export default AnimeGenreList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 16,
+    marginHorizontal: 16,
     zIndex: -1,
   },
   separator: {

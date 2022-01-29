@@ -1,6 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import {Spacing} from '..';
+import Spacing from '../Spacing';
 import {colors, fonts, responsiveHeight} from '../../../utils';
 
 export const ListFooterComponent = ({isMoreLoading, allDataDisplayed}) => {

@@ -1,38 +1,34 @@
 import React, {Component} from 'react';
-import {StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {Spacing} from '../../components/atoms';
-import HeaderLibrary from '../../components/molecules/HeaderLibrary';
-import {NewMovie, NewSeries} from '../../components/organism';
-import {colors, responsiveHeight} from '../../utils';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import {GenreButton} from '../../components/molecules';
+import {AnimeGenreList, PlaylistByGenre} from '../../components/organism';
+import {colors} from '../../utils';
 
 export default class Library extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      animes: [],
+      genreID: 0,
       isLoading: true,
-      tabName: 'TV Series',
     };
   }
 
-  getTabName = value => {
-    this.setState({tabName: value});
+  getID = value => {
+    this.setState({genreID: value});
   };
 
   render() {
-    const {navigate} = this.props.navigation;
-    const {isLoading, tabName} = this.state;
+    const {genreID} = this.state;
+    const navigate = this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
-        <HeaderLibrary navigation={navigate} handleProps={this.getTabName} />
-        {tabName === 'TV Series' ? (
-          <NewSeries loading={isLoading} />
+        <GenreButton navigation={navigate} handleProps={this.getID} />
+        {genreID === 0 ? (
+          <AnimeGenreList navigation={navigate} />
         ) : (
-          <NewMovie loading={isLoading} />
+          <PlaylistByGenre genreID={genreID} navigation={navigate} />
         )}
-        <Spacing height={responsiveHeight(90)} />
       </SafeAreaView>
     );
   }

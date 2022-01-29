@@ -72,9 +72,7 @@ const NewMovie = () => {
         if (isPage) {
           setMoreLoading(true);
           const res = await getMoreNewMovies(page);
-          console.log('PAGES', res.data.pages);
           setIsPage(res.data.pages);
-          // movies.push(...res.data.animes);
           setMovies([...movies, ...res.data.animes]);
           setPage(page + 1);
           setStopLoadMore(true);
@@ -113,8 +111,6 @@ const NewMovie = () => {
           removeClippedSubviews={true} // Unmount components when outside of window
           initialNumToRender={4} // Reduce initial render amount
           maxToRenderPerBatch={1} // Reduce number in each render batch
-          // updateCellsBatchingPeriod={100} // Increase time between renders
-          // windowSize={7} // Reduce the window size
         />
       )}
     </SafeAreaView>
@@ -125,8 +121,7 @@ export default NewMovie;
 
 const styles = StyleSheet.create({
   container: {
-    margin: 16,
-    zIndex: -1,
+    marginHorizontal: 16,
   },
   separator: {
     height: 12,

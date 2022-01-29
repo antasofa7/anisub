@@ -22,6 +22,7 @@ import IconSearchMenu from './icon_search_.svg';
 import IconLibrary from './icon_library.svg';
 import IconLibraryActive from './icon_library_active';
 import IconClose from './icon_close.svg';
+import IconCloseSmall from './icon_close_small.svg';
 
 export {
   IconFilm,
@@ -46,6 +47,7 @@ export {
   IconLibrary,
   IconLibraryActive,
   IconClose,
+  IconCloseSmall,
   IconSummer,
   IconFall,
 };

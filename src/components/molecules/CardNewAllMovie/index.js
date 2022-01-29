@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
-import {Star} from '../../atoms';
+import Star from '../../atoms/Star';
 
 const CardNewAllMovie = props => {
   const {title, rating, thumbnail, width, margin} = props;

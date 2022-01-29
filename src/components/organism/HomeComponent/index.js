@@ -1,10 +1,15 @@
 import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {BannerCarousel, Header, NewAllAnime, UpcomingAnime} from '..';
+import {
+  BannerCarousel,
+  Header,
+  NewAllAnime,
+  Recommendation,
+  UpcomingAnime,
+} from '..';
 import {responsiveHeight} from '../../../utils';
-import {Spacing} from '../../atoms';
-import HotSeason from '../Hot Season';
+import Spacing from '../../atoms/Spacing';
 
 const HomeComponent = ({navigation}) => {
   const _itemComponents = [
@@ -18,15 +23,15 @@ const HomeComponent = ({navigation}) => {
     },
     {
       id: 3,
-      component: <HotSeason navigation={navigation} />,
-    },
-    {
-      id: 4,
       component: <NewAllAnime navigation={navigation} />,
     },
     {
-      id: 5,
       component: <UpcomingAnime navigation={navigation} />,
+      id: 4,
+    },
+    {
+      id: 5,
+      component: <Recommendation navigation={navigation} />,
     },
   ];
 

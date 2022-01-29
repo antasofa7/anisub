@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IconBack} from '../../assets';
-import {Spacing} from '../../components/atoms';
+import Spacing from '../../components/atoms/Spacing';
 import {LoadingPage} from '../../components/atoms/Loading';
 import {ListFooterComponent} from '../../components/atoms/Loading/ListFooterComponent';
 import {MainCardFilm} from '../../components/molecules';
@@ -31,7 +31,6 @@ const GenrePage = ({route}) => {
   const getMovieList = useCallback(async () => {
     setLoading(true);
     const res = await getPlaylistyByGenre(genre.genre_id);
-    console.log('genre.genre_id> ', genre.genre_id);
     setMovies(res.data.getAnime);
     setIsPage(res.data.pages);
     setLoading(false);
@@ -69,21 +68,12 @@ const GenrePage = ({route}) => {
     return <View style={styles.separator} />;
   };
 
-  console.log('page', page);
-  console.log('loading', isLoading);
-  console.log('pages', isPage);
-  console.log('loadingMore', isMoreLoading);
-  console.log('stopLoadMore', stopLoadMore);
-  console.log('allDataDisplayed', allDataDisplayed);
-
   const loadMoreMovies = async () => {
     try {
       if (!stopLoadMore) {
         if (isPage) {
           setMoreLoading(true);
           const res = await getMorePlaylistyByGenre(genre.genre_id, page);
-          console.log('pages', res.data.pages);
-          console.log('genre_id> ', genre.genre_id);
           setMovies([...movies, ...res.data.getAnime]);
           setIsPage(res.data.pages);
           setPage(page + 1);

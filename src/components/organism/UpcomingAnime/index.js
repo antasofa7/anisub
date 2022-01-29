@@ -31,7 +31,6 @@ const UpcomingAnime = ({navigation}) => {
         if (isPage) {
           setLoading(true);
           const res = await getMoreUpcomingAnimes(page);
-          console.log('pages', res.data.pages);
           setMovies([...movies, ...res.data.episodes]);
           setIsPage(res.data.pages);
           setPage(page + 1);
