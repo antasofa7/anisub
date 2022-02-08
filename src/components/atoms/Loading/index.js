@@ -7,7 +7,9 @@ export const LoadingPage = ({allDataDisplayed, width, margin, small}) => {
   return (
     <View style={styles.loading(margin, width)}>
       {allDataDisplayed ? (
-        <Text style={styles.TextDisplayed}>All data is displayed.</Text>
+        <Text style={styles.TextDisplayed} numberOfLines={2}>
+          All data is displayed.
+        </Text>
       ) : (
         <ActivityIndicator size={size} color={colors.secondary} />
       )}
@@ -18,13 +20,14 @@ export const LoadingPage = ({allDataDisplayed, width, margin, small}) => {
 const styles = StyleSheet.create({
   loading: (margin, width) => ({
     marginTop: margin ? responsiveHeight(260) : 0,
+    paddingHorizontal: 16,
     flex: 1,
     width: width ? responsiveWidth(110) : '100%',
     justifyContent: 'center',
     alignItems: 'center',
   }),
   TextDisplayed: {
-    color: colors.onBackground,
+    color: colors.secondary,
     fontFamily: fonts.sora.regular,
     fontSize: 10,
   },

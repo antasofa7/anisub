@@ -15,7 +15,6 @@ import Spacing from '../../atoms/Spacing';
 import {MainCardFilm} from '../../molecules';
 
 const AnimeGenreList = ({navigation}) => {
-  // const navigation = useNavigation();
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isMoreLoading, setMoreLoading] = useState(false);
@@ -36,8 +35,8 @@ const AnimeGenreList = ({navigation}) => {
     getMovieList();
   }, [getMovieList]);
 
-  const numColumns = 3;
-  const size = Dimensions.get('window').width / numColumns - 20;
+  const numColumns = 2;
+  const size = Dimensions.get('window').width / numColumns - 24;
 
   const _itemSeparator = () => {
     return <View style={styles.separator} />;
@@ -97,6 +96,9 @@ const AnimeGenreList = ({navigation}) => {
           onEndReached={loadMoreMovies}
           onEndReachedThreshold={0.1}
           onMomentumScrollBegin={() => setStopLoadMore(false)}
+          removeClippedSubviews={true} // Unmount components when outside of window
+          initialNumToRender={4} // Reduce initial render amount
+          maxToRenderPerBatch={1} // Reduce number in each render batch
           ListHeaderComponent={() => <Spacing height={16} />}
           ListFooterComponent={
             <ListFooterComponent
@@ -104,9 +106,6 @@ const AnimeGenreList = ({navigation}) => {
               allDataDisplayed={allDataDisplayed}
             />
           }
-          removeClippedSubviews={true} // Unmount components when outside of window
-          initialNumToRender={4} // Reduce initial render amount
-          maxToRenderPerBatch={1} // Reduce number in each render batch
         />
       )}
     </SafeAreaView>
@@ -119,30 +118,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 16,
-    zIndex: -1,
   },
   separator: {
-    height: 12,
+    height: 14,
     width: '100%',
     backgroundColor: 'transparent',
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  allDataDisplayed: {
-    position: 'absolute',
-    bottom: 90,
-    left: responsiveWidth(95),
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-  },
-  TextDisplayed: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    color: colors.onPrimary,
-    fontFamily: fonts.sora.regular,
-    fontSize: 10,
   },
 });

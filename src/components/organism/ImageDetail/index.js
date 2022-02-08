@@ -16,14 +16,52 @@ import {IMG_ANIME_URL} from '../../../utils/constan';
 
 const leftPlayIcon = Dimensions.get('window').width / 2 - 30;
 
-const ImageDetail = ({animeDetail, indexParams, onPress}) => {
+const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
   const navigation = useNavigation();
+  const [countDown, setCountDown] = useState({});
   const [orientation, setOrientation] = useState('portrait');
+
   const index = indexParams || 0;
   const episodes = animeDetail.episodes[index];
   const postEpisode = index
     ? `Episode ${episodes.post_episodes}`
     : 'Last Episode';
+
+  const calculateCountdown = useCallback(() => {
+    let today = Date.now();
+    let updatedAt = new Date(episodes.updated_at).getTime();
+    let up_coming = updatedAt + 604800 * 1000;
+    let difference = Number(up_coming - today);
+
+    let days = Math.floor(difference / (1000 * 60 * 60 * 24));
+
+    let divisor4hour = (difference / 1000) % (3600 * 24);
+    let hours = Math.floor(divisor4hour / (60 * 60));
+
+    let divisor4minutes = (difference / 1000) % (60 * 60);
+    let minutes = Math.floor(divisor4minutes / 60);
+
+    let divisor4second = divisor4minutes % 60;
+    let seconds = Math.ceil(divisor4second);
+
+    let countDowns = {};
+    if (difference > 0) {
+      countDowns = {
+        days: days.toString().length < 2 ? `0${days}` : days,
+        hours: hours.toString().length < 2 ? `0${hours}` : hours,
+        minutes: minutes.toString().length < 2 ? `0${minutes}` : minutes,
+        seconds: seconds.toString().length < 2 ? `0${seconds}` : seconds,
+      };
+    } else {
+      countDowns = {
+        days: '00',
+        hours: '00',
+        minutes: '00',
+        seconds: '00',
+      };
+    }
+    return countDowns;
+  }, [episodes]);
 
   const getOrientation = useCallback(() => {
     if (Dimensions.get('window').width < Dimensions.get('window').height) {
@@ -35,7 +73,23 @@ const ImageDetail = ({animeDetail, indexParams, onPress}) => {
 
   useEffect(() => {
     getOrientation();
-  }, [getOrientation]);
+    const timer = setInterval(() => {
+      setCountDown(calculateCountdown());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [getOrientation, calculateCountdown]);
+
+  const countDownComponent = [];
+
+  Object.keys(countDown).forEach(interval => {
+    countDownComponent.push(
+      <View style={styles.countDownWrap} key={interval}>
+        <Text style={styles.countDownTitle}>{countDown[interval]} </Text>
+        <Text style={styles.countDownLabel}>{interval}</Text>
+      </View>,
+    );
+  });
 
   return (
     <View style={styles.container}>
@@ -56,21 +110,33 @@ const ImageDetail = ({animeDetail, indexParams, onPress}) => {
         <View style={styles.iconBack}>
           <IconBack onPress={() => navigation.goBack()} />
         </View>
-        <TouchableOpacity style={styles.iconPlay} onPress={onPress}>
-          <IconPlayCircle />
-        </TouchableOpacity>
-        <View style={styles.wrapperTitle}>
-          <Text style={styles.episode}>
-            {animeDetail.type === 'TV'
-              ? `${postEpisode} - ${moment(episodes.updated_at).format(
-                  'DD MMMM YYYY',
-                )}`
-              : null}
-          </Text>
-          <Text style={styles.title} numberOfLines={2}>
-            {episodes.post_name}
-          </Text>
-        </View>
+        {upcoming ? (
+          <>
+            <View style={styles.countDown}>{countDownComponent}</View>
+            <View style={styles.wrapperTitle}>
+              <Text style={styles.title} numberOfLines={2}>
+                {animeDetail.sub_name}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity style={styles.iconPlay} onPress={onPress}>
+              <IconPlayCircle />
+            </TouchableOpacity>
+            <View style={styles.wrapperTitle}>
+              <Text style={styles.episode}>
+                {animeDetail.type !== 'Movie' &&
+                  `${postEpisode} - ${moment(episodes.updated_at).format(
+                    'DD MMMM YYYY',
+                  )}`}
+              </Text>
+              <Text style={styles.title} numberOfLines={2}>
+                {animeDetail.sub_name}
+              </Text>
+            </View>
+          </>
+        )}
       </View>
     </View>
   );
@@ -122,18 +188,45 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 105,
     left: leftPlayIcon,
-    // opacity: 0.8,
     backgroundColor: colors.background,
     paddingLeft: 20,
     paddingRight: 15,
     paddingVertical: 15,
     borderRadius: 50,
   },
+  countDown: {
+    position: 'absolute',
+    flexDirection: 'row',
+    top: 105,
+    left: responsiveWidth(22),
+    backgroundColor: colors.background,
+    padding: 10,
+    borderRadius: 20,
+  },
+  countDownWrap: {
+    color: colors.onBackground,
+    marginHorizontal: 3,
+    alignItems: 'center',
+  },
+  countDownTitle: {
+    backgroundColor: colors.onPrimary,
+    padding: 16,
+    borderRadius: 5,
+    color: colors.onBackground,
+    fontFamily: fonts.nunito.bold,
+    fontSize: 24,
+  },
+  countDownLabel: {
+    marginTop: 3,
+    color: colors.onBackground,
+    fontFamily: fonts.nunito.bold,
+    fontSize: 12,
+  },
   wrapperTitle: {
     position: 'absolute',
     left: 16,
     right: 16,
-    bottom: 0,
+    bottom: 8,
   },
   episode: {
     fontFamily: fonts.sora.regular,

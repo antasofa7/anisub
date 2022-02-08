@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   title: active => ({
     fontFamily: fonts.sora.medium,
     fontSize: 14,
-    color: active ? colors.onPrimary : colors.onBackground,
+    color: active ? colors.background : colors.onBackground,
     paddingHorizontal: 16,
     paddingVertical: 8,
   }),

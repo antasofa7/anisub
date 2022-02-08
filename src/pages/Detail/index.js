@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useScrollToTop} from '@react-navigation/native';
 import moment from 'moment';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -11,10 +11,10 @@ import {
   View,
 } from 'react-native';
 import Star from '../../components/atoms/Star';
-import {MainCardFilm} from '../../components/molecules';
+import CardAnime from '../../components/molecules/CardAnime';
 import {ImageDetail} from '../../components/organism';
 import Recomendation from '../../components/organism/Recommendation';
-import {getAnimeById} from '../../config';
+import {getAnimeById, getRecommendation} from '../../config';
 import {colors, fonts, IMG_EPISODE_URL, responsiveHeight} from '../../utils';
 import PlayVideo from './PlayVideo';
 
@@ -23,6 +23,7 @@ const Detail = ({route}) => {
   const {animeId} = route.params;
   const [animeDetail, setAnimeDetail] = useState([]);
   const [episode, setEpisode] = useState([]);
+  const [recommendation, setRecommendation] = useState([]);
   const [genres, setGenres] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [textShown, setTextShown] = useState(false);
@@ -32,13 +33,16 @@ const Detail = ({route}) => {
   const getAnimeDetail = useCallback(async () => {
     setLoading(true);
     const res = await getAnimeById(animeId);
+    const recommend = await getRecommendation();
     setAnimeDetail(res.data.anime);
+    setRecommendation(recommend.data.animes);
     setLoading(false);
     setGenres(res.data.anime.genres);
   }, [animeId]);
 
   useEffect(() => {
     getAnimeDetail();
+    setVideoPlay(false);
   }, [getAnimeDetail]);
 
   const onTextLayout = useCallback(e => {
@@ -55,12 +59,14 @@ const Detail = ({route}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          setVideoPlay(true), setEpisode(animeDetail.episodes[index]);
+          setVideoPlay(true);
+          setEpisode(animeDetail.episodes[index]);
         }}>
         <View key={item.post_id} style={styles.wrapperItem}>
-          <MainCardFilm
+          <CardAnime
             key={item.post_id}
             title={item.post_name}
+            episode={item.post_episodes}
             thumbnail={`${IMG_EPISODE_URL}/${item.post_image}`}
           />
         </View>
@@ -75,29 +81,21 @@ const Detail = ({route}) => {
           <ActivityIndicator size="large" color={colors.secondary} />
         </View>
       ) : (
-        <ScrollView>
-          {isVideoPlay ? (
-            <View style={styles.video}>
-              <PlayVideo animeDetail={episode} />
-              <View style={styles.wrapperTitle}>
-                <Text style={styles.title} numberOfLines={1}>
-                  {episode.post_name}
-                </Text>
-                <Text style={styles.episode}>
-                  Episode {episode.post_episodes} -{' '}
-                  {moment(episode.updated_at).format('DD MMMM YYYY')}
-                </Text>
-              </View>
-            </View>
-          ) : (
-            <ImageDetail
-              animeDetail={animeDetail}
-              onPress={() => {
-                setVideoPlay(true), setEpisode(animeDetail.episodes[0]);
-              }}
-            />
-          )}
-          <View style={styles.wrapper}>
+        <>
+          <View style={styles.wrapperVideo}>
+            {isVideoPlay ? (
+              <PlayVideo animeDetail={episode} episode={true} />
+            ) : (
+              <ImageDetail
+                animeDetail={animeDetail}
+                onPress={() => {
+                  setVideoPlay(true);
+                  setEpisode(animeDetail.episodes[0]);
+                }}
+              />
+            )}
+          </View>
+          <ScrollView style={styles.wrapper}>
             <View style={styles.genreWrapper}>
               <Text style={styles.rilis}>
                 {moment(animeDetail.rilis).format('YYYY')} |{' '}
@@ -122,57 +120,56 @@ const Detail = ({route}) => {
             <View style={styles.wrapperRating}>
               <Star rating={animeDetail.rate} size={32} />
             </View>
-          </View>
-          <View style={styles.sinopsis}>
-            <Text style={styles.sinopsisTitle}>Synopsis</Text>
-            <Text
-              style={styles.sinopsisDetail}
-              numberOfLines={textShown ? undefined : 5}
-              onTextLayout={onTextLayout}>
-              {animeDetail.sub_description}
-            </Text>
-            {lengthMore ? (
-              <Text onPress={toggleNumberOfLines} style={styles.readMore}>
-                {textShown ? 'read less' : 'read more'}
+            <View style={styles.sinopsis}>
+              <Text
+                style={styles.sinopsisDetail}
+                numberOfLines={textShown ? undefined : 5}
+                onTextLayout={onTextLayout}>
+                {animeDetail.sub_description}
               </Text>
-            ) : null}
-          </View>
-          {animeDetail.type === 'TV' ? (
-            <View style={styles.otherEpisodes}>
-              <View style={styles.wrapperLabel}>
-                <Text style={styles.label}>Other Episodes</Text>
-                {animeDetail.pages ? (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('Episodes', {animeDetail})
-                    }>
-                    <Text style={styles.more}>See more</Text>
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-              <View style={styles.wrapperEpisodes}>
-                <FlatList
-                  data={animeDetail.episodes}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={_renderItem}
-                  initialNumToRender={3}
-                  keyExtractor={item => item.post_id.toString()}
-                  scrollToEnd={() => ({animated: true})}
-                  getItemLayout={(data, index) => ({
-                    length: responsiveHeight(100),
-                    offset: responsiveHeight(100) * index,
-                    index,
-                  })}
-                />
-              </View>
+              {lengthMore && (
+                <Text onPress={toggleNumberOfLines} style={styles.readMore}>
+                  {textShown ? 'read less' : 'read more'}
+                </Text>
+              )}
             </View>
-          ) : (
+            {animeDetail.type !== 'Movie' && (
+              <View style={styles.otherEpisodes}>
+                <View style={styles.wrapperLabel}>
+                  <Text style={styles.label}>Other Episodes</Text>
+                  {animeDetail.pages && (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate('Episodes', {animeDetail})
+                      }>
+                      <Text style={styles.more}>See more</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <View style={styles.wrapperEpisodes}>
+                  <FlatList
+                    data={animeDetail.episodes}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={_renderItem}
+                    initialNumToRender={3}
+                    keyExtractor={item => item.post_id.toString()}
+                    scrollToEnd={() => ({animated: true})}
+                    getItemLayout={(data, index) => ({
+                      length: responsiveHeight(100),
+                      offset: responsiveHeight(100) * index,
+                      index,
+                    })}
+                  />
+                </View>
+              </View>
+            )}
             <View style={styles.recomendation}>
-              <Recomendation />
+              <Text style={styles.label}>Anime Recommendations</Text>
+              <Recomendation recommendation={recommendation} />
             </View>
-          )}
-        </ScrollView>
+          </ScrollView>
+        </>
       )}
     </View>
   );
@@ -184,12 +181,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+    paddingBottom: 16,
+  },
+  video: {
+    height: responsiveHeight(270),
+  },
+  wrapperVideo: {
+    height: responsiveHeight(270),
   },
   wrapper: {
-    marginTop: 16,
     marginHorizontal: 16,
   },
   genreWrapper: {
+    marginTop: 8,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
@@ -209,23 +213,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   wrapperRating: {
-    marginTop: 4,
+    marginTop: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   sinopsis: {
-    marginHorizontal: 16,
     marginTop: 8,
-  },
-  sinopsisTitle: {
-    fontFamily: fonts.sora.semiBold,
-    fontSize: 12,
-    color: colors.onBackground,
   },
   sinopsisDetail: {
     marginTop: 8,
     fontFamily: fonts.sora.regular,
-    fontSize: 10,
+    fontSize: 11,
+    lineHeight: 16,
     color: colors.onBackground,
   },
   readMore: {
@@ -238,34 +237,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  video: {
-    height: responsiveHeight(320),
-  },
-  wrapperTitle: {
-    marginTop: 12,
-    marginHorizontal: 16,
-  },
-  episode: {
-    fontFamily: fonts.sora.regular,
-    fontSize: 10,
-    color: colors.onBackground,
-    marginBottom: 8,
-  },
-  title: {
-    fontFamily: fonts.nunito.bold,
-    fontSize: 22,
-    color: colors.onBackground,
-  },
   otherEpisodes: {
-    margin: 16,
-  },
-  recomendation: {
-    marginTop: -20,
-    padding: 16,
+    marginTop: 24,
   },
   wrapperEpisodes: {
     flexDirection: 'row',
-    marginTop: 12,
+    marginTop: 16,
   },
   wrapperLabel: {
     flexDirection: 'row',
@@ -281,5 +258,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: fonts.sora.regular,
     color: colors.primary,
+  },
+  recomendation: {
+    paddingVertical: 24,
   },
 });

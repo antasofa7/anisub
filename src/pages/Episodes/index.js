@@ -15,7 +15,13 @@ import {LoadingPage} from '../../components/atoms/Loading';
 import {ListFooterComponent} from '../../components/atoms/Loading/ListFooterComponent';
 import {MainCardFilm} from '../../components/molecules';
 import {getMoreEpisodes} from '../../config';
-import {colors, fonts, IMG_EPISODE_URL, responsiveHeight} from '../../utils';
+import {
+  colors,
+  fonts,
+  IMG_EPISODE_URL,
+  responsiveHeight,
+  responsiveWidth,
+} from '../../utils';
 
 const Episodes = () => {
   const navigation = useNavigation();
@@ -36,8 +42,8 @@ const Episodes = () => {
     setLoading(false);
   }, [anime]);
 
-  const numColumns = 3;
-  const size = Dimensions.get('window').width / numColumns - 20;
+  const numColumns = 2;
+  const size = Dimensions.get('window').width / numColumns - 24;
 
   const _renderItem = ({item, index}) => {
     return (
@@ -50,6 +56,7 @@ const Episodes = () => {
         <MainCardFilm
           key={item.post_id}
           title={item.post_name}
+          episode={item.post_episodes}
           thumbnail={`${IMG_EPISODE_URL}/${item.post_image}`}
           width={size}
           margin={0}
@@ -97,7 +104,7 @@ const Episodes = () => {
             <View style={styles.iconBack}>
               <IconBack onPress={() => navigation.goBack()} />
             </View>
-            <Spacing width={30} />
+            <Spacing width={16} />
             <Text numberOfLines={1} style={styles.title}>
               {anime.sub_name}
             </Text>
@@ -111,15 +118,16 @@ const Episodes = () => {
             onEndReached={loadMoreMovies}
             onEndReachedThreshold={0.1}
             onMomentumScrollBegin={() => setStopLoadMore(false)}
-            removeClippedSubviews={true} // Unmount components when outside of window
-            initialNumToRender={4} // Reduce initial render amount
-            maxToRenderPerBatch={1} // Reduce number in each render batch
+            ListHeaderComponent={() => <Spacing height={16} />}
             ListFooterComponent={
               <ListFooterComponent
                 isMoreLoading={isMoreLoading}
                 allDataDisplayed={allDataDisplayed}
               />
             }
+            removeClippedSubviews={true} // Unmount components when outside of window
+            initialNumToRender={4} // Reduce initial render amount
+            maxToRenderPerBatch={1} // Reduce number in each render batch
           />
         </View>
       )}
@@ -138,6 +146,7 @@ const styles = StyleSheet.create({
     margin: 16,
   },
   header: {
+    width: responsiveWidth(360),
     height: responsiveHeight(40),
     flexDirection: 'row',
   },

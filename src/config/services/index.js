@@ -1,6 +1,6 @@
 import callAPI from '../api';
 
-const ROOT_API = 'https://testapi.my.id';
+const ROOT_API = 'https://anisub.top/api';
 
 export async function getHotMovies() {
   const url = `${ROOT_API}/hot/season`;
@@ -146,7 +146,7 @@ export async function getGenres() {
 }
 
 export async function getSearch(searchParams) {
-  const url = `${ROOT_API}/search/${searchParams}`;
+  const url = `${ROOT_API}/live/search/${searchParams}`;
 
   return callAPI({
     url,

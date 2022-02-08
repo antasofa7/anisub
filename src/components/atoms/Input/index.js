@@ -2,7 +2,14 @@ import React from 'react';
 import {StyleSheet, TextInput} from 'react-native';
 import {colors, fonts} from '../../../utils';
 
-const Input = ({placeholder, onChangeText, value, onFocus}) => {
+const Input = ({
+  placeholder,
+  onChangeText,
+  value,
+  onFocus,
+  onKeyPress,
+  onSubmitEditing,
+}) => {
   return (
     <TextInput
       value={value}
@@ -11,6 +18,8 @@ const Input = ({placeholder, onChangeText, value, onFocus}) => {
       style={styles.input}
       onChangeText={onChangeText}
       onFocus={onFocus}
+      onKeyPress={onKeyPress}
+      onSubmitEditing={onSubmitEditing}
     />
   );
 };

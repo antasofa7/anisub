@@ -8,16 +8,16 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {getMoreNewMovies, getNewMovies} from '../../../config';
+import {getMoreNewMovies} from '../../../config';
 import {IMG_ANIME_URL} from '../../../utils';
 import {LoadingPage} from '../../atoms/Loading';
 import {ListFooterComponent} from '../../atoms/Loading/ListFooterComponent';
+import Spacing from '../../atoms/Spacing';
 import {MainCardFilm} from '../../molecules';
 
-const NewMovie = () => {
+const NewMovie = ({newMovies, loading}) => {
   const navigation = useNavigation();
   const [movies, setMovies] = useState([]);
-  const [isLoading, setLoading] = useState(false);
   const [isMoreLoading, setMoreLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [isPage, setIsPage] = useState(false);
@@ -25,24 +25,21 @@ const NewMovie = () => {
   const [allDataDisplayed, setAllDataDisplayed] = useState(false);
 
   const getMovieList = useCallback(async () => {
-    setLoading(true);
-    const allMovies = await getNewMovies();
-    setMovies(allMovies.data.animes);
-    setIsPage(allMovies.data.pages);
-    setLoading(false);
+    setMovies(newMovies.animes);
+    setIsPage(newMovies.pages);
 
-    if (!allMovies.data.pages) {
+    if (!newMovies.pages) {
       setAllDataDisplayed(true);
       setMoreLoading(false);
     }
-  }, []);
+  }, [newMovies]);
 
   useEffect(() => {
     getMovieList();
   }, [getMovieList]);
 
-  const numColumns = 3;
-  const size = Dimensions.get('window').width / numColumns - 20;
+  const numColumns = 2;
+  const size = Dimensions.get('window').width / numColumns - 24;
 
   const _itemSeparator = () => {
     return <View style={styles.separator} />;
@@ -90,7 +87,7 @@ const NewMovie = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading ? (
+      {loading ? (
         <LoadingPage margin />
       ) : (
         <FlatList
@@ -102,15 +99,16 @@ const NewMovie = () => {
           onEndReached={loadMoreMovies}
           onEndReachedThreshold={0.1}
           onMomentumScrollBegin={() => setStopLoadMore(false)}
+          removeClippedSubviews={true} // Unmount components when outside of window
+          initialNumToRender={4} // Reduce initial render amount
+          maxToRenderPerBatch={1} // Reduce number in each render batch
+          ListHeaderComponent={() => <Spacing height={16} />}
           ListFooterComponent={
             <ListFooterComponent
               isMoreLoading={isMoreLoading}
               allDataDisplayed={allDataDisplayed}
             />
           }
-          removeClippedSubviews={true} // Unmount components when outside of window
-          initialNumToRender={4} // Reduce initial render amount
-          maxToRenderPerBatch={1} // Reduce number in each render batch
         />
       )}
     </SafeAreaView>
@@ -124,7 +122,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   separator: {
-    height: 12,
+    height: 14,
     width: '100%',
     backgroundColor: 'transparent',
   },

@@ -12,7 +12,7 @@ import {
 import Star from '../../components/atoms/Star';
 import {ImageDetail} from '../../components/organism';
 import Recomendation from '../../components/organism/Recommendation';
-import {getAnimeById} from '../../config';
+import {getAnimeById, getRecommendation} from '../../config';
 import {colors, fonts, responsiveHeight} from '../../utils';
 import PlayVideo from './PlayVideo';
 
@@ -21,6 +21,7 @@ const DetailMovies = ({route}) => {
   const {animeId} = route.params;
   const [animeDetail, setAnimeDetail] = useState([]);
   const [episode, setEpisode] = useState([]);
+  const [recommendation, setRecommendation] = useState([]);
   const [genres, setGenres] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [textShown, setTextShown] = useState(false);
@@ -30,7 +31,9 @@ const DetailMovies = ({route}) => {
   const getAnimeDetail = useCallback(async () => {
     setLoading(true);
     const res = await getAnimeById(animeId);
+    const recommend = await getRecommendation();
     setAnimeDetail(res.data.anime);
+    setRecommendation(recommend.data.animes);
     setLoading(false);
     setGenres(res.data.anime.genres);
   }, [animeId]);
@@ -56,25 +59,21 @@ const DetailMovies = ({route}) => {
           <ActivityIndicator size="large" color={colors.secondary} />
         </View>
       ) : (
-        <ScrollView>
-          {isVideoPlay ? (
-            <View style={styles.video}>
+        <>
+          <View style={styles.wrapperVideo}>
+            {isVideoPlay ? (
               <PlayVideo animeDetail={episode} />
-              <View style={styles.wrapperTitle}>
-                <Text style={styles.title} numberOfLines={1}>
-                  {episode.post_name}
-                </Text>
-              </View>
-            </View>
-          ) : (
-            <ImageDetail
-              animeDetail={animeDetail}
-              onPress={() => {
-                setVideoPlay(true), setEpisode(animeDetail.episodes[0]);
-              }}
-            />
-          )}
-          <View style={styles.wrapper}>
+            ) : (
+              <ImageDetail
+                animeDetail={animeDetail}
+                onPress={() => {
+                  setVideoPlay(true);
+                  setEpisode(animeDetail.episodes[0]);
+                }}
+              />
+            )}
+          </View>
+          <ScrollView style={styles.wrapper}>
             <View style={styles.genreWrapper}>
               <Text style={styles.rilis}>
                 {moment(animeDetail.rilis).format('YYYY')} |{' '}
@@ -99,25 +98,26 @@ const DetailMovies = ({route}) => {
             <View style={styles.wrapperRating}>
               <Star rating={animeDetail.rate} size={32} />
             </View>
-          </View>
-          <View style={styles.sinopsis}>
-            <Text style={styles.sinopsisTitle}>Synopsis</Text>
-            <Text
-              style={styles.sinopsisDetail}
-              numberOfLines={textShown ? undefined : 5}
-              onTextLayout={onTextLayout}>
-              {animeDetail.sub_description}
-            </Text>
-            {lengthMore ? (
-              <Text onPress={toggleNumberOfLines} style={styles.readMore}>
-                {textShown ? 'read less' : 'read more'}
+            <View style={styles.sinopsis}>
+              <Text style={styles.sinopsisTitle}>Synopsis</Text>
+              <Text
+                style={styles.sinopsisDetail}
+                numberOfLines={textShown ? undefined : 5}
+                onTextLayout={onTextLayout}>
+                {animeDetail.sub_description}
               </Text>
-            ) : null}
-          </View>
-          <View style={styles.recomendations}>
-            <Recomendation />
-          </View>
-        </ScrollView>
+              {lengthMore && (
+                <Text onPress={toggleNumberOfLines} style={styles.readMore}>
+                  {textShown ? 'read less' : 'read more'}
+                </Text>
+              )}
+            </View>
+            <View style={styles.recomendations}>
+              <Text style={styles.label}>Anime Recommendations</Text>
+              <Recomendation recommendation={recommendation} />
+            </View>
+          </ScrollView>
+        </>
       )}
     </View>
   );
@@ -131,11 +131,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingBottom: 16,
   },
+  video: {
+    height: responsiveHeight(270),
+  },
+  wrapperVideo: {
+    height: responsiveHeight(270),
+  },
   wrapper: {
-    marginTop: 4,
     marginHorizontal: 16,
   },
   genreWrapper: {
+    marginTop: 8,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
@@ -160,7 +166,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   sinopsis: {
-    marginHorizontal: 16,
     marginTop: 8,
   },
   sinopsisTitle: {
@@ -184,9 +189,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  video: {
-    height: responsiveHeight(320),
-  },
   wrapperTitle: {
     position: 'absolute',
     left: 16,
@@ -199,6 +201,11 @@ const styles = StyleSheet.create({
     color: colors.onBackground,
   },
   recomendations: {
-    marginHorizontal: 16,
+    paddingVertical: 16,
+  },
+  label: {
+    fontSize: 14,
+    fontFamily: fonts.sora.medium,
+    color: colors.onBackground,
   },
 });

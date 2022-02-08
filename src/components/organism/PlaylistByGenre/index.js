@@ -11,6 +11,7 @@ import {getMorePlaylistyByGenre, getPlaylistyByGenre} from '../../../config';
 import {IMG_ANIME_URL} from '../../../utils';
 import {LoadingPage} from '../../atoms/Loading';
 import {ListFooterComponent} from '../../atoms/Loading/ListFooterComponent';
+import Spacing from '../../atoms/Spacing';
 import {MainCardFilm} from '../../molecules';
 
 const PlaylistByGenre = ({genreID, navigation}) => {
@@ -39,8 +40,8 @@ const PlaylistByGenre = ({genreID, navigation}) => {
     getMovieList();
   }, [getMovieList]);
 
-  const numColumns = 3;
-  const size = Dimensions.get('window').width / numColumns - 20;
+  const numColumns = 2;
+  const size = Dimensions.get('window').width / numColumns - 24;
 
   const _itemSeparator = () => {
     return <View style={styles.separator} />;
@@ -100,15 +101,16 @@ const PlaylistByGenre = ({genreID, navigation}) => {
             onEndReached={loadMoreMovies}
             onEndReachedThreshold={0.1}
             onMomentumScrollBegin={() => setStopLoadMore(false)}
+            removeClippedSubviews={true} // Unmount components when outside of window
+            initialNumToRender={4} // Reduce initial render amount
+            maxToRenderPerBatch={1} // Reduce number in each render batch
+            ListHeaderComponent={() => <Spacing height={16} />}
             ListFooterComponent={
               <ListFooterComponent
                 isMoreLoading={isMoreLoading}
                 allDataDisplayed={allDataDisplayed}
               />
             }
-            removeClippedSubviews={true} // Unmount components when outside of window
-            initialNumToRender={4} // Reduce initial render amount
-            maxToRenderPerBatch={1} // Reduce number in each render batch
           />
         </>
       )}
@@ -121,11 +123,10 @@ export default PlaylistByGenre;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 16,
-    zIndex: -1,
+    marginHorizontal: 16,
   },
   separator: {
-    height: 12,
+    height: 14,
     width: '100%',
     backgroundColor: 'transparent',
   },

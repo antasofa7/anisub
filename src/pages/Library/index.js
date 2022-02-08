@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {GenreButton} from '../../components/molecules';
 import {AnimeGenreList, PlaylistByGenre} from '../../components/organism';
 import {colors} from '../../utils';
 
-export default class Library extends Component {
+export default class Library extends PureComponent {
   constructor(props) {
     super(props);
 

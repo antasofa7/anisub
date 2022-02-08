@@ -7,12 +7,12 @@ import {BottomNavigator} from '../components/organism';
 import Detail from '../pages/Detail';
 import DetailEpisode from '../pages/Detail/DetailEpisode';
 import DetailMovies from '../pages/Detail/DetailMovies';
+import DetailUpcoming from '../pages/Detail/DetailUpcoming';
 import Episodes from '../pages/Episodes';
 import GenrePage from '../pages/GenrePage';
 import Home from '../pages/Home';
 import Library from '../pages/Library';
 import Search from '../pages/Search';
-import Splash from '../pages/Splash';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,11 +50,6 @@ const Router = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Splash"
-        component={Splash}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         name="MainApp"
         component={MainApp}
         options={{headerShown: false}}
@@ -72,6 +67,11 @@ const Router = () => {
       <Stack.Screen
         name="DetailEpisode"
         component={DetailEpisode}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="DetailUpcoming"
+        component={DetailUpcoming}
         options={{headerShown: false}}
       />
       <Stack.Screen

@@ -1,19 +1,12 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {getAllNew, getMoreAllNew} from '../../../config';
-import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
+import React, {useEffect, useState} from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {getMoreAllNew} from '../../../config';
+import {colors, fonts, responsiveHeight} from '../../../utils';
 import {IMG_EPISODE_URL} from '../../../utils/constan';
 import {LoadingPage} from '../../atoms/Loading';
 import {CardNewAllMovie} from '../../molecules';
 
-const NewAllAnime = ({navigation}) => {
+const NewAllAnime = ({navigation, newAllAnime}) => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -21,17 +14,10 @@ const NewAllAnime = ({navigation}) => {
   const [stopLoadMore, setStopLoadMore] = useState(false);
   const [allDataDisplayed, setAllDataDisplayed] = useState(false);
 
-  const getMovieList = useCallback(async () => {
-    setLoading(true);
-    const res = await getAllNew();
-    setMovies(res.data.episodes);
-    setIsPage(res.data.pages);
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    getMovieList();
-  }, [getMovieList]);
+    setMovies(newAllAnime.episodes);
+    setIsPage(newAllAnime.pages);
+  }, [newAllAnime]);
 
   const loadMoreMovies = async () => {
     try {
@@ -39,7 +25,6 @@ const NewAllAnime = ({navigation}) => {
         if (isPage) {
           setLoading(true);
           const res = await getMoreAllNew(page);
-          console.log('pages', res.data.pages);
           setMovies([...movies, ...res.data.episodes]);
           setIsPage(res.data.pages);
           setPage(page + 1);
@@ -108,12 +93,12 @@ export default NewAllAnime;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 16,
+    marginTop: 24,
   },
   wrapper: {
     flexDirection: 'row',
-    height: responsiveHeight(110),
-    marginTop: 12,
+    height: responsiveHeight(130),
+    marginTop: 16,
   },
   label: {
     fontSize: 16,

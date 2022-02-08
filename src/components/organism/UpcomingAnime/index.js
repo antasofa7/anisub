@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {getMoreUpcomingAnimes, getUpcomingAnimes} from '../../../config';
+import {getMoreUpcomingAnimes} from '../../../config';
 import {colors, fonts, IMG_ANIME_URL, responsiveHeight} from '../../../utils';
 import {LoadingPage} from '../../atoms/Loading';
 import {CardUpcomingAnime} from '../../molecules';
 
-const UpcomingAnime = ({navigation}) => {
+const UpcomingAnime = ({navigation, upcomingAnime}) => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -13,17 +13,10 @@ const UpcomingAnime = ({navigation}) => {
   const [stopLoadMore, setStopLoadMore] = useState(false);
   const [allDataDisplayed, setAllDataDisplayed] = useState(false);
 
-  const getMovieList = useCallback(async () => {
-    setLoading(true);
-    const res = await getUpcomingAnimes();
-    setMovies(res.data.episodes);
-    setIsPage(res.data.pages);
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    getMovieList();
-  }, [getMovieList]);
+    setMovies(upcomingAnime.episodes);
+    setIsPage(upcomingAnime.pages);
+  }, [upcomingAnime]);
 
   const loadMoreMovies = async () => {
     try {
@@ -51,7 +44,7 @@ const UpcomingAnime = ({navigation}) => {
   const _renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
-        onPress={() => navigation('Detail', {animeId: item.sid_new})}>
+        onPress={() => navigation('DetailUpcoming', {animeId: item.sid_new})}>
         <CardUpcomingAnime
           key={item.post_id}
           title={item.sub_name}
@@ -99,13 +92,12 @@ export default UpcomingAnime;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 16,
-    zIndex: -1,
+    marginTop: 24,
   },
   wrapper: {
     flexDirection: 'row',
-    height: responsiveHeight(110),
-    marginTop: 12,
+    height: responsiveHeight(130),
+    marginTop: 16,
   },
   label: {
     fontSize: 16,

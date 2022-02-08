@@ -8,9 +8,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {IconClose, IconSearchMenu} from '../../../assets';
+import FastImage from 'react-native-fast-image';
+import {IconClose, IconCloseSmall, IconSearchMenu} from '../../../assets';
 import {getSearch} from '../../../config';
-import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
+import {
+  colors,
+  fonts,
+  IMG_ANIME_URL,
+  responsiveHeight,
+  responsiveWidth,
+} from '../../../utils';
 import Input from '../../atoms/Input';
 import Spacing from '../../atoms/Spacing';
 
@@ -56,7 +63,14 @@ const HeaderSearch = props => {
       setFilteredData('');
     } else {
       setText(value);
-      getMovieList({dataSearch: value.toLowerCase()});
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!text) {
+      setFilteredData('');
+    } else {
+      getMovieList({dataSearch: text.toLowerCase()});
     }
   };
 
@@ -67,17 +81,32 @@ const HeaderSearch = props => {
     setFilteredData('');
   };
 
+  const clearText = () => {
+    setText('');
+    setFilteredData('');
+  };
+
   const _renderItem = ({index, item}) => {
     const type = item.type;
-    const detailPage = type === 'TV' ? 'Detail' : 'DetailMovies';
+    const detailPage = type === 'Movie' ? 'DetailMovies' : 'Detail';
     return (
-      <View style={styles.wrapperSearch}>
+      <View>
         <TouchableOpacity
           key={item.sub_id}
           onPress={() =>
             navigation.navigate(detailPage, {animeId: item.sub_id})
-          }>
-          <Text style={styles.dataSearch}>{item.sub_name}</Text>
+          }
+          style={styles.wrapperSearch}>
+          <FastImage
+            key={index}
+            source={{
+              uri: `${IMG_ANIME_URL}/${item.sub_banner}` || 'search image',
+            }}
+            style={styles.image}
+          />
+          <Text style={styles.dataSearch} numberOfLines={2}>
+            {item.sub_name}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -94,7 +123,13 @@ const HeaderSearch = props => {
               onFocus={() => setVisibleSearchArea(true)}
               placeholder="Search anime..."
               onChangeText={value => handleInput(value)}
+              onSubmitEditing={handleSubmit}
+              returnKeyType="done"
+              keyboardType="default"
             />
+            {text !== '' && (
+              <IconCloseSmall style={styles.iconClose} onPress={clearText} />
+            )}
           </>
         ) : (
           <IconSearchMenu onPress={() => setVisibleSearchbar(true)} />
@@ -114,7 +149,7 @@ const HeaderSearch = props => {
           );
         })}
       </View>
-      {!visibleSearchArea ? null : (
+      {visibleSearchArea && (
         <View style={styles.viewSearch}>
           {filterdData !== '' && (
             <>
@@ -125,10 +160,10 @@ const HeaderSearch = props => {
               ) : (
                 <>
                   {!filterdData ? (
-                    <Text style={styles.dataSearch}>Anime not found!</Text>
+                    <Text style={styles.notFound}>Anime not found!</Text>
                   ) : (
                     <FlatList
-                      data={filterdData?.animes}
+                      data={filterdData}
                       renderItem={_renderItem}
                       ListFooterComponent={() => <Spacing height={50} />}
                     />
@@ -159,19 +194,25 @@ const styles = StyleSheet.create({
     width: visibleSearchbar ? '100%' : responsiveWidth(60),
     height: responsiveHeight(40),
   }),
+  iconClose: {
+    position: 'absolute',
+    top: 9,
+    right: 20,
+    opacity: 0.5,
+  },
   wrapperTitle: {
     flexDirection: 'row',
   },
   series: {
     height: responsiveHeight(40),
-    width: responsiveWidth(132),
     justifyContent: 'center',
-    alignItems: 'center',
   },
   title: active => ({
+    paddingLeft: responsiveWidth(45),
+    width: responsiveWidth(132),
     fontFamily: fonts.sora.medium,
     fontSize: 16,
-    color: active ? colors.primary : colors.secondary,
+    color: active ? colors.primary : colors.onBackground,
     opacity: active ? 1 : 0.7,
   }),
   viewSearch: {
@@ -181,19 +222,33 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1,
     flex: 1,
-    paddingHorizontal: 16,
     paddingTop: 11,
     backgroundColor: colors.background,
-    alignItems: 'center',
-    minHeight: responsiveHeight(280),
+    height: responsiveHeight(640),
+    width: responsiveWidth(360),
   },
   wrapperSearch: {
-    paddingHorizontal: 16,
-    height: 50,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 36,
+    marginBottom: 8,
+    width: responsiveWidth(320),
+    height: responsiveHeight(65),
+  },
+  image: {
+    width: responsiveWidth(50),
+    height: responsiveHeight(60),
+    borderRadius: 5,
+    resizeMode: 'cover',
   },
   dataSearch: {
     fontFamily: fonts.sora.regular,
+    marginLeft: 10,
+    color: colors.onBackground,
+    fontSize: 16,
+  },
+  notFound: {
+    fontFamily: fonts.sora.regular,
+    marginLeft: responsiveWidth(100),
     color: colors.onBackground,
     fontSize: 16,
   },

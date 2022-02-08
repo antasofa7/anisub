@@ -6,7 +6,7 @@ import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import Star from '../../atoms/Star';
 
 const MainCardFilm = props => {
-  const {title, rating, thumbnail, width, margin} = props;
+  const {title, rating, thumbnail, width, margin, episode} = props;
 
   return (
     <View style={styles.container(margin)}>
@@ -21,11 +21,12 @@ const MainCardFilm = props => {
         colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.85)']}
         style={styles.linearGradient(width)}
       />
-      <View style={styles.wrapperTitle}>
+      <View style={styles.wrapperTitle(width)}>
         <Text style={styles.title} numberOfLines={2}>
           {title}
         </Text>
-        <Star rating={rating} size={14} />
+        {episode && <Text style={styles.episode}>Episode {episode}</Text>}
+        {rating && <Star rating={rating} size={20} />}
       </View>
     </View>
   );
@@ -35,11 +36,11 @@ export default MainCardFilm;
 
 const styles = StyleSheet.create({
   container: margin => ({
-    marginRight: margin ? margin : responsiveWidth(12),
+    marginRight: margin || responsiveWidth(14),
   }),
   imageThumbnail: width => ({
     width: width || responsiveWidth(110),
-    height: responsiveHeight(110),
+    height: responsiveHeight(170),
     borderRadius: 10,
     resizeMode: 'cover',
   }),
@@ -48,18 +49,26 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: width || responsiveWidth(110),
-    height: responsiveHeight(110),
+    height: responsiveHeight(170),
     borderRadius: 10,
   }),
-  wrapperTitle: {
+  wrapperTitle: width => ({
     position: 'absolute',
-    left: 4,
+    left: 6,
     bottom: 8,
-    width: responsiveWidth(100),
-  },
+    width: width - 16 || responsiveWidth(110),
+  }),
   title: {
     color: colors.onBackground,
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: fonts.sora.medium,
+    marginLeft: 3,
+  },
+  episode: {
+    color: colors.secondary,
+    fontSize: 9,
+    fontFamily: fonts.sora.regular,
+    marginBottom: 3,
+    marginLeft: 3,
   },
 });

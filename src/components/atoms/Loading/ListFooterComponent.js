@@ -9,7 +9,7 @@ export const ListFooterComponent = ({isMoreLoading, allDataDisplayed}) => {
     if (isMoreLoading) {
       return (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color={colors.secondary} />
+          <ActivityIndicator size="small" color={colors.secondary} />
           <Spacing height={responsiveHeight(170)} />
         </View>
       );
@@ -20,6 +20,7 @@ export const ListFooterComponent = ({isMoreLoading, allDataDisplayed}) => {
         return (
           <View style={styles.dataDisplayed}>
             <Text style={styles.TextDisplayed}>All data is displayed.</Text>
+            <Spacing height={responsiveHeight(170)} />
           </View>
         );
       }
@@ -31,14 +32,13 @@ export const ListFooterComponent = ({isMoreLoading, allDataDisplayed}) => {
 
 const styles = StyleSheet.create({
   loading: {
-    marginTop: 50,
+    marginTop: 24,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   dataDisplayed: {
     alignItems: 'center',
-    height: 170,
   },
   TextDisplayed: {
     marginTop: 24,

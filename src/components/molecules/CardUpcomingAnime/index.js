@@ -6,26 +6,26 @@ import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
 import Star from '../../atoms/Star';
 
 const CardUpcomingAnime = props => {
-  const {title, rating, thumbnail, width, margin} = props;
+  const {title, rating, thumbnail} = props;
 
   return (
-    <View style={styles.container(margin)}>
+    <View style={styles.container}>
       <FastImage
         source={{
           uri: thumbnail || '../../../assets/images/image-default.jpg',
           priority: FastImage.priority.normal,
         }}
-        style={styles.imageThumbnail(width)}
+        style={styles.imageThumbnail}
       />
       <LinearGradient
         colors={['rgba(13, 9, 0, 0)', 'rgba(13, 9, 0, 0.85)']}
-        style={styles.linearGradient(width)}
+        style={styles.linearGradient}
       />
       <View style={styles.wrapperTitle}>
         <Text style={styles.title} numberOfLines={2}>
           {title}
         </Text>
-        <Star rating={rating} size={14} />
+        <Star rating={rating} size={18} />
       </View>
     </View>
   );
@@ -34,33 +34,34 @@ const CardUpcomingAnime = props => {
 export default CardUpcomingAnime;
 
 const styles = StyleSheet.create({
-  container: margin => ({
-    marginRight: margin ? margin : responsiveWidth(12),
-  }),
-  imageThumbnail: width => ({
-    width: width ? width : responsiveWidth(110),
-    height: responsiveHeight(110),
+  container: {
+    marginRight: responsiveWidth(12),
+  },
+  imageThumbnail: {
+    width: responsiveWidth(120),
+    height: responsiveHeight(130),
     borderRadius: 10,
     resizeMode: 'cover',
-  }),
-  linearGradient: width => ({
+  },
+  linearGradient: {
     flex: 1,
     position: 'absolute',
     top: 0,
     left: 0,
-    width: responsiveWidth(110) || width,
-    height: responsiveHeight(110),
+    width: responsiveWidth(120),
+    height: responsiveHeight(130),
     borderRadius: 10,
-  }),
+  },
   wrapperTitle: {
     position: 'absolute',
     left: 4,
     bottom: 8,
-    width: responsiveWidth(100),
+    width: responsiveWidth(110),
   },
   title: {
     color: colors.onBackground,
-    fontSize: 10,
+    fontSize: 11,
     fontFamily: fonts.sora.medium,
+    marginLeft: 3,
   },
 });
