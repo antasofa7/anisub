@@ -1,6 +1,6 @@
-import {useNavigation, useScrollToTop} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -10,13 +10,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {OrientationLocker, PORTRAIT} from 'react-native-orientation-locker';
 import Star from '../../components/atoms/Star';
 import CardAnime from '../../components/molecules/CardAnime';
 import {ImageDetail} from '../../components/organism';
 import Recomendation from '../../components/organism/Recommendation';
 import {getAnimeById, getRecommendation} from '../../config';
 import {colors, fonts, IMG_EPISODE_URL, responsiveHeight} from '../../utils';
-import PlayVideo from './PlayVideo';
+import DetailEpisode from './DetailEpisode';
 
 const DetailUpcoming = ({route}) => {
   const navigation = useNavigation();
@@ -28,7 +29,7 @@ const DetailUpcoming = ({route}) => {
   const [isLoading, setLoading] = useState(true);
   const [textShown, setTextShown] = useState(false);
   const [lengthMore, setLengthMore] = useState(false);
-  const [isVideoPlay, setVideoPlay] = useState(false);
+  const [isEpisode, setIsEpisode] = useState(false);
 
   const getAnimeDetail = useCallback(async () => {
     setLoading(true);
@@ -42,7 +43,7 @@ const DetailUpcoming = ({route}) => {
 
   useEffect(() => {
     getAnimeDetail();
-    setVideoPlay(false);
+    setIsEpisode(false);
   }, [getAnimeDetail]);
 
   const onTextLayout = useCallback(e => {
@@ -59,7 +60,7 @@ const DetailUpcoming = ({route}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          setVideoPlay(true);
+          setIsEpisode(true);
           setEpisode(animeDetail.episodes[index]);
         }}>
         <View key={item.post_id} style={styles.wrapperItem}>
@@ -76,6 +77,7 @@ const DetailUpcoming = ({route}) => {
 
   return (
     <View style={styles.container}>
+      <OrientationLocker orientation={PORTRAIT} />
       {isLoading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color={colors.secondary} />
@@ -83,14 +85,14 @@ const DetailUpcoming = ({route}) => {
       ) : (
         <>
           <View style={styles.wrapperVideo}>
-            {isVideoPlay ? (
-              <PlayVideo animeDetail={episode} episode={true} />
+            {isEpisode ? (
+              <DetailEpisode animeDetail={episode} />
             ) : (
               <ImageDetail
                 animeDetail={animeDetail}
                 upcoming="Upcoming"
                 onPress={() => {
-                  setVideoPlay(true);
+                  setIsEpisode(true);
                   setEpisode(animeDetail.episodes[0]);
                 }}
               />

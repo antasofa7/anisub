@@ -9,12 +9,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {OrientationLocker, PORTRAIT} from 'react-native-orientation-locker';
 import Star from '../../components/atoms/Star';
 import {ImageDetail} from '../../components/organism';
 import Recomendation from '../../components/organism/Recommendation';
 import {getAnimeById, getRecommendation} from '../../config';
 import {colors, fonts, responsiveHeight} from '../../utils';
-import PlayVideo from './PlayVideo';
 
 const DetailMovies = ({route}) => {
   const navigation = useNavigation();
@@ -54,6 +54,7 @@ const DetailMovies = ({route}) => {
 
   return (
     <View style={styles.container}>
+      <OrientationLocker orientation={PORTRAIT} />
       {isLoading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color={colors.secondary} />
@@ -61,17 +62,14 @@ const DetailMovies = ({route}) => {
       ) : (
         <>
           <View style={styles.wrapperVideo}>
-            {isVideoPlay ? (
-              <PlayVideo animeDetail={episode} />
-            ) : (
-              <ImageDetail
-                animeDetail={animeDetail}
-                onPress={() => {
-                  setVideoPlay(true);
-                  setEpisode(animeDetail.episodes[0]);
-                }}
-              />
-            )}
+            <ImageDetail
+              animeDetail={animeDetail}
+              onPress={() => {
+                navigation.navigate('PlayVideo', {
+                  animeDetail: animeDetail.episodes[0],
+                });
+              }}
+            />
           </View>
           <ScrollView style={styles.wrapper}>
             <View style={styles.genreWrapper}>

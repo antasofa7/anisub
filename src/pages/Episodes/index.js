@@ -22,6 +22,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from '../../utils';
+import {OrientationLocker, PORTRAIT} from 'react-native-orientation-locker';
 
 const Episodes = () => {
   const navigation = useNavigation();
@@ -49,8 +50,8 @@ const Episodes = () => {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate('DetailEpisode', {
-            episode: item,
+          navigation.navigate('PlayVideo', {
+            animeDetail: item,
           })
         }>
         <MainCardFilm
@@ -96,6 +97,7 @@ const Episodes = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <OrientationLocker orientation={PORTRAIT} />
       {isLoading ? (
         <LoadingPage />
       ) : (

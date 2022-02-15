@@ -19,7 +19,6 @@ const leftPlayIcon = Dimensions.get('window').width / 2 - 30;
 const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
   const navigation = useNavigation();
   const [countDown, setCountDown] = useState({});
-  const [orientation, setOrientation] = useState('portrait');
 
   const index = indexParams || 0;
   const episodes = animeDetail.episodes[index];
@@ -63,22 +62,13 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
     return countDowns;
   }, [episodes]);
 
-  const getOrientation = useCallback(() => {
-    if (Dimensions.get('window').width < Dimensions.get('window').height) {
-      setOrientation('portrait');
-    } else {
-      setOrientation('landscape');
-    }
-  }, []);
-
   useEffect(() => {
-    getOrientation();
     const timer = setInterval(() => {
       setCountDown(calculateCountdown());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [getOrientation, calculateCountdown]);
+  }, [calculateCountdown]);
 
   const countDownComponent = [];
 
@@ -93,7 +83,7 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.wrapper(orientation)}>
+      <View style={styles.wrapper}>
         <FastImage
           source={{
             uri:
@@ -126,10 +116,8 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
             </TouchableOpacity>
             <View style={styles.wrapperTitle}>
               <Text style={styles.episode}>
-                {animeDetail.type !== 'Movie' &&
-                  `${postEpisode} - ${moment(episodes.updated_at).format(
-                    'DD MMMM YYYY',
-                  )}`}
+                {animeDetail.type !== 'Movie' && `${postEpisode} -`}
+                {moment(episodes.updated_at).format('DD MMMM YYYY')}
               </Text>
               <Text style={styles.title} numberOfLines={2}>
                 {animeDetail.sub_name}
@@ -150,9 +138,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.onBackground,
   },
-  wrapper: orientation => ({
-    width: orientation === 'portrait' ? responsiveWidth(360) : '100%',
-  }),
+  wrapper: {
+    width: '100%',
+  },
   imageDetail: {
     width: '100%',
     height: responsiveHeight(270),
@@ -179,10 +167,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     left: 16,
-    opacity: 0.8,
-    backgroundColor: colors.onPrimary,
     padding: 10,
-    borderRadius: 5,
   },
   iconPlay: {
     position: 'absolute',

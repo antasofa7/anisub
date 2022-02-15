@@ -5,13 +5,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import {BottomNavigator} from '../components/organism';
 import Detail from '../pages/Detail';
-import DetailEpisode from '../pages/Detail/DetailEpisode';
 import DetailMovies from '../pages/Detail/DetailMovies';
 import DetailUpcoming from '../pages/Detail/DetailUpcoming';
 import Episodes from '../pages/Episodes';
 import GenrePage from '../pages/GenrePage';
 import Home from '../pages/Home';
 import Library from '../pages/Library';
+import PlayVideo from '../pages/PlayVideo';
 import Search from '../pages/Search';
 
 const Stack = createNativeStackNavigator();
@@ -65,8 +65,8 @@ const Router = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="DetailEpisode"
-        component={DetailEpisode}
+        name="PlayVideo"
+        component={PlayVideo}
         options={{headerShown: false}}
       />
       <Stack.Screen
