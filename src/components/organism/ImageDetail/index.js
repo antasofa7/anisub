@@ -1,24 +1,28 @@
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import {IconBack, IconPlayCircle} from '../../../assets';
-import {colors, fonts, responsiveHeight, responsiveWidth} from '../../../utils';
+import {
+  IconBack,
+  IconBookmark,
+  IconClose,
+  IconPlayCircle,
+} from '../../../assets';
+import {
+  colors,
+  fonts,
+  responsiveHeight,
+  responsiveWidth,
+  screenWidth,
+} from '../../../utils';
 import {IMG_ANIME_URL} from '../../../utils/constan';
-
-const leftPlayIcon = Dimensions.get('window').width / 2 - 30;
 
 const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
   const navigation = useNavigation();
   const [countDown, setCountDown] = useState({});
+  const [isBookmark, setBookmark] = useState(false);
 
   const index = indexParams || 0;
   const episodes = animeDetail.episodes[index];
@@ -100,6 +104,13 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
         <View style={styles.iconBack}>
           <IconBack onPress={() => navigation.goBack()} />
         </View>
+        <View style={styles.iconBookmark}>
+          {isBookmark ? (
+            <IconClose onPress={() => navigation.goBack()} />
+          ) : (
+            <IconBookmark onPress={() => setBookmark(true)} />
+          )}
+        </View>
         {upcoming ? (
           <>
             <View style={styles.countDown}>{countDownComponent}</View>
@@ -113,6 +124,9 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
           <>
             <TouchableOpacity style={styles.iconPlay} onPress={onPress}>
               <IconPlayCircle />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.wrapperThriller}>
+              <Text style={styles.textThriller}>Watch Thriller</Text>
             </TouchableOpacity>
             <View style={styles.wrapperTitle}>
               <Text style={styles.episode}>
@@ -158,8 +172,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     right: 16,
-    opacity: 0.6,
-    backgroundColor: colors.onPrimary,
     padding: 10,
     borderRadius: 5,
   },
@@ -171,13 +183,25 @@ const styles = StyleSheet.create({
   },
   iconPlay: {
     position: 'absolute',
-    top: 105,
-    left: leftPlayIcon,
+    top: responsiveHeight(80),
+    left: screenWidth / 2 - 30,
     backgroundColor: colors.background,
     paddingLeft: 20,
     paddingRight: 15,
     paddingVertical: 15,
     borderRadius: 50,
+  },
+  wrapperThriller: {
+    position: 'absolute',
+    top: responsiveHeight(140),
+    left: screenWidth / 2 - 50,
+    backgroundColor: colors.background,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+  },
+  textThriller: {
+    color: colors.onBackground,
   },
   countDown: {
     position: 'absolute',

@@ -9,6 +9,8 @@ const Input = ({
   onFocus,
   onKeyPress,
   onSubmitEditing,
+  keyboardType,
+  secureTextEntry,
 }) => {
   return (
     <TextInput
@@ -16,6 +18,8 @@ const Input = ({
       placeholder={placeholder}
       placeholderTextColor={colors.onBackground}
       style={styles.input}
+      keyboardType={keyboardType}
+      secureTextEntry={secureTextEntry}
       onChangeText={onChangeText}
       onFocus={onFocus}
       onKeyPress={onKeyPress}

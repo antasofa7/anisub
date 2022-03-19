@@ -7,8 +7,10 @@ import {
   IconLibraryActive,
   IconSearcActive,
   IconSearchMenu,
+  IconUser,
+  IconUserActive,
 } from '../../../assets';
-import {colors, fonts} from '../../../utils';
+import {colors, fonts, responsiveWidth} from '../../../utils';
 
 const TabItem = props => {
   const {index, label, isFocused, onPress, onLongPress} = props;
@@ -22,6 +24,9 @@ const TabItem = props => {
     }
     if (label === 'Library') {
       return isFocused ? <IconLibraryActive /> : <IconLibrary />;
+    }
+    if (label === 'Profile') {
+      return isFocused ? <IconUserActive /> : <IconUser />;
     }
     return <IconHomeActive />;
   };
@@ -45,7 +50,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingHorizontal: responsiveWidth(16),
   },
   label: isFocused => ({
     color: isFocused ? colors.primary : colors.onBackground,

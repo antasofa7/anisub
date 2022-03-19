@@ -12,6 +12,7 @@ import GenrePage from '../pages/GenrePage';
 import Home from '../pages/Home';
 import Library from '../pages/Library';
 import PlayVideo from '../pages/PlayVideo';
+import Profile from '../pages/Profile';
 import Search from '../pages/Search';
 
 const Stack = createNativeStackNavigator();
@@ -38,6 +39,13 @@ const MainApp = () => {
       <Tab.Screen
         name="Library"
         component={Library}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
         options={{
           headerShown: false,
         }}
