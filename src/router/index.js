@@ -11,8 +11,10 @@ import Episodes from '../pages/Episodes';
 import GenrePage from '../pages/GenrePage';
 import Home from '../pages/Home';
 import Library from '../pages/Library';
+import Login from '../pages/Login';
 import PlayVideo from '../pages/PlayVideo';
 import Profile from '../pages/Profile';
+import Register from '../pages/Register';
 import Search from '../pages/Search';
 
 const Stack = createNativeStackNavigator();
@@ -90,6 +92,16 @@ const Router = () => {
       <Stack.Screen
         name="GenrePage"
         component={GenrePage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

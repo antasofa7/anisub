@@ -5,6 +5,8 @@ import Share from 'react-native-share';
 import {connect} from 'react-redux';
 import {UserCircle} from '../../assets';
 import Menu from '../../components/atoms/Menu';
+import Login from '../../components/organism/Login';
+import Register from '../../components/organism/Register';
 import {
   clearStorage,
   colors,
@@ -26,6 +28,7 @@ class Profile extends Component {
 
     this.state = {
       isLogin: false,
+      titleForm: '',
       profile: {
         email: '',
       },
@@ -33,6 +36,7 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    console.log('user');
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this._getUser();
     });
@@ -60,6 +64,10 @@ class Profile extends Component {
     this.setState({isLogin: false});
   };
 
+  getProps = value => {
+    this.setState({titleForm: value});
+  };
+
   share = async (customOptions = options) => {
     try {
       const result = await Share.open(customOptions);
@@ -70,7 +78,7 @@ class Profile extends Component {
   };
 
   render() {
-    const {isLogin, profile} = this.state;
+    const {isLogin, titleForm, profile} = this.state;
     const {navigation, loginLoading} = this.props;
 
     console.log('loading', loginLoading);

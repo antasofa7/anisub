@@ -1,0 +1,1 @@
+/home/antasofa/Android/Sdk/platform-tools/adb
