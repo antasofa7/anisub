@@ -80,12 +80,14 @@ class Login extends Component {
     console.log('form', form);
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Please login to personalize this app</Text>
+        <Text style={styles.title}>Login</Text>
+        <Text style={styles.text}>Please fill this form to login</Text>
         <Form
           title="Login"
           loading={loginLoading}
           email={form.email}
           error={errors}
+          navigation={navigation}
           onChangeEmail={email => this.setState({form: {...form, email}})}
           password={form.password}
           onChangePassword={password =>
@@ -119,11 +121,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: colors.background,
   },
+  title: {
+    fontFamily: fonts.nunito.bold,
+    fontSize: 46,
+    color: colors.primary,
+  },
   text: {
     fontFamily: fonts.sora.medium,
-    fontSize: 16,
+    fontSize: 14,
     color: colors.onBackground,
-    marginBottom: 32,
+    marginBottom: 24,
   },
   register: {
     flexDirection: 'row',

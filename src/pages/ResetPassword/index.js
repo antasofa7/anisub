@@ -5,7 +5,7 @@ import {colors, fonts, responsiveHeight} from '../../utils';
 import {registerUser} from '../../actions/AuthAction';
 import {connect} from 'react-redux';
 
-class Register extends Component {
+class ResetPassword extends Component {
   constructor(props) {
     super(props);
 
@@ -79,10 +79,10 @@ class Register extends Component {
     console.log('result', registerResults);
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Register</Text>
-        <Text style={styles.text}>Please fill this form to register</Text>
+        <Text style={styles.title}>Reset Password</Text>
+        <Text style={styles.text}>Please fill this form to reset password</Text>
         <Form
-          title="Register"
+          title="Reset"
           loading={registerLoading}
           email={form.email}
           error={errors}
@@ -93,12 +93,6 @@ class Register extends Component {
           }
           onSubmit={() => this._register()}
         />
-        <TouchableOpacity
-          style={styles.register}
-          onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.registerTitle}>Already have an account?</Text>
-          <Text style={styles.registerTitleActive}> Login</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -110,7 +104,7 @@ const mapStateToProps = state => ({
   registerError: state.AuthReducer.registerError,
 });
 
-export default connect(mapStateToProps, null)(Register);
+export default connect(mapStateToProps, null)(ResetPassword);
 
 const styles = StyleSheet.create({
   container: {
@@ -121,7 +115,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.nunito.bold,
-    fontSize: 46,
+    fontSize: 32,
     color: colors.primary,
   },
   text: {

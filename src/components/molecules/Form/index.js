@@ -8,6 +8,7 @@ import {
 import React from 'react';
 import Input from '../../atoms/Input';
 import {colors, fonts} from '../../../utils';
+import {useNavigation} from '@react-navigation/native';
 
 const Form = props => {
   const {
@@ -20,6 +21,7 @@ const Form = props => {
     loading,
     error,
   } = props;
+  const navigation = useNavigation();
 
   return (
     <View>
@@ -33,22 +35,38 @@ const Form = props => {
         />
       </View>
       {error.email ? <Text style={styles.error}>{error.email}</Text> : null}
-      <Text style={styles.label}>Password</Text>
-      <View style={styles.input}>
-        <Input
-          value={password}
-          onChangeText={onChangePassword}
-          placeholder="Please input your password"
-          secureTextEntry={true}
-        />
-      </View>
-      {error.password ? (
-        <Text style={styles.error}>{error.password}</Text>
-      ) : null}
-      <TouchableOpacity style={styles.btn} onPress={onSubmit}>
+      {title !== 'Reset' && (
+        <>
+          <Text style={styles.label}>Password</Text>
+          <View style={styles.input}>
+            <Input
+              value={password}
+              onChangeText={onChangePassword}
+              placeholder="Please input your password"
+              secureTextEntry={true}
+            />
+          </View>
+          {error.password ? (
+            <Text style={styles.error}>{error.password}</Text>
+          ) : null}
+        </>
+      )}
+      {title === 'Login' && (
+        <TouchableOpacity
+          style={styles.forgot}
+          onPress={() => navigation.navigate('ResetPassword')}>
+          <Text style={styles.forgot}>Forgot password?</Text>
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity style={styles.btnSubmit} onPress={onSubmit}>
         <Text style={styles.title}>
           {loading ? <ActivityIndicator /> : title}
         </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.btnBack}
+        onPress={() => navigation.goBack()}>
+        <Text style={styles.titleBack}>Back</Text>
       </TouchableOpacity>
     </View>
   );
@@ -62,6 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.onBackground,
     textAlign: 'left',
+    marginTop: 16,
   },
   input: {
     backgroundColor: colors.onPrimary,
@@ -69,12 +88,18 @@ const styles = StyleSheet.create({
     marginTop: 12,
     borderRadius: 10,
   },
-  btn: {
+  btnSubmit: {
     width: '100%',
     backgroundColor: colors.primary,
     padding: 12,
     borderRadius: 30,
     marginTop: 24,
+  },
+  btnBack: {
+    width: '100%',
+    padding: 12,
+    borderRadius: 30,
+    marginTop: 16,
   },
   title: {
     fontFamily: fonts.sora.semiBold,
@@ -83,10 +108,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textTransform: 'uppercase',
   },
+  titleBack: {
+    fontFamily: fonts.sora.medium,
+    fontSize: 16,
+    color: colors.onBackground,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
   error: {
     fontFamily: fonts.sora.light,
     fontSize: 12,
-    color: '#FF0000',
+    color: colors.red,
     marginVertical: 8,
+  },
+  forgot: {
+    fontFamily: fonts.sora.light,
+    fontSize: 12,
+    color: colors.primary,
+    marginTop: 8,
+    textAlign: 'right',
   },
 });

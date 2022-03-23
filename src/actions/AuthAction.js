@@ -1,4 +1,5 @@
 import FIREBASE from '../config/firebase';
+import auth from '../reducer/auth';
 import {
   dispatchLoading,
   dispatchSuccess,
@@ -21,9 +22,13 @@ export const registerUser = data => {
           uid: success.user.uid,
         };
 
+        success.user.sendEmailVerification();
+
         FIREBASE.database().ref(`users/${success.user.uid}`).set(newData);
 
         dispatchSuccess(dispatch, REGISTER_USER, newData);
+
+        auth.signOut();
       })
       .catch(err => {
         dispatchError(dispatch, REGISTER_USER, err.message);
@@ -43,7 +48,6 @@ export const loginUser = data => {
           .once('value')
           .then(resDB => {
             if (resDB.val()) {
-              console.log('res', resDB.val());
               dispatchSuccess(dispatch, LOGIN_USER, resDB.val());
 
               storeData('user', resDB.val());
