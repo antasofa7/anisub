@@ -9,6 +9,7 @@ import NewSeries from './NewSeries';
 import PlaylistByGenre from './PlaylistByGenre';
 import Recommendation from './Recommendation';
 import UpcomingAnime from './UpcomingAnime';
+import WatchList from './WatchList';
 
 export {
   AnimeGenreList,
@@ -22,4 +23,5 @@ export {
   PlaylistByGenre,
   Recommendation,
   UpcomingAnime,
+  WatchList,
 };

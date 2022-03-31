@@ -10,9 +10,10 @@ import IconTv from './icon_tv.svg';
 import IconTvActive from './icon_tv_active.svg';
 import IconUser from './icon_user.svg';
 import IconUserActive from './icon_user_active.svg';
+import IconHeart from './icon_heart.svg';
+import IconHeartActive from './icon_heart_active.svg';
 import IconSearch from './icon_search.svg';
 import IconBack from './icon_back.svg';
-import IconBookmark from './icon_bookmark.svg';
 import IconShare from './icon_share.svg';
 import IconPlayCircle from './play_icon.svg';
 import IconSummer from './summer.svg';
@@ -39,7 +40,8 @@ export {
   IconStarActive,
   IconSearch,
   IconBack,
-  IconBookmark,
+  IconHeart,
+  IconHeartActive,
   IconShare,
   IconPlayCircle,
   IconSearcActive,

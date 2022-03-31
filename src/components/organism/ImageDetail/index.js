@@ -1,28 +1,43 @@
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
+import {connect} from 'react-redux';
+import {
+  addToWatchList,
+  deleteWatchList,
+} from '../../../actions/WatchListAction';
 import {
   IconBack,
-  IconBookmark,
-  IconClose,
+  IconHeart,
+  IconHeartActive,
   IconPlayCircle,
 } from '../../../assets';
 import {
   colors,
   fonts,
+  getDataFromStorage,
   responsiveHeight,
   responsiveWidth,
   screenWidth,
 } from '../../../utils';
 import {IMG_ANIME_URL} from '../../../utils/constan';
 
-const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
+const ImageDetail = props => {
+  const {
+    animeDetail,
+    indexParams,
+    onPress,
+    upcoming,
+    dispatch,
+    getWatchListResults,
+  } = props;
   const navigation = useNavigation();
   const [countDown, setCountDown] = useState({});
   const [isBookmark, setBookmark] = useState(false);
+  const [user, setUser] = useState({});
 
   const index = indexParams || 0;
   const episodes = animeDetail.episodes[index];
@@ -67,12 +82,13 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
   }, [episodes]);
 
   useEffect(() => {
+    _getData();
     const timer = setInterval(() => {
       setCountDown(calculateCountdown());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [calculateCountdown]);
+  }, [calculateCountdown, _getData]);
 
   const countDownComponent = [];
 
@@ -84,6 +100,68 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
       </View>,
     );
   });
+
+  const _addToWatchList = async _ => {
+    if (user) {
+      const watchListData = {
+        uid: user.uid,
+        animeId: animeDetail.sub_id,
+        episode: episodes.post_episodes,
+        title: animeDetail.sub_name,
+        rating: animeDetail.rate,
+        thumbnail: animeDetail.sub_banner,
+      };
+      dispatch(addToWatchList(watchListData));
+      setBookmark(true);
+      Alert.alert('Success', 'Anime successfully added to watchlist.');
+    } else {
+      Alert.alert('Error', 'Please login to save anime!');
+      navigation.navigate('Login');
+    }
+  };
+
+  const _getData = useCallback(
+    async _ => {
+      const userData = await getDataFromStorage('user');
+      setUser(userData);
+      if (getWatchListResults !== null) {
+        const watchlist = Object.keys(getWatchListResults);
+        watchlist.forEach(list => {
+          if (list === animeDetail.sub_id) {
+            setBookmark(true);
+          }
+        });
+      }
+    },
+    [getWatchListResults, animeDetail],
+  );
+
+  const _deleteWatchList = () => {
+    Alert.alert(
+      'Delete',
+      'Are you sure you want to delete this movie from watchlist?',
+      [
+        {text: 'Sure', onPress: () => action()},
+        {
+          text: 'No',
+          onPress: () => console.log('No Thanks Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+
+    const action = () => {
+      if (user) {
+        const watchListData = {
+          uid: user.uid,
+          animeId: animeDetail.sub_id,
+        };
+        dispatch(deleteWatchList(watchListData));
+        setBookmark(false);
+      }
+    };
+  };
 
   return (
     <View style={styles.container}>
@@ -106,9 +184,9 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
         </View>
         <View style={styles.iconBookmark}>
           {isBookmark ? (
-            <IconClose onPress={() => navigation.goBack()} />
+            <IconHeartActive onPress={() => _deleteWatchList()} />
           ) : (
-            <IconBookmark onPress={() => setBookmark(true)} />
+            <IconHeart onPress={() => _addToWatchList()} />
           )}
         </View>
         {upcoming ? (
@@ -124,9 +202,6 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
           <>
             <TouchableOpacity style={styles.iconPlay} onPress={onPress}>
               <IconPlayCircle />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.wrapperThriller}>
-              <Text style={styles.textThriller}>Watch Thriller</Text>
             </TouchableOpacity>
             <View style={styles.wrapperTitle}>
               <Text style={styles.episode}>
@@ -144,7 +219,17 @@ const ImageDetail = ({animeDetail, indexParams, onPress, upcoming}) => {
   );
 };
 
-export default ImageDetail;
+const mapStateToProps = state => ({
+  addToWatchListLoading: state.WatchListReducer.addToWatchListLoading,
+  addToWatchListResults: state.WatchListReducer.addToWatchListResults,
+  addToWatchListError: state.WatchListReducer.addToWatchListError,
+
+  getWatchListLoading: state.WatchListReducer.getWatchListLoading,
+  getWatchListResults: state.WatchListReducer.getWatchListResults,
+  getWatchListError: state.WatchListReducer.getWatchListError,
+});
+
+export default connect(mapStateToProps, null)(ImageDetail);
 
 const styles = StyleSheet.create({
   container: {
@@ -172,14 +257,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     right: 16,
-    padding: 10,
-    borderRadius: 5,
+    padding: 12,
   },
   iconBack: {
     position: 'absolute',
     top: 16,
     left: 16,
-    padding: 10,
+    padding: 12,
   },
   iconPlay: {
     position: 'absolute',
@@ -190,18 +274,6 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingVertical: 15,
     borderRadius: 50,
-  },
-  wrapperThriller: {
-    position: 'absolute',
-    top: responsiveHeight(140),
-    left: screenWidth / 2 - 50,
-    backgroundColor: colors.background,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-  },
-  textThriller: {
-    color: colors.onBackground,
   },
   countDown: {
     position: 'absolute',

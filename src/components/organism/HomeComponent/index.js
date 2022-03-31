@@ -1,13 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Alert,
-  BackHandler,
-  FlatList,
-  StyleSheet,
-  ToastAndroid,
-  View,
-} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Alert, FlatList, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {connect} from 'react-redux';
 import {
   BannerCarousel,
   Header,
@@ -15,11 +9,40 @@ import {
   Recommendation,
   UpcomingAnime,
 } from '..';
-import {responsiveHeight} from '../../../utils';
+import {getWatchLists} from '../../../actions/WatchListAction';
+import {getDataFromStorage, responsiveHeight} from '../../../utils';
 import Spacing from '../../atoms/Spacing';
+import WatchList from '../WatchList';
 
 const HomeComponent = props => {
-  const {navigation, dataAnime} = props;
+  const {
+    navigation,
+    dataAnime,
+    dispatch,
+    getWatchListResults,
+    getWatchListLoading,
+  } = props;
+  const [user, setUser] = useState({});
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    _getData();
+  }, [_getData]);
+
+  const _getData = useCallback(
+    async _ => {
+      const userData = await getDataFromStorage('user');
+      setUser(userData);
+      if (userData) {
+        await dispatch(getWatchLists(userData.uid));
+      }
+
+      if (getWatchListResults !== null) {
+        setMovies(Object.values(getWatchListResults));
+      }
+    },
+    [dispatch, getWatchListResults],
+  );
 
   const hotMovies =
     dataAnime.hotMovies !== null
@@ -43,18 +66,29 @@ const HomeComponent = props => {
     },
     {
       id: 3,
+      component:
+        !getWatchListResults && !user ? null : (
+          <WatchList
+            navigation={navigation}
+            watchlist={movies}
+            loading={getWatchListLoading}
+          />
+        ),
+    },
+    {
+      id: 4,
       component: (
         <NewAllAnime navigation={navigation} newAllAnime={newAllAnime} />
       ),
     },
     {
+      id: 5,
       component: (
         <UpcomingAnime navigation={navigation} upcomingAnime={upcomingAnime} />
       ),
-      id: 4,
     },
     {
-      id: 5,
+      id: 6,
       component: (
         <Recommendation
           recommendation={recommendation}
@@ -77,6 +111,8 @@ const HomeComponent = props => {
       <FlatList
         data={_itemComponents}
         renderItem={_renderItem}
+        refreshing={getWatchListLoading}
+        onRefresh={_getData}
         initialNumToRender={3}
         keyExtractor={(item, index) => index.toString()}
         scrollToEnd={() => ({animated: true})}
@@ -86,7 +122,13 @@ const HomeComponent = props => {
   );
 };
 
-export default HomeComponent;
+const mapStateToProps = state => ({
+  getWatchListLoading: state.WatchListReducer.getWatchListLoading,
+  getWatchListResults: state.WatchListReducer.getWatchListResults,
+  getWatchListError: state.WatchListReducer.getWatchListError,
+});
+
+export default connect(mapStateToProps, null)(HomeComponent);
 
 const styles = StyleSheet.create({
   container: {

@@ -15,8 +15,8 @@ import Login from '../pages/Login';
 import PlayVideo from '../pages/PlayVideo';
 import Profile from '../pages/Profile';
 import Register from '../pages/Register';
-import ResetPassword from '../pages/ResetPassword';
 import Search from '../pages/Search';
+import WatchList from '../pages/WatchList';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -106,8 +106,8 @@ const Router = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="ResetPassword"
-        component={ResetPassword}
+        name="WatchList"
+        component={WatchList}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

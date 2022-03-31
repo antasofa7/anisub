@@ -74,9 +74,7 @@ class Register extends Component {
 
   render() {
     const {form, errors} = this.state;
-    const {registerLoading, registerResults, navigation} = this.props;
-    console.log('form', form);
-    console.log('result', registerResults);
+    const {registerLoading, navigation} = this.props;
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Register</Text>

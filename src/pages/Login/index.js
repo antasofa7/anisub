@@ -77,7 +77,6 @@ class Login extends Component {
   render() {
     const {form, errors} = this.state;
     const {loginLoading, navigation} = this.props;
-    console.log('form', form);
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Login</Text>
@@ -87,7 +86,6 @@ class Login extends Component {
           loading={loginLoading}
           email={form.email}
           error={errors}
-          navigation={navigation}
           onChangeEmail={email => this.setState({form: {...form, email}})}
           password={form.password}
           onChangePassword={password =>
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sora.medium,
     fontSize: 14,
     color: colors.onBackground,
-    marginBottom: 24,
+    marginBottom: 32,
   },
   register: {
     flexDirection: 'row',

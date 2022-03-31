@@ -10,7 +10,6 @@ export const dispatchLoading = (dispatch, type) => {
 };
 
 export const dispatchSuccess = (dispatch, type, results) => {
-  console.log(type);
   return dispatch({
     type: type,
     payload: {

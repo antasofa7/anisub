@@ -46,7 +46,7 @@ const UpcomingAnime = ({navigation, upcomingAnime}) => {
       <TouchableOpacity
         onPress={() => navigation('DetailUpcoming', {animeId: item.sid_new})}>
         <CardUpcomingAnime
-          key={item.post_id}
+          key={index}
           title={item.sub_name}
           rating={item.rate}
           thumbnail={`${IMG_ANIME_URL}/${item.sub_banner}`}

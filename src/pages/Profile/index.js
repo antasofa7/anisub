@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Linking,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Share from 'react-native-share';
 import {connect} from 'react-redux';
@@ -14,7 +21,7 @@ import {
   responsiveWidth,
 } from '../../utils';
 
-const options = {
+const optionsShare = {
   title: 'Share this app',
   message: '',
   url: 'https://play.google.com/store/apps/details?id=com.anisub',
@@ -46,21 +53,36 @@ class Profile extends Component {
     getDataFromStorage('user').then(res => {
       if (!res) {
         this.setState({isLogin: false});
+      } else {
+        this.setState({profile: {email: res.email}});
+        this.setState({isLogin: true});
       }
-
-      this.setState({profile: {email: res.email}});
-      this.setState({isLogin: true});
     });
   };
 
   _logout = () => {
-    setTimeout(() => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to log out?',
+      [
+        {text: 'Sure', onPress: () => action()},
+        {
+          text: 'No',
+          onPress: () => console.log('No Thanks Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+
+    const action = () => {
       clearStorage();
-    }, 3000);
-    this.setState({isLogin: false});
+      this.setState({isLogin: false});
+      this.props.navigation.navigate('Home');
+    };
   };
 
-  share = async (customOptions = options) => {
+  _share = async (customOptions = optionsShare) => {
     try {
       const result = await Share.open(customOptions);
       console.log(result);
@@ -69,11 +91,14 @@ class Profile extends Component {
     }
   };
 
+  _rate = () => {
+    const GOOGLE_PACKAGE = 'com.anisub';
+    Linking.openURL(`market://details?id=${GOOGLE_PACKAGE}`);
+  };
+
   render() {
     const {isLogin, profile} = this.state;
     const {navigation, loginLoading} = this.props;
-
-    console.log('loading', loginLoading);
 
     return (
       <View style={styles.container} refreshing={loginLoading}>
@@ -83,11 +108,12 @@ class Profile extends Component {
               <View style={styles.wrapperImage}>
                 <FastImage source={UserCircle} style={styles.image} />
               </View>
-              <Text style={styles.title}> Salahudin </Text>
-              <Text style={styles.emailText}> {profile.email} </Text>
+              <Text style={styles.title}> {profile.email} </Text>
             </View>
-            <Menu name="Update Profile" />
-            <Menu name="Watch List" />
+            <Menu
+              name="Watch List"
+              onPress={() => navigation.navigate('WatchList')}
+            />
           </>
         ) : (
           <View style={styles.wrapperUser}>
@@ -101,15 +127,9 @@ class Profile extends Component {
             </TouchableOpacity>
           </View>
         )}
-        <Menu name="Share" onPress={() => this.share()} />
-        <Menu name="Rate Us" />
-        {isLogin && (
-          <TouchableOpacity
-            style={styles.logout}
-            onPress={() => this._logout()}>
-            <Text style={styles.logoutTitle}>Logout</Text>
-          </TouchableOpacity>
-        )}
+        <Menu name="Share" onPress={() => this._share()} />
+        <Menu name="Rate Us" onPress={() => this._rate()} />
+        {isLogin && <Menu name="Logout" onPress={() => this._logout()} />}
       </View>
     );
   }
@@ -168,26 +188,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sora.bold,
     fontSize: 20,
     color: colors.onBackground,
-  },
-  emailText: {
-    fontFamily: fonts.sora.regular,
-    fontSize: 12,
-    color: colors.onBackground,
-  },
-  logout: {
-    position: 'absolute',
-    bottom: responsiveHeight(80),
-    left: 16,
-    borderWidth: 2,
-    borderColor: colors.onBackground,
-    borderRadius: 30,
-    padding: 16,
-    width: '100%',
-  },
-  logoutTitle: {
-    fontFamily: fonts.sora.medium,
-    fontSize: 14,
-    color: colors.onBackground,
-    textAlign: 'center',
   },
 });
