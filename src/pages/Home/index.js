@@ -11,7 +11,8 @@ import {
   getRecommendation,
   getUpcomingAnimes,
 } from '../../config';
-import {colors, responsiveHeight} from '../../utils';
+import {colors, getDataFromStorage, responsiveHeight} from '../../utils';
+import {getWatchLists} from '../../actions/WatchListAction';
 
 export default class Home extends PureComponent {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class Home extends PureComponent {
 
     this.state = {
       isLoading: true,
+      user: {},
       dataAnime: {
         hotMovies: [],
         allNew: [],
@@ -69,9 +71,20 @@ export default class Home extends PureComponent {
       });
   };
 
+  _getData = async _ => {
+    const userData = await getDataFromStorage('user');
+    console.log('userData', userData);
+    if (userData) {
+      this.setState({user: userData});
+      // await this.props.dispatch(getWatchLists(userData.uid));
+    }
+    return null;
+  };
+
   componentDidMount() {
     this.unsubscribe();
     this._getMovieList();
+    this._getData();
     setTimeout(() => {
       SplashScreen.hide();
     }, 1000);
@@ -79,7 +92,7 @@ export default class Home extends PureComponent {
 
   render() {
     const {navigate} = this.props.navigation;
-    const {dataAnime, isLoading} = this.state;
+    const {dataAnime, isLoading, user} = this.state;
     return (
       <SafeAreaView style={styles.container}>
         {isLoading ? (
@@ -89,7 +102,11 @@ export default class Home extends PureComponent {
             style={styles.loading}
           />
         ) : (
-          <HomeComponent navigation={navigate} dataAnime={dataAnime} />
+          <HomeComponent
+            navigation={navigate}
+            dataAnime={dataAnime}
+            user={user}
+          />
         )}
         <Spacing height={responsiveHeight(90)} />
       </SafeAreaView>

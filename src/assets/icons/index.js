@@ -24,6 +24,8 @@ import IconLibrary from './icon_library.svg';
 import IconLibraryActive from './icon_library_active';
 import IconClose from './icon_close.svg';
 import IconCloseSmall from './icon_close_small.svg';
+import IconEyeClose from './eye_icon.svg';
+import IconEye from './eye_icon_active.svg';
 
 export {
   IconFilm,
@@ -52,4 +54,6 @@ export {
   IconCloseSmall,
   IconSummer,
   IconFall,
+  IconEye,
+  IconEyeClose,
 };

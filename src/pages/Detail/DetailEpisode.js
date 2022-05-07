@@ -1,28 +1,20 @@
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import React, {useState} from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
+import {IconBack, IconPlayCircle} from '../../assets';
 import {
-  IconBack,
-  IconBookmark,
-  IconBookmarkActive,
-  IconPlayCircle,
-} from '../../assets';
-import {colors, fonts, IMG_EPISODE_URL, responsiveHeight} from '../../utils';
-
-const leftPlayIcon = Dimensions.get('window').width / 2 - 30;
+  colors,
+  fonts,
+  IMG_EPISODE_URL,
+  responsiveHeight,
+  screenWidth,
+} from '../../utils';
 
 const DetailEpisode = ({animeDetail}) => {
   const navigation = useNavigation();
-  const [isBookmark, setBookmark] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -42,13 +34,6 @@ const DetailEpisode = ({animeDetail}) => {
         />
         <View style={styles.iconBack}>
           <IconBack onPress={() => navigation.goBack()} />
-        </View>
-        <View style={styles.iconBookmark}>
-          {isBookmark ? (
-            <IconBookmarkActive onPress={() => setBookmark(false)} />
-          ) : (
-            <IconBookmark onPress={() => setBookmark(true)} />
-          )}
         </View>
         <TouchableOpacity
           style={styles.iconPlay}
@@ -101,23 +86,22 @@ const styles = StyleSheet.create({
     height: responsiveHeight(270),
   },
   iconBack: {
+    backgroundColor: colors.onPrimary,
     position: 'absolute',
     top: 16,
     left: 16,
-    padding: 10,
-  },
-  iconBookmark: {
-    position: 'absolute',
-    top: 16,
-    right: 16,
-    padding: 10,
-    borderRadius: 5,
+    width: 50,
+    height: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
   },
   iconPlay: {
     position: 'absolute',
     top: 105,
-    left: leftPlayIcon,
-    backgroundColor: colors.background,
+    left: screenWidth / 2 - 30,
+    backgroundColor: colors.primary,
     paddingLeft: 20,
     paddingRight: 15,
     paddingVertical: 15,

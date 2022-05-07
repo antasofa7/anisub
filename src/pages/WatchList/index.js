@@ -94,6 +94,7 @@ const WatchList = props => {
             removeClippedSubviews={true} // Unmount components when outside of window
             initialNumToRender={4} // Reduce initial render amount
             maxToRenderPerBatch={1} // Reduce number in each render batch
+            ListFooterComponent={<Spacing height={responsiveHeight(70)} />}
           />
         </View>
       )}

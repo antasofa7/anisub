@@ -6,6 +6,11 @@ import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen; // here
 import android.content.Intent; // orientation screen
 import android.content.res.Configuration; // orientation screen
+// google admob
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 
 public class MainActivity extends ReactActivity {
 
@@ -17,7 +22,15 @@ public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
       SplashScreen.show(this);  // here
+      // setContentView(R.layout.activity_main);
       super.onCreate(savedInstanceState);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
   }
 
   @Override

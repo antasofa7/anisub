@@ -10,38 +10,38 @@ import {
   UpcomingAnime,
 } from '..';
 import {getWatchLists} from '../../../actions/WatchListAction';
-import {getDataFromStorage, responsiveHeight} from '../../../utils';
+import {responsiveHeight} from '../../../utils';
 import Spacing from '../../atoms/Spacing';
+import NativeAds from '../NativeAds';
 import WatchList from '../WatchList';
 
 const HomeComponent = props => {
   const {
     navigation,
     dataAnime,
+    user,
     dispatch,
     getWatchListResults,
     getWatchListLoading,
   } = props;
-  const [user, setUser] = useState({});
-  const [movies, setMovies] = useState([]);
+  const [watchlist, setWatchlist] = useState([]);
+  const [isLoading, setLoading] = useState([]);
 
-  useEffect(() => {
-    _getData();
-  }, [_getData]);
+  console.log('getWatchListResults', getWatchListResults);
+  console.log('user', user);
 
-  const _getData = useCallback(
+  // useEffect(() => {
+  //   _getDataMovie();
+  // }, [_getDataMovie]);
+
+  const _getDataMovie = useCallback(
     async _ => {
-      const userData = await getDataFromStorage('user');
-      setUser(userData);
-      if (userData) {
-        await dispatch(getWatchLists(userData.uid));
+      if (user) {
+        await dispatch(getWatchLists(user.uid));
       }
-
-      if (getWatchListResults !== null) {
-        setMovies(Object.values(getWatchListResults));
-      }
+      return null;
     },
-    [dispatch, getWatchListResults],
+    [dispatch, user],
   );
 
   const hotMovies =
@@ -66,14 +66,15 @@ const HomeComponent = props => {
     },
     {
       id: 3,
-      component:
-        !getWatchListResults && !user ? null : (
-          <WatchList
-            navigation={navigation}
-            watchlist={movies}
-            loading={getWatchListLoading}
-          />
-        ),
+      component: user && (
+        <WatchList
+          navigation={navigation}
+          watchlist={
+            getWatchListResults ? Object.values(getWatchListResults) : []
+          }
+          loading={getWatchListLoading}
+        />
+      ),
     },
     {
       id: 4,
@@ -96,6 +97,10 @@ const HomeComponent = props => {
         />
       ),
     },
+    {
+      id: 7,
+      component: <NativeAds headlineView nativeMediaView callToActionView />,
+    },
   ];
 
   const _renderItem = ({item}) => {
@@ -108,16 +113,29 @@ const HomeComponent = props => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* {getWatchListResults && user ? (
+        <FlatList
+          data={_itemComponents}
+          renderItem={_renderItem}
+          refreshing={getWatchListLoading}
+          onRefresh={_getDataMovie}
+          initialNumToRender={3}
+          keyExtractor={(item, index) => index.toString()}
+          scrollToEnd={() => ({animated: true})}
+          ListFooterComponent={() => <Spacing height={responsiveHeight(80)} />}
+        />
+      ) : ( */}
       <FlatList
         data={_itemComponents}
         renderItem={_renderItem}
         refreshing={getWatchListLoading}
-        onRefresh={_getData}
+        onRefresh={_getDataMovie}
         initialNumToRender={3}
         keyExtractor={(item, index) => index.toString()}
         scrollToEnd={() => ({animated: true})}
         ListFooterComponent={() => <Spacing height={responsiveHeight(80)} />}
       />
+      {/* )} */}
     </SafeAreaView>
   );
 };

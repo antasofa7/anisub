@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -9,6 +9,11 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {connect} from 'react-redux';
+import {
+  getRecentSearch,
+  saveSearchResults,
+} from '../../../actions/searchResultsAction';
 import {IconClose, IconCloseSmall, IconSearchMenu} from '../../../assets';
 import {getSearch} from '../../../config';
 import {
@@ -33,13 +38,33 @@ const tabItem = [
 ];
 
 const HeaderSearch = props => {
+  const {dispatch, user, getRecentSearchLoading, getRecentSearchResults} =
+    props;
+  console.log('user', user);
+
   const navigation = useNavigation();
   const [filterdData, setFilteredData] = useState([]);
+  const [recentSearchResult, setRecentSearchResult] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [visibleSearchbar, setVisibleSearchbar] = useState(false);
   const [visibleSearchArea, setVisibleSearchArea] = useState(false);
   const [text, setText] = useState('');
   const [activeBar, setActiveBar] = useState('TV Series');
+
+  console.log('recentSearchLoading', getRecentSearchLoading);
+  console.log('recentSearchResult', recentSearchResult);
+  console.log('filterdData', filterdData);
+
+  useEffect(() => {
+    _getRecentSearch();
+  }, [_getRecentSearch]);
+
+  const _getRecentSearch = useCallback(
+    async _ => {
+      await dispatch(getRecentSearch(user.uid));
+    },
+    [dispatch, user],
+  );
 
   const onPressTab = value => {
     props.handleProps(value);
@@ -52,7 +77,7 @@ const HeaderSearch = props => {
     if (allAnime.error) {
       setFilteredData(allAnime.message);
     }
-    setFilteredData(allAnime.data);
+    setFilteredData(allAnime.data.splice(0, allAnime.data.length - 1));
     setLoading(false);
   }, []);
 
@@ -74,6 +99,14 @@ const HeaderSearch = props => {
     }
   };
 
+  const recentSearch = async () => {
+    setRecentSearchResult(
+      getRecentSearchResults ? Object.values(getRecentSearchResults) : [],
+    );
+    setVisibleSearchbar(true);
+    setVisibleSearchArea(true);
+  };
+
   const closeSearchBar = () => {
     setVisibleSearchbar(false);
     setVisibleSearchArea(false);
@@ -87,15 +120,27 @@ const HeaderSearch = props => {
   };
 
   const _renderItem = ({index, item}) => {
-    const type = item.type;
-    const detailPage = type === 'Movie' ? 'DetailMovies' : 'Detail';
+    console.log('item', item);
+
+    const onPressAnime = _ => {
+      if (user) {
+        const searchResult = {
+          uid: user.uid,
+          animeId: item.sub_id,
+          name: item.sub_name,
+          image: item.sub_banner,
+        };
+        dispatch(saveSearchResults(searchResult));
+      }
+      const type = item.type;
+      const detailPage = type === 'Movie' ? 'DetailMovies' : 'Detail';
+      navigation.navigate(detailPage, {animeId: item.sub_id});
+    };
     return (
       <View>
         <TouchableOpacity
           key={item.sub_id}
-          onPress={() =>
-            navigation.navigate(detailPage, {animeId: item.sub_id})
-          }
+          onPress={onPressAnime}
           style={styles.wrapperSearch}>
           <FastImage
             key={index}
@@ -121,7 +166,7 @@ const HeaderSearch = props => {
             <Input
               value={text}
               onFocus={() => setVisibleSearchArea(true)}
-              placeholder="Search anime..."
+              placeholder="Search your favorite anime..."
               onChangeText={value => handleInput(value)}
               onSubmitEditing={handleSubmit}
               returnKeyType="done"
@@ -132,7 +177,7 @@ const HeaderSearch = props => {
             )}
           </>
         ) : (
-          <IconSearchMenu onPress={() => setVisibleSearchbar(true)} />
+          <IconSearchMenu onPress={() => recentSearch()} />
         )}
       </View>
       <View style={styles.wrapperTitle}>
@@ -151,7 +196,7 @@ const HeaderSearch = props => {
       </View>
       {visibleSearchArea && (
         <View style={styles.viewSearch}>
-          {filterdData !== '' && (
+          {filterdData !== '' ? (
             <>
               {isLoading ? (
                 <View style={styles.loading}>
@@ -162,14 +207,26 @@ const HeaderSearch = props => {
                   {!filterdData ? (
                     <Text style={styles.notFound}>Anime not found!</Text>
                   ) : (
-                    <FlatList
-                      data={filterdData}
-                      renderItem={_renderItem}
-                      ListFooterComponent={() => <Spacing height={50} />}
-                    />
+                    <>
+                      <Text style={styles.recentSearh}>Search result</Text>
+                      <FlatList
+                        data={filterdData}
+                        renderItem={_renderItem}
+                        ListFooterComponent={() => <Spacing height={50} />}
+                      />
+                    </>
                   )}
                 </>
               )}
+            </>
+          ) : (
+            <>
+              <Text style={styles.recentSearh}>Recent search</Text>
+              <FlatList
+                data={recentSearchResult}
+                renderItem={_renderItem}
+                ListFooterComponent={() => <Spacing height={50} />}
+              />
             </>
           )}
         </View>
@@ -178,7 +235,17 @@ const HeaderSearch = props => {
   );
 };
 
-export default HeaderSearch;
+const mapStateToProps = state => ({
+  searchResultsListLoading: state.SearchResultReducer.searchResultsListLoading,
+  searchResultsListResults: state.SearchResultReducer.searchResultsListResults,
+  searchResultsListError: state.SearchResultReducer.searchResultsListError,
+
+  getRecentSearchLoading: state.SearchResultReducer.getRecentSearchLoading,
+  getRecentSearchResults: state.SearchResultReducer.getRecentSearchResults,
+  getRecentSearchError: state.SearchResultReducer.getRecentSearchError,
+});
+
+export default connect(mapStateToProps, null)(HeaderSearch);
 
 const styles = StyleSheet.create({
   container: {
@@ -222,14 +289,13 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1,
     flex: 1,
-    paddingTop: 11,
     backgroundColor: colors.background,
     height: responsiveHeight(640),
     width: responsiveWidth(360),
   },
   wrapperSearch: {
     flexDirection: 'row',
-    paddingHorizontal: 36,
+    paddingHorizontal: 24,
     marginBottom: 8,
     width: responsiveWidth(320),
     height: responsiveHeight(65),
@@ -251,5 +317,12 @@ const styles = StyleSheet.create({
     marginLeft: responsiveWidth(100),
     color: colors.onBackground,
     fontSize: 16,
+  },
+  recentSearh: {
+    margin: 16,
+    fontFamily: fonts.sora.regular,
+    color: colors.onPrimary,
+    fontSize: 16,
+    textTransform: 'uppercase',
   },
 });

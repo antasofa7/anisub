@@ -5,9 +5,10 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Input from '../../atoms/Input';
 import {colors, fonts} from '../../../utils';
+import {IconEye, IconEyeClose} from '../../../assets';
 
 const Form = props => {
   const {
@@ -20,6 +21,8 @@ const Form = props => {
     loading,
     error,
   } = props;
+
+  const [secure, setSecure] = useState(true);
 
   return (
     <View>
@@ -39,8 +42,13 @@ const Form = props => {
           value={password}
           onChangeText={onChangePassword}
           placeholder="Please input your password"
-          secureTextEntry={true}
+          secureTextEntry={secure}
         />
+        {secure ? (
+          <IconEye onPress={() => setSecure(false)} />
+        ) : (
+          <IconEyeClose onPress={() => setSecure(true)} />
+        )}
       </View>
       {error.password ? (
         <Text style={styles.error}>{error.password}</Text>
@@ -65,8 +73,11 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   input: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: colors.onPrimary,
-    paddingHorizontal: 10,
+    paddingLeft: 10,
+    paddingRight: 40,
     marginTop: 12,
     borderRadius: 10,
   },

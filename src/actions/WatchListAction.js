@@ -29,6 +29,7 @@ export const addToWatchList = data => {
 };
 
 export const getWatchLists = uid => {
+  console.log('uid', uid);
   return dispatch => {
     dispatchLoading(dispatch, GET_WATCH_LIST);
 
@@ -36,7 +37,7 @@ export const getWatchLists = uid => {
       .ref(`watchLists/${uid}`)
       .once('value', snapshot => {
         let data = snapshot.val();
-        dispatchSuccess(dispatch, GET_WATCH_LIST, data);
+        dispatchSuccess(dispatch, GET_WATCH_LIST, data ? data : []);
       })
       .catch(err => {
         dispatchError(dispatch, GET_WATCH_LIST, err.message);

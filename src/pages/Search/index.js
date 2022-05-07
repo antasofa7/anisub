@@ -4,8 +4,9 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Spacing from '../../components/atoms/Spacing';
 import HeaderSearch from '../../components/molecules/HeaderSearch';
 import {NewMovie, NewSeries} from '../../components/organism';
+import BannerAds from '../../components/organism/BannerAds';
 import {getNewMovies, getNewSeries} from '../../config';
-import {colors, responsiveHeight} from '../../utils';
+import {colors, getDataFromStorage, responsiveHeight} from '../../utils';
 
 export default class Search extends PureComponent {
   constructor(props) {
@@ -16,6 +17,7 @@ export default class Search extends PureComponent {
       tabName: 'TV Series',
       newSeries: [],
       newMovies: [],
+      user: {},
     };
   }
 
@@ -36,8 +38,16 @@ export default class Search extends PureComponent {
       });
   };
 
+  _getDataUser = async _ => {
+    const userData = await getDataFromStorage('user');
+    if (userData) {
+      this.setState({user: userData});
+    }
+  };
+
   componentDidMount() {
     this._getMovieList();
+    this._getDataUser();
   }
 
   getTabName = value => {
@@ -46,10 +56,16 @@ export default class Search extends PureComponent {
 
   render() {
     const {navigate} = this.props.navigation;
-    const {isLoading, tabName, newSeries, newMovies} = this.state;
+    const {isLoading, tabName, newSeries, newMovies, user} = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
-        <HeaderSearch navigation={navigate} handleProps={this.getTabName} />
+        <BannerAds marginHorizontal />
+        <HeaderSearch
+          navigation={navigate}
+          handleProps={this.getTabName}
+          user={user}
+        />
         {tabName === 'TV Series' ? (
           <NewSeries loading={isLoading} newSeries={newSeries} />
         ) : (

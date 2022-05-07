@@ -4,6 +4,7 @@ import Form from '../../components/molecules/Form';
 import {colors, fonts, responsiveHeight} from '../../utils';
 import {registerUser} from '../../actions/AuthAction';
 import {connect} from 'react-redux';
+import NativeAds from '../../components/organism/NativeAds';
 
 class Register extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class Register extends Component {
   componentDidUpdate(prevProps) {
     const {registerResults} = this.props;
     if (registerResults && prevProps.registerResults !== registerResults) {
-      Alert.alert('Please check your email for verification.');
+      Alert.alert('Check your email for verification.');
       this.props.navigation.navigate('Login');
     }
   }
@@ -97,6 +98,7 @@ class Register extends Component {
           <Text style={styles.registerTitle}>Already have an account?</Text>
           <Text style={styles.registerTitleActive}> Login</Text>
         </TouchableOpacity>
+        <NativeAds imageView />
       </View>
     );
   }

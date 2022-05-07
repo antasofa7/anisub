@@ -14,6 +14,7 @@ import {OrientationLocker, PORTRAIT} from 'react-native-orientation-locker';
 import Star from '../../components/atoms/Star';
 import CardAnime from '../../components/molecules/CardAnime';
 import {ImageDetail} from '../../components/organism';
+import NativeAds from '../../components/organism/NativeAds';
 import Recomendation from '../../components/organism/Recommendation';
 import {getAnimeById, getRecommendation} from '../../config';
 import {colors, fonts, IMG_EPISODE_URL, responsiveHeight} from '../../utils';
@@ -170,6 +171,7 @@ const DetailUpcoming = ({route}) => {
               <Text style={styles.label}>Anime Recommendations</Text>
               <Recomendation recommendation={recommendation} />
             </View>
+            <NativeAds headlineView nativeMediaView />
           </ScrollView>
         </>
       )}

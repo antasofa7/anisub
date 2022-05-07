@@ -4,6 +4,7 @@ import Form from '../../components/molecules/Form';
 import {colors, fonts, responsiveHeight} from '../../utils';
 import {loginUser} from '../../actions/AuthAction';
 import {connect} from 'react-redux';
+import NativeAds from '../../components/organism/NativeAds';
 
 class Login extends Component {
   constructor(props) {
@@ -99,6 +100,7 @@ class Login extends Component {
           <Text style={styles.registerTitle}>Don't have an account?</Text>
           <Text style={styles.registerTitleActive}> Register</Text>
         </TouchableOpacity>
+        <NativeAds imageView />
       </View>
     );
   }

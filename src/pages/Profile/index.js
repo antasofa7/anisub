@@ -12,6 +12,7 @@ import Share from 'react-native-share';
 import {connect} from 'react-redux';
 import {UserCircle} from '../../assets';
 import Menu from '../../components/atoms/Menu';
+import NativeAds from '../../components/organism/NativeAds';
 import {
   clearStorage,
   colors,
@@ -32,7 +33,7 @@ class Profile extends Component {
     super(props);
 
     this.state = {
-      isLogin: false,
+      isLogedIn: false,
       profile: {
         email: '',
       },
@@ -52,10 +53,10 @@ class Profile extends Component {
   _getUser = () => {
     getDataFromStorage('user').then(res => {
       if (!res) {
-        this.setState({isLogin: false});
+        this.setState({isLogedIn: false});
       } else {
         this.setState({profile: {email: res.email}});
-        this.setState({isLogin: true});
+        this.setState({isLogedIn: true});
       }
     });
   };
@@ -63,7 +64,7 @@ class Profile extends Component {
   _logout = () => {
     Alert.alert(
       'Logout',
-      'Are you sure you want to log out?',
+      'You want to log out?',
       [
         {text: 'Sure', onPress: () => action()},
         {
@@ -77,7 +78,7 @@ class Profile extends Component {
 
     const action = () => {
       clearStorage();
-      this.setState({isLogin: false});
+      this.setState({isLogedIn: false});
       this.props.navigation.navigate('Home');
     };
   };
@@ -97,12 +98,12 @@ class Profile extends Component {
   };
 
   render() {
-    const {isLogin, profile} = this.state;
+    const {isLogedIn, profile} = this.state;
     const {navigation, loginLoading} = this.props;
 
     return (
       <View style={styles.container} refreshing={loginLoading}>
-        {isLogin ? (
+        {isLogedIn ? (
           <>
             <View style={styles.wrapperUser}>
               <View style={styles.wrapperImage}>
@@ -129,7 +130,14 @@ class Profile extends Component {
         )}
         <Menu name="Share" onPress={() => this._share()} />
         <Menu name="Rate Us" onPress={() => this._rate()} />
-        {isLogin && <Menu name="Logout" onPress={() => this._logout()} />}
+        {isLogedIn && <Menu name="Logout" onPress={() => this._logout()} />}
+        <NativeAds
+          headlineView
+          taglineView
+          storeView
+          imageView
+          callToActionView
+        />
       </View>
     );
   }

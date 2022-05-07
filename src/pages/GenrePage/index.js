@@ -22,6 +22,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from '../../utils';
+import BannerAds from '../../components/organism/BannerAds';
 
 const GenrePage = ({route}) => {
   const navigation = useNavigation();
@@ -102,38 +103,41 @@ const GenrePage = ({route}) => {
       {isLoading ? (
         <LoadingPage />
       ) : (
-        <View style={styles.wrapper}>
-          <View style={styles.header}>
-            <View style={styles.iconBack}>
-              <IconBack onPress={() => navigation.goBack()} />
+        <>
+          <BannerAds marginHorizontal />
+          <View style={styles.wrapper}>
+            <View style={styles.header}>
+              <View style={styles.iconBack}>
+                <IconBack onPress={() => navigation.goBack()} />
+              </View>
+              <Spacing width={16} />
+              <Text style={styles.subTitle}>Genre: </Text>
+              <Text numberOfLines={1} style={styles.title}>
+                {genre.genre_name}
+              </Text>
             </View>
-            <Spacing width={16} />
-            <Text style={styles.subTitle}>Genre: </Text>
-            <Text numberOfLines={1} style={styles.title}>
-              {genre.genre_name}
-            </Text>
+            <FlatList
+              data={movies}
+              renderItem={_renderItem}
+              ItemSeparatorComponent={_itemSeparator}
+              keyExtractor={(item, index) => String(index)}
+              numColumns={numColumns}
+              onEndReached={loadMoreMovies}
+              onEndReachedThreshold={0.1}
+              onMomentumScrollBegin={() => setStopLoadMore(false)}
+              ListHeaderComponent={() => <Spacing height={16} />}
+              ListFooterComponent={
+                <ListFooterComponent
+                  isMoreLoading={isMoreLoading}
+                  allDataDisplayed={allDataDisplayed}
+                />
+              }
+              removeClippedSubviews={true} // Unmount components when outside of window
+              initialNumToRender={4} // Reduce initial render amount
+              maxToRenderPerBatch={1} // Reduce number in each render batch
+            />
           </View>
-          <FlatList
-            data={movies}
-            renderItem={_renderItem}
-            ItemSeparatorComponent={_itemSeparator}
-            keyExtractor={(item, index) => String(index)}
-            numColumns={numColumns}
-            onEndReached={loadMoreMovies}
-            onEndReachedThreshold={0.1}
-            onMomentumScrollBegin={() => setStopLoadMore(false)}
-            ListHeaderComponent={() => <Spacing height={16} />}
-            ListFooterComponent={
-              <ListFooterComponent
-                isMoreLoading={isMoreLoading}
-                allDataDisplayed={allDataDisplayed}
-              />
-            }
-            removeClippedSubviews={true} // Unmount components when outside of window
-            initialNumToRender={4} // Reduce initial render amount
-            maxToRenderPerBatch={1} // Reduce number in each render batch
-          />
-        </View>
+        </>
       )}
     </SafeAreaView>
   );

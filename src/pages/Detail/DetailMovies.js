@@ -12,6 +12,7 @@ import {
 import {OrientationLocker, PORTRAIT} from 'react-native-orientation-locker';
 import Star from '../../components/atoms/Star';
 import {ImageDetail} from '../../components/organism';
+import NativeAds from '../../components/organism/NativeAds';
 import Recomendation from '../../components/organism/Recommendation';
 import {getAnimeById, getRecommendation} from '../../config';
 import {colors, fonts, responsiveHeight} from '../../utils';
@@ -20,13 +21,11 @@ const DetailMovies = ({route}) => {
   const navigation = useNavigation();
   const {animeId} = route.params;
   const [animeDetail, setAnimeDetail] = useState([]);
-  const [episode, setEpisode] = useState([]);
   const [recommendation, setRecommendation] = useState([]);
   const [genres, setGenres] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [textShown, setTextShown] = useState(false);
   const [lengthMore, setLengthMore] = useState(false);
-  const [isVideoPlay, setVideoPlay] = useState(false);
 
   const getAnimeDetail = useCallback(async () => {
     setLoading(true);
@@ -114,6 +113,7 @@ const DetailMovies = ({route}) => {
               <Text style={styles.label}>Anime Recommendations</Text>
               <Recomendation recommendation={recommendation} />
             </View>
+            <NativeAds headlineView nativeMediaView />
           </ScrollView>
         </>
       )}

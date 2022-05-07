@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {GenreButton} from '../../components/molecules';
 import {AnimeGenreList, PlaylistByGenre} from '../../components/organism';
+import BannerAds from '../../components/organism/BannerAds';
 import {colors} from '../../utils';
 
 export default class Library extends PureComponent {
@@ -23,6 +24,7 @@ export default class Library extends PureComponent {
     const navigate = this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
+        <BannerAds marginHorizontal />
         <GenreButton navigation={navigate} handleProps={this.getID} />
         {genreID === 0 ? (
           <AnimeGenreList navigation={navigate} />

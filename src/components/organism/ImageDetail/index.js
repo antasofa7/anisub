@@ -113,7 +113,7 @@ const ImageDetail = props => {
       };
       dispatch(addToWatchList(watchListData));
       setBookmark(true);
-      Alert.alert('Success', 'Anime successfully added to watchlist.');
+      Alert.alert('Success', 'Anime added to watchlist.');
     } else {
       Alert.alert('Error', 'Please login to save anime!');
       navigation.navigate('Login');
@@ -139,7 +139,7 @@ const ImageDetail = props => {
   const _deleteWatchList = () => {
     Alert.alert(
       'Delete',
-      'Are you sure you want to delete this movie from watchlist?',
+      'Delete movie from watchlist?',
       [
         {text: 'Sure', onPress: () => action()},
         {
@@ -254,22 +254,34 @@ const styles = StyleSheet.create({
     height: responsiveHeight(270),
   },
   iconBookmark: {
+    backgroundColor: colors.onPrimary,
     position: 'absolute',
     top: 16,
     right: 16,
-    padding: 12,
+    width: 50,
+    height: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
   },
   iconBack: {
+    backgroundColor: colors.onPrimary,
     position: 'absolute',
     top: 16,
     left: 16,
-    padding: 12,
+    width: 50,
+    height: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
   },
   iconPlay: {
     position: 'absolute',
     top: responsiveHeight(80),
     left: screenWidth / 2 - 30,
-    backgroundColor: colors.background,
+    backgroundColor: colors.primary,
     paddingLeft: 20,
     paddingRight: 15,
     paddingVertical: 15,
